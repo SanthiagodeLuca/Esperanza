@@ -1,0 +1,74 @@
+<div class="sidebar" [ngClass]="{ 'showSidebar': isSidebarVisible, 'hideSidebar': !isSidebarVisible }" [@fadeInOut]>
+    <ul>
+      <li>
+        <a routerLink="/registro" routerLinkActive="active" (click)="toggleSubmenu()">
+          <span class="menu-icon material-icons"> assignment</span>
+          <span class="menu-text">Registros</span>
+          <span class="sub-menu-icon" [ngClass]="{ 'sub-menu-open': isSubmenuOpen }">
+            <mat-icon>{{ isSubmenuOpen ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</mat-icon>
+          </span>
+        </a>
+        <!-- sub menu registros-->
+        <ul *ngIf="isSubmenuOpen" class="sub-menu">
+          <li><a routerLink="/registro/diario" routerLinkActive="active"><span class="menu-icon material-icons">event_note</span><span class="menu-text">Diario</span></a></li>
+          <li><a routerLink="/registro/semanal" routerLinkActive="active"><span class="menu-icon material-icons">view_week</span><span class="menu-text">Semanal</span></a></li>
+          <li><a routerLink="/registro/mensual" routerLinkActive="active"><span class="menu-icon material-icons">date_range</span><span class="menu-text">Mensual</span></a></li>
+        </ul>
+      </li>
+      <!--
+      <li>
+        <a routerLinkActive="active" (click)="toggleSubmenu()">
+          <span class="menu-icon material-icons">dashboard</span>
+          <span class="menu-text">Dashboard</span>
+          <span class="sub-menu-icon" [ngClass]="{ 'sub-menu-open': isSubmenuOpen }">
+            <mat-icon>{{ isSubmenuOpen ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</mat-icon>
+          </span>
+        </a>-->
+        <!-- Sub-menu for Dashboard with left padding -->
+              <!--
+<ul *ngIf="isSubmenuOpen" class="sub-menu">
+          <li><a routerLink="/dashboard" routerLinkActive="active"><span class="menu-icon material-icons">details</span><span class="menu-text">Details</span></a></li>
+          <li><a routerLink="/dashboard/messages" routerLinkActive="active"><span class="menu-icon material-icons">message</span><span class="menu-text">Messages</span></a></li>
+        </ul>
+      </li>-->
+      <li>
+        <a routerLink="/estudiantes" routerLinkActive="active">
+          <span class="menu-icon material-icons">school</span>
+          <span class="menu-text">Estudiantes</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/comidas" routerLinkActive="active">
+          <span class="menu-icon material-icons">restaurant</span>
+          <span class="menu-text">Comidas</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/excel" routerLinkActive="active">
+          <span class="menu-icon material-icons">send</span>
+          <span class="menu-text">Exportar Excel</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/modificar" routerLinkActive="active">
+          <span class="menu-icon material-icons">create</span>
+          <span class="menu-text">Modificar Registros</span>
+        </a>
+      </li>
+      <!--
+      <li>
+        <a routerLink="/timetable" routerLinkActive="active">
+          <span class="menu-icon material-icons">access_time</span>
+          <span class="menu-text">Time Table</span>
+        </a>
+      </li>
+      -->
+      <li>
+        <a routerLink="/seguridad" routerLinkActive="active">
+          <span class="menu-icon material-icons">settings</span>
+          <span class="menu-text">Seguridad</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+

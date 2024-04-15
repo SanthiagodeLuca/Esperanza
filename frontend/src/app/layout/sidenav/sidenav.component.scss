@@ -1,0 +1,72 @@
+/* Define un mixin para estilos comunes */
+@mixin menu-item {
+  color: #d4d4d4; /* Color del texto */
+  text-decoration: none; /* Sin subrayado */
+  display: flex; /* Utiliza un layout de caja flexible */
+  align-items: center; /* Centra verticalmente el contenido */
+  padding: 10px; /* Relleno de 10px en todos los lados */
+  border-radius: 10px; /* Borde redondeado */
+  transition: all 0.3s; /* Transición suave para todos los cambios */
+}
+
+/* Estilos para el contenedor de la barra lateral */
+.sidebar {
+  background-color: #ffffff; /* Color de fondo de la barra lateral */
+  width: 200px; /* Ancho de la barra lateral */
+  padding: 20px; /* Relleno interior */
+  position: fixed; /* Fijar posición */
+  height: 100%; /* Altura completa */
+  top: 0; /* Pegado a la parte superior */
+  left: 0; /* Pegado a la izquierda */
+  overflow-x: hidden; /* Oculta el desbordamiento horizontal */
+  margin-top: 48px; /* Margen superior */
+}
+
+/* Estilos para la lista no ordenada dentro de la barra lateral */
+.sidebar ul {
+  list-style: none; /* Sin viñetas */
+  padding: 0; /* Sin relleno */
+}
+
+/* Estilos para cada elemento de la lista en la barra lateral */
+.sidebar li {
+  margin-bottom: 10px; /* Margen inferior */
+}
+
+/* Estilos para los enlaces en la barra lateral */
+.sidebar li a {
+  @include menu-item; /* Usa el mixin menu-item */
+
+  &:hover {
+    background-color: rgb(241, 241, 241); /* Color de fondo al pasar el mouse */
+    color: #6c6c6c; /* Color del texto al pasar el mouse */
+  }
+
+  &.active {
+    color: #000000; /* Color del texto activo */
+    background-color: rgb(241, 241, 241); /* Color de fondo activo */
+  }
+
+  &.active:hover {
+    /* Estilos al pasar el mouse sobre un elemento activo */
+  }
+}
+
+/* Estilos para los submenús */
+.sub-menu {
+  padding-left: 20px; /* Ajusta el relleno izquierdo */
+}
+
+/* Estilos para ocultar la barra lateral */
+.hideSidebar {
+  transform: translateX(-100%); /* Mueve la barra lateral fuera de la pantalla */
+  opacity: 0; /* Opacidad 0 */
+  transition: transform 0.3s, opacity 0.3s; /* Transición suave */
+}
+
+/* Estilos para mostrar la barra lateral */
+.showSidebar {
+  transform: translateX(0); /* Muestra la barra lateral */
+  opacity: 1; /* Opacidad 1 */
+  transition: transform 0.3s, opacity 0.3s; /* Transición suave */
+}

@@ -1,0 +1,36 @@
+<!-- toolbar.component.html -->
+
+<!-- Definición de una barra de herramientas -->
+<mat-toolbar class="custom-toolbar">
+
+   <!-- Botón de menú -->
+ <button
+  mat-icon-button
+  class="neumorphic-button"
+  class="example-icon"
+  aria-label="Toggle Sidebar"
+  (click)="toggleSidebar()"
+>
+  <mat-icon>menu</mat-icon>
+</button>
+<div class="logo-container">
+  <img src="assets/img/lgrp.png" alt="Logo" class="logo rounded" width="20" height="20">
+</div>
+ <!-- Espacio en blanco -->
+  &nbsp;
+    <!-- Título de la barra de herramientas -->
+  <span>Comedor Escolar</span>
+
+    <!-- Espaciador flexible -->
+  <span class="example-spacer"></span>
+
+   <!-- Botón de notificaciones -->
+ <button mat-icon-button class="notification-icon" aria-label="Notification icon button">
+  <mat-icon>notifications</mat-icon>
+</button>
+  <!-- Espacio en blanco -->
+  &nbsp;
+  <!-- Botón de perfil -->
+<button mat-icon-button class="perfil-icon" routerLink="/profile" routerLinkActive="active" class="neumorphic-button"><mat-icon>person</mat-icon></button>
+
+</mat-toolbar>

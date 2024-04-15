@@ -1,0 +1,53 @@
+<!--filtros-->
+<input type="text" pInputText placeholder="Nombre" [(ngModel)]="filtros['nombre']">
+<input type="text" pInputText placeholder="Jornada" [(ngModel)]="filtros['jornada']">
+<input type="text" pInputText placeholder="curso" [(ngModel)]="filtros['curso']">
+
+<!-- tabla-datos.component.html -->
+<!--value enlaza los datos con la tabla row el numero de filas por tabla-->
+<button (click)="mostrarValoresEstudiantesFiltrado()">Mostrar Valores Únicos de Nombre</button>
+
+<!-- Creamos un área donde se mostrarán los valores únicos -->
+<div *ngIf="uniqueValues">
+  <h3>Valores Únicos de la Columna:</h3>
+  <ul>
+    <!-- Iteramos sobre los valores únicos y los mostramos en una lista -->
+    <li *ngFor="let value of uniqueValues">{{ value }}</li>
+  </ul>
+</div>
+<p-table [value]="filtrarEstudianes" [rows]="10" [paginator]="true">
+  <ng-template pTemplate="header">
+    <!-- Encabezados de la tabla -->
+    <tr>
+      <th>
+        <p-dropdown [options]="getUniqueValues('nombre')" [(ngModel)]="selectedNombre" placeholder="Nombre"></p-dropdown>
+      </th>
+      <th>
+        <p-dropdown [options]="getUniqueValues('jornada')" [(ngModel)]="selectedJornada" placeholder="Jornada"></p-dropdown>
+      </th>
+      <th>
+        <p-dropdown [options]="getUniqueValues('curso')" [(ngModel)]="selectedCurso" placeholder="Curso"></p-dropdown>
+      </th>
+      <th>Acciones</th>
+    </tr>
+  </ng-template>
+    <ng-template pTemplate="body" let-estudiante>
+      <tr>
+        <!-- Celdas de la tabla -->
+       <td> {{ estudiante.nombre }}</td>
+       <td> {{ estudiante.jornada }}</td>
+       <td> {{ estudiante.curso }}</td>
+       <td>
+        <button (click)="cambiarEstadoImagen(estudiante)">{{ cambiarEstadoTexto(estudiante) }}</button>
+       <!-- <button (click)="cambiarEstadoImagen(estudiante)">{{ cambiarEstadoTexto(estudiante) }}</button>-->
+        <div *ngIf="estudiante.imagenVisible">
+         <img [src]="estudiante.imagenUrl" alt="Imagen">
+        </div>
+        </td>
+       <!--nosotros reconstruimos la imagen -->
+        <!--<td> <img [src]="'http://localhost:8085/api/imagen/image/' + estudiante.id + '.png'" alt="Imagen">  -->
+       
+      </tr>
+      
+    </ng-template>
+  </p-table>

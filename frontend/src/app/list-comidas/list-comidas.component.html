@@ -1,0 +1,11 @@
+<table>
+    <thead>
+      <!-- Encabezados de la tabla -->
+    </thead>
+    <tbody>
+      <tr *ngFor="let comida of comidas">
+        <!-- Celdas de la tabla -->
+        {{ comida.id }} - tipo: {{ comida.nombre}}
+      </tr>
+    </tbody>
+  </table>

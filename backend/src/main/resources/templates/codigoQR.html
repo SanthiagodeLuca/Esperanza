@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Código QR</title>
+       <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<div>
+	  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <a class="navbar-brand" href="#">Comedor</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a th:href="@{/new}" class="nav-link" >Nuevo</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/listar}" class="nav-link" >Estudiantes</a>
+                </li>
+                  <li class="nav-item">
+                    <a th:href="@{/asistencias}" class="nav-link" >Asistencias</a>
+                </li>
+                 <li class="nav-item">
+                    <a th:href="@{/almuerzo}" class="nav-link" >Almuerzos</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/mostrarQR}" class="nav-link" >Código QR</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/mostrarExcel}" class="nav-link" >Excel</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/mostrarDireccionIP}" class="nav-link" >direccion IP</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <h1>Código QR</h1>
+ <!--   <img src="/images/codigo_qr.png" alt="My Image">-->
+<!--  	<img src="/images/pollo.jpg" alt="Another Image">-->
+	
+	<!--<a th:href="@{/obtenerModelo}" >Modelo</a>-->
+
+<input type="text" id="buscadorQR" placeholder="Filtrar por Cedula" data-table="tablaQR">
+<div style="overflow: auto; max-height: 500px;">
+<table  class="table" th:id="${miTablaQR}">
+					<thead>
+					<tr>
+						<th class="header-with-arrow">
+			                    <div class="header-container">
+			                        <span>ID</span>
+			                        <!--&#x25BC; representa triangulo hacia abajo-->
+			                        <button class="arrow">&#x25BC;</button>
+			                    </div>
+			                   <div class="options-container">
+			                        <select class="filter-options" style="display: none;"></select>
+			                    </div>
+               			 </th>
+						<th class="header-with-arrow">
+			                    <div class="header-container">
+			                        <span>Cedula Estudiante</span>
+			                        <!--&#x25BC; representa triangulo hacia abajo-->
+			                        <button class="arrow">&#x25BC;</button>
+			                    </div>
+			                   <div class="options-container">
+			                        <select class="filter-options" style="display: none;"></select>
+			                    </div>
+               			 </th>
+						<th class="header-with-arrow">
+			                    <div class="header-container">
+			                        <span>Tipo de Almuerzo</span>
+			                        <!--&#x25BC; representa triangulo hacia abajo-->
+			                        <button class="arrow">&#x25BC;</button>
+			                    </div>
+			                   <div class="options-container">
+			                        <select class="filter-options" style="display: none;"></select>
+			                    </div>
+               			 </th>
+               			 <th class="header-with-arrow">
+			                    <div class="header-container">
+			                        <span>Curso</span>
+			                        <!--&#x25BC; representa triangulo hacia abajo-->
+			                        <button class="arrow">&#x25BC;</button>
+			                    </div>
+			                   <div class="options-container">
+			                        <select class="filter-options" style="display: none;"></select>
+			                    </div>
+               			 </th>
+							<th class="header-with-arrow">
+			                    <div class="header-container">
+			                        <span>Imagen</span>
+			                    
+			                        <button class="arrow">&#x25BC;</button>
+			                    </div>
+			                   <div class="options-container">
+			                        <select class="filter-options" style="display: none;"></select>
+			                    </div>
+               			 </th>
+						
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr th:each="estudiante:${estudiantes}">
+						<td th:text="${estudiante.id}"></td>
+						<td th:text="${estudiante.nombre}"></td>	
+						<td th:text="${estudiante.jornada}"></td>
+						<td th:text="${estudiante.curso}"></td>
+						<td>
+						 <a th:href="${estudiante.imagen}" download="imagen_estudiante.png">
+        					<img th:src="${estudiante.imagen}" alt="Imagen del estudiante">
+    					</a>
+						  </td>
+					</tr>
+				</tbody>
+			</table>      
+
+
+	<!-- <h1>Imágenes</h1>
+
+  <!-- <div th:each="ruta: ${rutas}">
+
+
+    <img th:src="${ruta}" alt="Imagen">
+   <!-- <p th:text="${ruta.estudiante.nombre}"></p>-->
+   <!-- <a th:href="${ruta}" download="123">Descargar</a>-->
+<!--</div>-->
+</div>
+</div>
+
+		<script src="/js/tabladinamicaQR.js"></script>
+		<script src="/js/buscardorQR.js"></script>
+<script src="/js/jquery-3.5.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+</body>
+</html>
