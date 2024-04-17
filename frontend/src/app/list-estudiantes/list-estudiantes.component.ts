@@ -1,3 +1,30 @@
+  /**Ejemplo de funcion Filtros
+   * 
+   * estudiantes: Estudiante[] = [
+  { nombre: 'Juan', jornada: 'Mañana', curso: 'A' },
+  { nombre: 'María', jornada: 'Tarde', curso: 'B' },
+  { nombre: 'Pedro', jornada: 'Mañana', curso: 'A' },
+  { nombre: 'Laura', jornada: 'Noche', curso: 'C' },
+  { nombre: 'Carlos', jornada: 'Tarde', curso: 'B' },
+];
+
+   * const filtros = {
+  //nombre: 'Juan',
+  jornada: 'Mañana',
+  //curso: 'A'
+};
+
+   * this.filtros['jornada'] = 'Tarde';
+this.aplicarFiltros();
+RESULTADO
+   * { nombre: 'María', jornada: 'Tarde', curso: 'B' }
+{ nombre: 'Carlos', jornada: 'Tarde', curso: 'B' }
+
+   * 
+   * 
+   *  */  
+  
+  
   import { Component, OnInit } from '@angular/core';
 
 
@@ -85,38 +112,70 @@ import { take } from 'rxjs/operators'; // Importa el operador 'take
 
 
 
+
+
+
+
+      
      //filtros
-     get filtrarEstudianes(): Estudiante[] {
-      return this.filtroService.aplicarFiltros(this.estudiantes, this.filtros);
-    } 
 
 
-    aplicarFiltro(column: string, value: string): void {
-      console.log('Aplicando filtro:', column, value);
+     aplicarFiltros(): void {
+      // Vuevlve a reconvertir el estudiantes filtro 
+     
+       this.estudiantesFiltrados = this.estudiantes.filter(
+        estudiante => {
+        // Object.keys ejemplo 
+      
+        
+        // cada clave cumple con una condicion 
+        //object.key devuelve un arreglo con las llaves 
+         Object.keys(this.filtros)
+        // every metodo que verificasi lo elemento cumplen una condicion 
+         .every(
+          key => {
+          // Aquí se muestra la clave actual en cada ciclo
+         // console.log('Ciclo de Object.keys:', key);
     
-      // crea un nuevo arreglo con elementos que cumplas la regla
-      this.estudiantesFiltrados = this.estudiantes.filter(estudiante => {
-        // Verificar si la columna existe en el estudiante
-        if (estudiante.hasOwnProperty(column)) {
-          // Comparar en minúsculas para hacer la búsqueda insensible a mayúsculas
-          const entro = estudiante[column].toString().toLowerCase().includes(value.toLowerCase());
-          console.log('Estudiante:', estudiante, 'Incluido:', entro);
-          return entro;
-        } else {
-          // Devolver true para incluir el estudiante si la columna no existe
-          console.log('Estudiante:', estudiante, 'Incluido: true (no se encuentra la columna)');
-          return true;
-        }
+          // Esta es la lógica de cada iteración en el método every
+          //filtros[key] el valor que tiene ese filtro
+          var valor=this.filtros[key];
+          var valorEstudiante =estudiante[key];
+          const condition = !this.filtros[key] || estudiante[key] === this.filtros[key];
+    
+          // Se muestra el resultado de la condición en cada iteración
+          //console.log('Condición en cada iteración de every:', condition);
+    
+          // Se retorna el resultado de la condición para cada clave
+          return condition;
+        });
       });
-    
-      // Mostrar los resultados en la consola
-      console.log('Estudiantes filtrados:', this.estudiantesFiltrados);
-      console.log('Filtros aplicados:', this.filtros);
-    
-      // Actualizar la vista
-      this.showFilteredData();
+
+      if(this.estudiantesFiltrados.length===0){
+        this.estudiantesFiltrados= this.estudiantes.slice();
+      }
     }
     
+     
+   
+    
+     get filtrarEstudianes(): Estudiante[] {
+      return this.filtroService.aplicarFiltros2(this.estudiantes, this.filtros);
+    } 
+
+// list-estudiantes.component.ts
+
+
+
+    
+    
+    filtrarTabla(columna: string, valorSeleccionado: any) {
+      // Filtrar los datos según la columna y el valor seleccionado
+      this.estudiantesFiltrados = this.estudiantes.filter(estudiante => estudiante[columna] === valorSeleccionado);
+    }
+   
+    
+
     //obtiene valores unicos de una columna
     getUniqueValues(column: string): string[] {//crea un nuevo arreglo solo con los valores de la columna 
       return this.estudiantesFiltrados.map(estudiante => estudiante[column])
@@ -132,10 +191,7 @@ import { take } from 'rxjs/operators'; // Importa el operador 'take
                                        .filter((value, index, self) => self.indexOf(value) === index);
     }
 
-    //Muestra los valore unicos
-    showUniqueValues(column: string): void {
-      this.uniqueValues = this.getUniqueValues(column); // Llamamos al método getUniqueValues para obtener los valores únicos
-    }
+   
   
 
     mostrarValoresEstudiantesFiltrado() :void{

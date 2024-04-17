@@ -1,11 +1,11 @@
 <!--filtros-->
-<input type="text" pInputText placeholder="Nombre" [(ngModel)]="filtros['nombre']">
+<!--<input type="text" pInputText placeholder="Nombre" [(ngModel)]="filtros['nombre']" >
 <input type="text" pInputText placeholder="Jornada" [(ngModel)]="filtros['jornada']">
-<input type="text" pInputText placeholder="curso" [(ngModel)]="filtros['curso']">
+<input type="text" pInputText placeholder="curso" [(ngModel)]="filtros['curso']">-->
 
 <!-- tabla-datos.component.html -->
 <!--value enlaza los datos con la tabla row el numero de filas por tabla-->
-<button (click)="mostrarValoresEstudiantesFiltrado()">Mostrar Valores Únicos de Nombre</button>
+<!--<button (click)="mostrarValoresEstudiantesFiltrado()">Mostrar Valores Únicos de Nombre</button>-->
 
 <!-- Creamos un área donde se mostrarán los valores únicos -->
 <div *ngIf="uniqueValues">
@@ -20,13 +20,19 @@
     <!-- Encabezados de la tabla -->
     <tr>
       <th>
-        <p-dropdown [options]="getUniqueValues('nombre')" [(ngModel)]="selectedNombre" placeholder="Nombre"></p-dropdown>
+        <input type="text" pInputText placeholder="Nombre" (input)="aplicarFiltros()" [(ngModel)]="filtros['nombre']">
+      <th>
+        <!-- Filtra por jornada -->
+         <!--  [(ngModel)]="filtros['jornada']" vincula esto con un valor en la opcion seleccionada -->
+          <select [(ngModel)]="filtros['jornada']" >
+            <option *ngFor="let jornada of getUniqueValues('jornada')" [value]="jornada">{{ jornada }}</option>
+          </select>
       </th>
       <th>
-        <p-dropdown [options]="getUniqueValues('jornada')" [(ngModel)]="selectedJornada" placeholder="Jornada"></p-dropdown>
-      </th>
-      <th>
-        <p-dropdown [options]="getUniqueValues('curso')" [(ngModel)]="selectedCurso" placeholder="Curso"></p-dropdown>
+        <!-- Filtra por curso -->
+        <select [(ngModel)]="filtros['curso']" >
+          <option *ngFor="let curso of getUniqueValues('curso')" [value]="curso">{{ curso }}</option>
+        </select>
       </th>
       <th>Acciones</th>
     </tr>
