@@ -23,7 +23,6 @@ import { MainComponent } from './main/main.component';
 import { RouterLinkActiveExactDirective } from './main/appRouterLinkActiveExact.directive';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { MatCardModule } from '@angular/material/card';
-import { FormsModule } from '@angular/forms';
 import { TimetableComponent } from './pages/timetable/timetable.component';
 import { EstudiantesComponent } from './estudiantes/estudiantes.component';
 import { RegistroComponent } from './registro/registro.component';
@@ -42,7 +41,9 @@ import { ListAsistenciasComponent } from './list-asistencias/list-asistencias.co
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { FormsModule } from '@angular/forms';
+import  {CommonModule} from '@angular/common';
+import { CriteriosComponent } from './criterio/criterio.component';
 
 // Import FormsModule
 @NgModule({
@@ -68,6 +69,7 @@ import { DropdownModule } from 'primeng/dropdown';
     ComidasComponent,
     ListComidasComponent,
     ListAsistenciasComponent,
+    CriteriosComponent,
 
   ],
   imports: [
@@ -83,12 +85,14 @@ import { DropdownModule } from 'primeng/dropdown';
     MatListModule,
     MatButtonModule,
     MatCardModule,
-    FormsModule,
+   
     MatTableModule,
     HttpClientModule,
     TableModule,
     InputTextModule,
-    DropdownModule 
+    DropdownModule ,
+    FormsModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

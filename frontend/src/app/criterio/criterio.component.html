@@ -1,0 +1,68 @@
+        <!-- Plantilla HTML asociada al componente CriteriosComponent -->
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Itera sobre cada criterio y muestra sus detalles en una fila de la tabla -->
+            <tr *ngFor="let criterio of criterios">
+                <td>{{ criterio.id }}</td>
+                <td>{{ criterio.nombre }}</td>
+                <td>
+                <!-- Botón para editar el criterio seleccionado -->
+                <button (click)="editarCriterio(criterio)">Editar</button>
+                </td>
+            </tr>
+            
+            
+            </tbody>
+        </table>
+        <form #formularioCriterio="ngForm" (ngSubmit)="agregarCriterio(formularioCriterio)">
+            <label for="id">ID:</label>
+            <input type="text" name="id" [(ngModel)]="criterioSeleccionado.id">
+            <!-- Agrega el atributo "name" para identificar el campo "id" -->
+        
+            <label for="nombre">Nombre:</label>
+            <input type="text" name="nombre" [(ngModel)]="criterioSeleccionado.nombre">
+            <!-- Agrega el atributo "name" para identificar el campo "nombre" -->
+            <label for="tipo">Tipo:</label>
+            
+            <select name="tipo" [(ngModel)]="nuevoCriterio.tipoCriterio">
+              <option value="Longitud de Estudiantes">Longitud de Estudiantes</option>
+              <option value="Jornada">Jornada</option>
+              <option value="Curso">Curso</option>
+            </select>
+            <button type="submit">Agregar Criterio</button>
+        </form>
+        
+        
+        <!-- 
+        <div *ngIf="criterioSeleccionado">
+            <h2>Editar Criterio</h2>
+            <form (submit)="guardarCambios()">
+                <label>ID:</label>
+                <input type="text" [(ngModel)]="criterioSeleccionado.id" >
+                <label>Nombre:</label>
+                <input type="text" [(ngModel)]="criterioSeleccionado.nombre">
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    
+        <div *ngIf="criterioSeleccionado">
+            <h2>Editar Criterio</h2>
+            <form (submit)="guardarCambios()">
+                <label>ID:</label>
+                <input type="text" [(ngModel)]="criterioSeleccionado.id">
+
+                <label>Nombre:</label>
+                <input type="text" [(ngModel)]="criterioSeleccionado.nombre">
+
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+
+    -->

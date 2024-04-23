@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dirección IP</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+ <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <a class="navbar-brand" href="#">Comedor</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a th:href="@{/new}" class="nav-link" >Nuevo</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/listar}" class="nav-link" >Estudiantes</a>
+                </li>
+                 <li class="nav-item">
+                    <a th:href="@{/asistencias}" class="nav-link" >Asistencias</a>
+                </li>
+                 <li class="nav-item">
+                    <a th:href="@{/almuerzo}" class="nav-link" >Almuerzos</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a th:href="@{/mostrarQR}" class="nav-link" >Código QR</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/mostrarExcel}" class="nav-link" >Excel</a>
+                </li>
+                  <li class="nav-item">
+                    <a th:href="@{/mostrarDireccionIP}" class="nav-link" >direccion IP</a>
+                </li>
+                
+              <!--  <li class="nav-item">
+                    <a th:href="@{/calendario}" class="nav-link" >Calendario</a>
+                </li>-->
+            </ul>
+        </div>
+    </nav>
+    <h1>La dirección IP del servidor es: <span th:text="${direccionIP}"></span></h1>
+</body>
+</html>

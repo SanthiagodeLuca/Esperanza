@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>horario</title>
+       <link rel="stylesheet" href="/css/bootstrap.min.css">
+     <!--  <link rel="sytlesheet" href="/css/error.css">-->
+</head>
+<body>
+	      <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <a class="navbar-brand" href="#">Comedor</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a th:href="@{/new}" class="nav-link" >Nuevo</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/listar}" class="nav-link" >Estudiantes</a>
+                </li>
+                 <li class="nav-item">
+                    <a th:href="@{/asistencias}" class="nav-link" >Asistencias</a>
+                </li>
+                 <li class="nav-item">
+                    <a th:href="@{/almuerzo}" class="nav-link" >Almuerzos</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a th:href="@{/mostrarQR}" class="nav-link" >Código QR</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <h1>Horario</h1>
+  	<form action="/horario" method="POST">
+    <!-- Input para la primera hora y minutos -->
+    <label for="horaInicialDesayuno">hora Inicial Desayuno :</label>
+    <input type="time" id="horaInicialDesayuno" name="horaInicio1">
+    <br>
+    <label for="minutoInicialDesayuno">minuto Inicial Desayuno:</label>
+    <input type="number" id="minutoInicialDesayuno" name="minInicio1" min="0" max="59">
+    <br>
+    
+    <!-- Input para la primera hora y minutos -->
+    <label for="horaFinalDesayuno">hora Final Desayuno:</label>
+    <input type="time" id="horaFinalDesayuno" name="horaFin1">
+    <br>
+    <label for="minutoFinalDesayuno">minuto Final Desayuno:</label>
+    <input type="number" id="minutoFinalDesayuno" name="minFin1" min="0" max="59">
+    <br>
+    
+    <!-- Repite este patrón para los otros horarios -->
+    
+    <!-- Input para la segunda hora y minutos -->
+    <label for="horaInicialAlmuerzo">hora Inicial Almuerzo:</label>
+    <input type="time" id="horaInicialAlmuerzo" name="horaInicio2">
+    <br>
+    <label for="minutoInicialAlmuerzo">minuto Inicial Almuerzo:</label>
+    <input type="number" id="minutoInicialAlmuerzo" name="minFin2" min="0" max="59">
+    <br>
+    <!-- Input para la segunda hora y minutos -->
+    <label for="horaFinalAlmuerzo">hora Final Almuerzo:</label>
+    <input type="time" id="horaFinalAlmuerzo" name="horaFin2">
+    <br>
+    
+    <label for="minutoFinalAlmuerzo">minuto Final Almuerzo:</label>
+    <input type="number" id="minutoFinalAlmuerzo" name="minInicio2" min="0" max="59">
+    <br>
+    
+    
+    <!-- Botón para enviar el formulario -->
+   <button type ="button" onclick="enviarDatos()">GuardarAsistencias</button>
+    
+   
+</form>
+
+
+
+
+
+
+
+   
+	
+	
+  		
+		
+ </body>
+ <script src="/js/horario.js"></script>
+		
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</html>
