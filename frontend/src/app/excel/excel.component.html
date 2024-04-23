@@ -1,1 +1,3 @@
-<p>excel works!</p>
+<p>Exportar Excel</p>
+<input type="file" (change)="cargaArchivo($event)">
+<div *ngIf="mensaje" class="message">{{ mensaje }}</div>

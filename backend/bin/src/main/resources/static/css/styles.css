@@ -1,0 +1,27 @@
+/* Estilos para el sidebar */
+.sidebar {
+    background-color: #333;
+    color: #fff;
+    width: 200px;
+    padding: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Estilos para el contenido principal */
+.content {
+    margin-left: 220px; /* Ajusta este valor según el ancho de tu sidebar */
+    padding: 20px;
+}

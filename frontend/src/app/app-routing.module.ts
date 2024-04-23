@@ -13,6 +13,7 @@ import { DiarioComponent } from './pages/diario/diario.component';
 import { SemanalComponent } from './pages/semanal/semanal.component';
 import { MensualComponent } from './pages/mensual/mensual.component';
 import { ComidasComponent } from './comidas/comidas.component';
+import { CriteriosComponent } from './criterio/criterio.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -28,7 +29,9 @@ const routes: Routes = [
   {path:'registro/diario',component:DiarioComponent},
   {path:'registro/semanal',component:SemanalComponent},
   {path:'registro/mensual',component:MensualComponent},
-  {path:'comidas',component:ComidasComponent}
+  {path:'comidas',component:ComidasComponent},
+  {path:'criterio',component:CriteriosComponent}
+
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
