@@ -1,4 +1,6 @@
-Esta es la prueba 2 de las ramas
+Error
+    Node packages may not be installed. Try installing with 'npm install'.
+    Error: Could not find the '@angular-devkit/build-angular:dev-server' builder's node package.
 
-Esta es una nueva modificacion
-soy libre 
+npm uninstall -g @angular/cli
+npm install --legacy-peer-deps

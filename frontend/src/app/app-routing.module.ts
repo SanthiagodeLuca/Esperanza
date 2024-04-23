@@ -14,13 +14,14 @@ import { SemanalComponent } from './pages/semanal/semanal.component';
 import { MensualComponent } from './pages/mensual/mensual.component';
 import { ComidasComponent } from './comidas/comidas.component';
 import { CriteriosComponent } from './criterio/criterio.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'timetable', component: TimetableComponent },
+  {path: '', redirectTo: 'home', pathMatch: 'full' },
+  {path: 'home', component: HomeComponent },
+  {path: 'dashboard', component: DashboardComponent },
+  {path: 'profile', component: ProfileComponent },
+  {path: 'timetable', component: TimetableComponent },
   {path:'estudiantes',component:EstudiantesComponent},
   {path:'registro',component:RegistroComponent},
   {path:'excel',component:ExcelComponent},
@@ -30,7 +31,8 @@ const routes: Routes = [
   {path:'registro/semanal',component:SemanalComponent},
   {path:'registro/mensual',component:MensualComponent},
   {path:'comidas',component:ComidasComponent},
-  {path:'criterio',component:CriteriosComponent}
+  {path:'criterio',component:CriteriosComponent},
+  {path:'login',component:LoginComponent}
 
 ];
 @NgModule({
