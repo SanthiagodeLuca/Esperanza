@@ -4,3 +4,18 @@ Error
 
 npm uninstall -g @angular/cli
 npm install --legacy-peer-deps
+
+Actualizacion y uso lombok
+
+Abre Eclipse.
+Ve a "Help" en la barra de menú.
+Selecciona "Install New Software...".
+En el cuadro de diálogo "Install", haz clic en el botón "Add" para agregar un nuevo sitio de actualización.
+En el campo "Name" (Nombre), puedes escribir "Lombok" para identificar el sitio.
+En el campo "Location" (Ubicación), ingresa la URL del sitio de actualización de Lombok: https://projectlombok.org/p2.
+Haz clic en "OK" para agregar el sitio de actualización.
+Ahora deberías ver el nombre que ingresaste en la lista de "Work with" (Trabajar con). Selecciónalo.
+Deberían aparecer los componentes disponibles para instalar. Marca el checkbox para el "Lombok" y haz clic en "Next".
+Sigue las instrucciones en pantalla para completar la instalación. Es posible que necesites reiniciar Eclipse después de instalar el plugin.
+
+https://projectlombok.org/p2

@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +21,11 @@ import colegio.comedor.PowerShellExecutor;
 import colegio.comedor.interfaceService.IAsistenciaService;
 import colegio.comedor.interfaceService.IEstudianteService;
 import colegio.comedor.modelo.Estudiante;
-import colegio.comedor.service.EstudianteService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/estudiantes")
+@RequiredArgsConstructor//asigna al contructor valores 
 public class controladorEstudiante {
 	@Autowired
 	private IEstudianteService serviceEstudiante;
@@ -33,12 +33,15 @@ public class controladorEstudiante {
 	@Autowired
 	private IAsistenciaService serviceAsistencia;
 	private static final Logger logger = LoggerFactory.getLogger(controladorEstudiante.class);
-	/*@GetMapping("/error")
-	public String mostrarError() {
+	
+	@PostMapping(value="/bienvenida")
+	public String welcome() {
 
-		logger.info("entro al metodo mostrarError");
-	      return "error";
-	}*/
+		
+	      return "welcome works";
+	}
+	
+	
 	@GetMapping("/")
 	public String home() {
 		PowerShellExecutor.ejecutarScript();  

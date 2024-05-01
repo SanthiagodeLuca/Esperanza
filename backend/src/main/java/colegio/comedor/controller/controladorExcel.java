@@ -5,11 +5,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,95 +56,82 @@ public class controladorExcel {
 	}
 	
 	@PostMapping("/subirExcel")
-	public String manejadorSubidaArchivos(@RequestParam("file") MultipartFile file,Model modelo) throws IOException {
+	public ResponseEntity<String> manejadorSubidaArchivos(@RequestParam("file") MultipartFile file,Model modelo) throws IOException {
 		
-		hoja=excelService.procesarArchivo(file);
-		System.out.println("Hoja procesada correctamente.");
-        	
-		insertarDatos(modelo);
+
+		    try {
+		        hoja = excelService.procesarArchivo(file);
+		        System.out.println("Hoja procesada correctamente.");
+		        insertarDatos(modelo);
+		        //frotend espera una respuesta tipo JSON 
+		        return ResponseEntity.ok().body("{\"message\": \"Archivo subido correctamente\"}");
+		    } catch (IOException e) {
+		        // Manejar la excepción de IO aquí
+		        e.printStackTrace();
+		        // Devolver una respuesta adecuada al cliente, por ejemplo, un mensaje de error
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                    .body("Error de lectura del archivo: " + e.getMessage());
+		    }catch (Exception e) {
+		        // Manejar otras excepciones aquí
+		        e.printStackTrace();
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Archivo no correspondiente: " + e.getMessage());
+		    }
 		
-		//modelo.addAttribute("estudiantes", operacionEstudiante.listar()); // Asegúrate de agregar la lista al modelo
-		
-		return "excel";
-		
+
 	}
 	@GetMapping("/insertarDatos")
-	public String insertarDatos(Model modelo) {
-		//List<Estudiante>estudiantes=operacionEstudiante.listar();
-		//modelo.addAttribute("estudiantes",estudiantes);
-		Estudiante estudiante=new Estudiante();
-		boolean primeraLinea = true;
-		for(Row fila:hoja) {
-
-			
-		    // Resto del código de procesamiento para la fila
-
-		    // ...
-			if(primeraLinea) {
-				
-				primeraLinea=false;
-				continue;
-			}
-
-
-		for(int i=0;i<fila.getPhysicalNumberOfCells();i++) {
-			
-			
-		
-			//System.out.println("valor de la celda"+fila.getCell(i)+"id :"+i);
-			if(i==0) {
-				
-				estudiante.setId(fila.getCell(i).getStringCellValue());
-				//estudiante.setImagen(fila.getCell(i).getStringCellValue());
-				//System.out.println("estudiante con id :"+estudiante.getId());
-			}
-			
-			if(i==3) {
-				
-				estudiante.setNombre(fila.getCell(i).getStringCellValue());
-				//System.out.println("estudiante con id :"+estudiante.getId()+"nombre "+estudiante.getNombre());
-			}
-			
-			if(i==5) {
-				
-				estudiante.setJornada(fila.getCell(i).getStringCellValue());
-			//	System.out.println("estudiante con id :"+estudiante.getId()+"nombre "+estudiante.getNombre()+"jornada "+estudiante.getJornada());
-			}
-			if(i==6) {
-				
-				estudiante.setCurso(fila.getCell(i).getStringCellValue());
-				//System.out.println("esudiante id :"+estudiante.getId()+"nombre :"+estudiante.getNombre()+" jornada :"+estudiante.getJornada()+" curso :"+estudiante.getCurso());
-				
-				
-				
-				
-				
-				//modelo.addAttribute("estudiante", new Estudiante());
-				
-			//	System.out.println("Estudiante guardado correctamente.");
-				
-				//modelo.addAttribute("estudiante", new Estudiante());
-			}
-			
-			if(i==7) {
-				
-				
-				estudiante.setEspecial(Boolean.parseBoolean(fila.getCell(i).getStringCellValue()));
-				
-				operacionEstudiante.save(estudiante);
-				operacionEstudiante.imagenQR(estudiante);
-			}
-			
-		}
-		
-		
-	}	
-	
-		
-		
-		return "/mostrarQR";
+	public ResponseEntity insertarDatos(Model modelo) {
+	    Estudiante estudiante = new Estudiante();
+	    boolean primeraLinea = true;
+	    for (Row fila : hoja) {
+	        if (primeraLinea) {
+	            primeraLinea = false;
+	            continue;
+	        }
+	       
+	        for (int i = 0; i < fila.getPhysicalNumberOfCells(); i++) {
+	            Cell celda = fila.getCell(i);
+	            if (celda != null) {
+	                String valorCelda = "";
+	                // Convertir el valor de la celda a cadena de texto
+	                if (celda.getCellType() == CellType.STRING) {
+	                    valorCelda = celda.getStringCellValue();
+	                } else if (celda.getCellType() == CellType.NUMERIC) {
+	                    // Si es numérico, convertirlo a cadena de texto
+	                    valorCelda = String.valueOf(celda.getNumericCellValue());
+	                }
+	                // Procesar la celda según su posición en la fila
+	           
+	                if (i == 0) {
+	                    String estudianteId = valorCelda;
+	                    Estudiante existenteEstudiante = operacionEstudiante.listarId(estudianteId).orElse(null);
+	                    if (existenteEstudiante != null) {
+	                        continue;
+	                    }
+	                    estudiante.setId(estudianteId);
+	                } else if (i == 3) {
+	                    estudiante.setNombre(valorCelda);
+	                } else if (i == 5) {
+	                    estudiante.setJornada(valorCelda);
+	                } else if (i == 6) {
+	                    estudiante.setCurso(valorCelda);
+	                } else if(i == 7) {
+	                    // Si es booleano, parsearlo como cadena y luego a booleano
+	                    estudiante.setEspecial(Boolean.parseBoolean(valorCelda));
+	                }
+	            }
+	        }
+	        if (estudiante.getId() != null) {
+	        	System.out.println("Nuevo estudiante");
+	            operacionEstudiante.save(estudiante);
+	            operacionEstudiante.imagenQR(estudiante);
+	            estudiante = new Estudiante(); // Restablecer el objeto estudiante para el siguiente ciclo
+	        }
+	    }
+	    return ResponseEntity.ok("Datos insertados correctamente.");
 	}
-	
+
+
 	
 	@GetMapping("/obtenerModelo")
 	public String otraVista(Model modelo) {
