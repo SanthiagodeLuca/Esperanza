@@ -57,5 +57,10 @@ public class userService implements IUserService {
 	        }
       
 	}
+	@Override
+	public Optional<User> buscarUsuario(double id) {
+		// TODO Auto-generated method stub
+		 return userRepository.findById(String.valueOf((int) id));
+	}
 
 }

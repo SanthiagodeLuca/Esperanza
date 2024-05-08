@@ -26,7 +26,10 @@
 		//toma un userDetail y devuelve un token
 		public String getToken(UserDetails user) {
 			
-			return getToken(new HashMap<>(),user);
+			Map<String, Object> extraClaims = new HashMap<>();
+		//	extraClaims.put("userId", userId);
+			
+			return getToken(extraClaims,user);
 		}
 		//toma el userdetail y devulve un token
 		private String getToken(Map<String,Object>extraClaims,UserDetails user) {

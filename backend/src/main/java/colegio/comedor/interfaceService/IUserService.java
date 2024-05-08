@@ -12,5 +12,5 @@ public interface IUserService {
 	public void save(User e);
 	public void delete(String id);
 	public Optional<User> findByUsername(String username);
-	
+	public Optional<User> buscarUsuario(double id);
 }

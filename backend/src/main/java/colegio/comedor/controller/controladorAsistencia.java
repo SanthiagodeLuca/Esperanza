@@ -14,6 +14,7 @@ import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,7 @@ import colegio.comedor.modelo.Asistencia;
 import reactor.core.publisher.Flux;
 @RestController
 @RequestMapping("/api/asistencias") 
+@CrossOrigin(origins= {"http://localhost:4200"})
 public class controladorAsistencia{
 	private static final Logger logger = LoggerFactory.getLogger(controladorAsistencia.class);
 

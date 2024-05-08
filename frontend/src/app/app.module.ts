@@ -34,16 +34,20 @@ import { SemanalComponent } from './pages/semanal/semanal.component';
 import { MensualComponent } from './pages/mensual/mensual.component';
 import { ListEstudiantesComponent } from './list-estudiantes/list-estudiantes.component';
 import { EstudianteService } from './services/estudiante.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ComidasComponent } from './comidas/comidas.component';
 import { ListComidasComponent } from './list-comidas/list-comidas.component';
 import { ListAsistenciasComponent } from './list-asistencias/list-asistencias.component';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import  {CommonModule} from '@angular/common';
 import { CriteriosComponent } from './criterio/criterio.component';
+import { LoginComponent } from './login/login.component';
+//import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
+import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
+
 
 // Import FormsModule
 @NgModule({
@@ -70,7 +74,8 @@ import { CriteriosComponent } from './criterio/criterio.component';
     ListComidasComponent,
     ListAsistenciasComponent,
     CriteriosComponent,
-
+    LoginComponent
+  
   ],
   imports: [
     BrowserModule,
@@ -92,9 +97,13 @@ import { CriteriosComponent } from './criterio/criterio.component';
     InputTextModule,
     DropdownModule ,
     FormsModule,
-    CommonModule
+    CommonModule,
+
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

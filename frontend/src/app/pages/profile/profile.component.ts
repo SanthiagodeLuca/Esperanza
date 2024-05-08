@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { User } from 'src/app/modelos/user';
+import { UserService } from 'src/app/services/user/user.service';
+import { environment } from 'src/enviroments/enviroments';
 
 @Component({
   selector: 'app-profile',
@@ -6,6 +9,25 @@ import { Component } from '@angular/core';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
+  public user?:User;
+  errorMessage:string="";
+  constructor(private userService:UserService){
+
+    this.userService.getUser(environment.ID).subscribe({
+
+      next:(userData)=>{
+        this.user=userData;
+      },
+      error:(errorData)=>{
+          this.errorMessage=errorData;
+      } ,
+      complete:()=>{
+
+        console.info("user OK Data");
+      }
+
+    });
+  }
   address = '123 Main St, City, Country';
   isEditMode = false;
   editAddress() {
