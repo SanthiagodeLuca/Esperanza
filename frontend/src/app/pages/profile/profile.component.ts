@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from 'src/app/modelos/user';
+import { LoginService } from 'src/app/services/auth/login.service';
+import { TokenInformacionService } from 'src/app/services/token/token-informacion.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { environment } from 'src/enviroments/enviroments';
 
@@ -11,9 +14,12 @@ import { environment } from 'src/enviroments/enviroments';
 export class ProfileComponent {
   public user?:User;
   errorMessage:string="";
-  constructor(private userService:UserService){
+ 
+  constructor(private userService:UserService,private loginService:LoginService,private router:Router,private tokenInformacionService:TokenInformacionService){
 
-    this.userService.getUser(environment.ID).subscribe({
+    const userLoginOn=this.loginService.currentUserLoginOn;
+    //console.log(userLoginOn)
+    this.userService.getUser(tokenInformacionService.getUserIdFromToken()).subscribe({
 
       next:(userData)=>{
         this.user=userData;
@@ -51,5 +57,10 @@ export class ProfileComponent {
   cancelEdit() {
     // Reset any changes made during edit and exit edit mode
     this.isEditMode = false;
+  }
+
+  logOut() {
+    this.loginService.logOut(); // Llama al método logOut() de LoginService
+    this.router.navigateByUrl("/login");
   }
 }

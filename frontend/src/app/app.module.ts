@@ -47,6 +47,7 @@ import { CriteriosComponent } from './criterio/criterio.component';
 import { LoginComponent } from './login/login.component';
 //import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
 import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
+import { HorarioComponent } from './pages/horario/horario.component';
 
 
 // Import FormsModule
@@ -74,7 +75,8 @@ import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
     ListComidasComponent,
     ListAsistenciasComponent,
     CriteriosComponent,
-    LoginComponent
+    LoginComponent,
+    HorarioComponent
   
   ],
   imports: [

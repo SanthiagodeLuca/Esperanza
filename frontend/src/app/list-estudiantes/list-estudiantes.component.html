@@ -21,7 +21,7 @@
     <tr>
       <th>
         <input type="text" pInputText placeholder="Nombre" (input)="aplicarFiltros()" [(ngModel)]="filtros['nombre']">
-      <th>
+      <th> 
         <!-- Filtra por jornada -->
          <!--  [(ngModel)]="filtros['jornada']" vincula esto con un valor en la opcion seleccionada -->
           <select [(ngModel)]="filtros['jornada']" >
@@ -45,12 +45,18 @@
        <td> {{ estudiante.curso }}</td>
        <td>
         <button (click)="cambiarEstadoImagen(estudiante)">{{ cambiarEstadoTexto(estudiante) }}</button>
-       <!-- <button (click)="cambiarEstadoImagen(estudiante)">{{ cambiarEstadoTexto(estudiante) }}</button>-->
-        <div *ngIf="estudiante.imagenVisible">
-         <img [src]="estudiante.imagenUrl" alt="Imagen">
-        </div>
+        
+        <!--<p>{{tokenSeleccionado }}</p>-->
+      
+        <!-- <button (click)="cambiarEstadoImagen(estudiante)">{{ cambiarEstadoTexto(estudiante) }}</button>-->
+          <div *ngIf="estudiante.imagenVisible"> 
+            <a [href]="imagenUrl" download="estudiante.png"> 
+              <img [src]="imagenUrl" alt="Imagen"  (error)="handleImageError($event)">
+            </a>
+            <!--<p>texto {{tokenSeleccionado }}</p>-->
+          </div>
         </td>
-       <!--nosotros reconstruimos la imagen -->
+       <!--nosotros reconstruimos la imagen (load)="cargarImagen(estudiante)"> -->
         <!--<td> <img [src]="'http://localhost:8085/api/imagen/image/' + estudiante.id + '.png'" alt="Imagen">  -->
        
       </tr>

@@ -37,6 +37,11 @@ RESULTADO
   import { API_URL_IMAGEN } from '../shared/constantes';
 import { FiltroService } from '../services/filtro.service';
 import { take } from 'rxjs/operators'; // Importa el operador 'take
+import { LoginService } from '../services/auth/login.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { User } from '../modelos/user';
+import { UserService } from '../services/user/user.service';
+import { TokenInformacionService } from '../services/token/token-informacion.service';
 
   @Component({
     selector: 'app-list-estudiantes',
@@ -45,6 +50,10 @@ import { take } from 'rxjs/operators'; // Importa el operador 'take
   })
   export class ListEstudiantesComponent implements OnInit {
     
+     public user?:User;
+
+     authorities:string[] =[];
+
     estudiantes:Estudiante[]=[];
     estudiantesFiltrados: Estudiante[] = []; 
     uniqueValues: string[] = []; 
@@ -54,11 +63,15 @@ import { take } from 'rxjs/operators'; // Importa el operador 'take
     selectedNombre: string="";
     selectedJornada: string="";
     selectedCurso: string="";
+
+    tokenSeleccionado:string="";
     // Filtros
     filtros: { [key: string]: any } = {};
 
-    constructor(private estudiantesService:EstudianteService,private imagenService:ImagenService,private filtroService:FiltroService){}
-  
+    constructor(private estudiantesService:EstudianteService,
+      private imagenService:ImagenService,private filtroService:FiltroService,private loginService:LoginService
+    ,private http:HttpClient,private userService:UserService,private tokenInformacionService:TokenInformacionService){}
+    data=this.loginService.currentUserData;
     //metodo cunado se inica el componente
     ngOnInit(): void {
 
@@ -86,17 +99,36 @@ import { take } from 'rxjs/operators'; // Importa el operador 'take
       });
      // this.estudiantesFiltrados = JSON.parse(JSON.stringify(this.estudiantes));
      //this.estudiantesFiltrados = this.estudiantes.slice();
-    console.log('complete');
+
+     this.cargarImagen();
+     this.obtenerAuthoritiesUser();
+    
     // this.obtenerImagen();
+    }
+
+    obtenerAuthoritiesUser(){
+
+     this.authorities= this.tokenInformacionService.geAuthoritiesFromToken();
+      console.log(this.authorities)
+    // Ciclo for para recorrer el array authorities
+        for (let i = 0; i < this.authorities.length; i++) {
+          console.log(this.authorities[i]); // Muestra cada permiso en la consola
+        }
     }
 
     cambiarEstadoImagen(estudiante: Estudiante) {
       estudiante.imagenVisible = !estudiante.imagenVisible;
       this.estudiantes = [...this.estudiantes]; // Forzar a Angular a detectar cambios
       console.log('Estudiante después de cambiar estado:', estudiante);
+      if(estudiante.imagenVisible){
+        this.obtenerImagen(estudiante);
+
+      }
     }
   
     cambiarEstadoTexto(estudiante: Estudiante): string {
+
+      
       const texto=estudiante.imagenVisible ? 'Ocultar imagen' : 'Mostrar imagen';
       console.log('Texto del botón:', texto);
       return texto;
@@ -104,11 +136,71 @@ import { take } from 'rxjs/operators'; // Importa el operador 'take
   
     mostrarImagen(estudiante:Estudiante) {
     
-      //     this.imagenUrl = API_URL_IMAGEN + estudiante.id + '.png';
+        this.imagenUrl = API_URL_IMAGEN + estudiante.id + '.png';
 
         estudiante.imagenVisible = true; // Muestra la imagen cuando se recibe la URL
       }
+      cargarImagen() {
+        this.loginService.userToken.subscribe(
+          (token: String) => {
+            console.log('Token recibido:', token);
+            // Asignar el token a la propiedad tokenSeleccionado
+            this.tokenSeleccionado = token.toString();
+            // Otro código aquí...
+          },
+          (error: any) => {
+            // Manejar cualquier error que ocurra al obtener el token
+            console.error('Error al obtener el token de usuario:', error);
+          }
+        );
+      }
 
+      handleImageError(event: any) {
+        console.error('Error al cargar la imagen:', event);
+      }
+      
+      obtenerImagen(estudiante:Estudiante) {
+
+        const headers = new HttpHeaders({
+          'Authorization':`Bearer ${this.tokenSeleccionado}`
+          // Agrega otros encabezados según sea necesario
+        });
+        // Hacer la solicitud GET para obtener la imagen
+        this.http.get(API_URL_IMAGEN + estudiante.id + '.png', { headers:headers, responseType: 'arraybuffer' }).subscribe(
+          (imagenData: ArrayBuffer) => {
+            // Convertir los bytes en una URL de objeto
+            const imagenBlob = new Blob([imagenData]);
+            this.imagenUrl = URL.createObjectURL(imagenBlob);
+          },
+          error => {
+            console.error('Error al cargar la imagen:', error);
+          }
+        );
+      }
+       // const urlImagen = `http://localhost:8085/api/images/${estudiante.id}`; // Ejemplo de URL al servidor
+      
+     
+        // Realiza la solicitud HTTP para obtener la imagen
+        /*this.http.get(urlImagen, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          responseType: 'blob'
+        }).subscribe(
+          (imagenBlob: Blob) => {
+            // Convierte el blob en una URL de objeto
+            const imagenUrl = URL.createObjectURL(imagenBlob);
+            // Actualiza la URL de la imagen en el objeto estudiante
+            estudiante.imagenUrl = imagenUrl;
+          },
+          error => {
+            console.error('Error al cargar la imagen:', error);
+          }
+        );
+        */
+      
+      
+      
 
 
 

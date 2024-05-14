@@ -15,6 +15,7 @@ import { MensualComponent } from './pages/mensual/mensual.component';
 import { ComidasComponent } from './comidas/comidas.component';
 import { CriteriosComponent } from './criterio/criterio.component';
 import { LoginComponent } from './login/login.component';
+import { HorarioComponent } from './pages/horario/horario.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -32,7 +33,9 @@ const routes: Routes = [
   {path:'registro/mensual',component:MensualComponent},
   {path:'comidas',component:ComidasComponent},
   {path:'criterio',component:CriteriosComponent},
-  {path:'login',component:LoginComponent}
+  {path:'login',component:LoginComponent},
+  {path:'horario',component:HorarioComponent}
+
 
 ];
 @NgModule({

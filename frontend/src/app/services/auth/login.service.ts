@@ -21,47 +21,12 @@ private tokenStorageKey = 'userToken';
 //programacion asincronica
   constructor(private http:HttpClient) { 
     this.currentUserLoginOn=new BehaviorSubject<boolean>(sessionStorage.getItem("token")!=null);
+    
     this.currentUserData=new BehaviorSubject<String>(sessionStorage.getItem("token") || "");
      
   }
 
-  
 
-
-
-
-
-  //comunicar con la apiRest
-  //coge las credenciales del usuario como argumento y devuelve un observable
- /* login(credentials:loginRequest):Observable<any>{
-    console.log('Iniciando solicitud de inicio de sesión...');
-    console.log('Credenciales:', credentials);
-    return this.http.post<any>("http://localhost:8085/auth/login",credentials).pipe( 
-        
-    tap((userData)=>{
-        console.log('hola soy tap');
-        console.log('Respuesta del servidor:', userData);
-        sessionStorage.setItem("token",userData.token);
-      this.currentUserData.next(userData.token);
-      this.currentUserLoginOn.next(true);
-      console.log('Inicio de sesión exitoso.');
-      this.currentUserData.subscribe(value => console.log('Valor actual del currentUserData:', value));
-
-      }), 
-      
-    //transforma
-    map((userData)=>userData.token),
-      catchError(this.handleError)
-    );
-
-  }
-  */
-  static readonly DEFAULT_CREDENTIALS = {
-    "username":"juan@gmail",
-    "password":"juan"
-
-
-}
  obtener(){
   return this.http.get<any>("http://localhost:8085/api/asistencias")
  }
@@ -72,8 +37,8 @@ private tokenStorageKey = 'userToken';
   tap((userData)=>{
     //console.log('Respuesta del servidor:', userData);
     sessionStorage.setItem("token",userData.token);
-   // const dato = sessionStorage.getItem("token");
-    //console.log(dato);
+    const dato = sessionStorage.getItem("token");
+    console.log(dato);
     this.currentUserData.next(userData.token);
     this.currentUserLoginOn.next(true);
   }
@@ -85,6 +50,8 @@ private tokenStorageKey = 'userToken';
 
 
 logOut():void{
+
+  this.currentUserLoginOn = new BehaviorSubject<boolean>(false);
 
   sessionStorage.removeItem("token");
   //avisar a todos que ya no tienen acceso lo que estan subcritos
@@ -106,6 +73,10 @@ private handleError(error: HttpErrorResponse) {
   // Retorna un observable con un mensaje de error genérico
   return throwError('Algo salió mal; por favor, inténtalo de nuevo más tarde.');
 }
+
+
+
+
   get userData():Observable<String>{
 
     return this.currentUserData.asObservable();

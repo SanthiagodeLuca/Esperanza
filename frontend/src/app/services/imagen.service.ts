@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EnvironmentInjector, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URL_IMAGEN } from '../shared/constantes';
+import { environment } from 'src/enviroments/enviroments';
+import { Estudiante } from '../modelos/estudiante';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +18,10 @@ export class ImagenService {
 
   }*/
 
-  getUrlImagen(): Observable<string> {
+  getUrlImagen(estudiante: Estudiante): Observable<string> {
     // Realizar una solicitud HTTP para obtener la URL de la imagen
-    return this.http.get<string>(API_URL_IMAGEN);
+    return this.http.get<string>(/*environment.API_URL_IMAGEN*/'http://localhost:8085/api/imagen/image/'+estudiante.id+'.png');
   }
+
+  
 }

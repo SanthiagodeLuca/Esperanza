@@ -22,14 +22,18 @@
           <!-- Other editable fields... -->
         </ng-container>
         <!-- Display non-editable fields when not in edit mode -->
-        <ng-template #displayMode>
+        <ng-template #displayMode>io
           <p>Nombre: {{user?.firstname}}</p>
           <p>role: {{ user?.role }}</p>
           <p>Unique ID: {{user?.id}}</p>
           <p>country: {{user?.country}}</p>
          
         </ng-template>
+       
 
+       <!-- <div *ngIF="!userLoginOn">-->
+        <button mat-raised-button color="accent" (click)="logOut()">    Cerrar Sesion  </button>
+     <!--- </div>-->
          <button mat-raised-button color="accent" (click)="toggleEditMode()">
         {{ isEditMode ? 'Cancel' : 'Edit' }}
       </button>

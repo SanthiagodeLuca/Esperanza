@@ -1,25 +1,40 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+  import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+  import { Injectable } from '@angular/core';
+  import { Observable } from 'rxjs';
+  import { LoginService } from './login.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class JwtInterceptorService implements HttpInterceptor{
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class JwtInterceptorService implements HttpInterceptor{
 
-  constructor() { }
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    constructor(private loginService:LoginService) { }
 
-    const token = sessionStorage.getItem('token');
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    //console.log("aqui AGREGO LA CABECERA")
-    if (token!=null ||token!="") {
-      req = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const token = sessionStorage.getItem('token');
+    // Verificar si el interceptor está inicializado
+  console.log("valor",this.loginService.currentUserLoginOn.value)
+    // console.log(token)
+    
+    const valor=!this.loginService.currentUserLoginOn.value;
+
+    if (valor) {
+      console.log("El usuario no está autenticado, pasando la solicitud sin token.");
+      return next.handle(req);
     }
-   return next.handle(req);
+    
+    console.log(token)
+      if (token != null && token != '') {
+        console.log(`aqui el token es diferente de nulo ${token}`);
+
+        req = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }
+    
+    return next.handle(req);
+    }
   }
-}
