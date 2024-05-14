@@ -58,8 +58,8 @@ public class securityConfig {
 		return http.csrf(csrf->csrf.disable())//desabilita la proteccion CRSF
 				.authorizeHttpRequests(authRequest ->
 				authRequest
-				.requestMatchers(HttpMethod.GET).permitAll()
-				.requestMatchers(HttpMethod.POST).permitAll()
+			//	.requestMatchers(HttpMethod.GET).permitAll()
+			//	.requestMatchers(HttpMethod.POST).permitAll()
 				.requestMatchers("/auth/**").permitAll()//Permite el accesto a /auth/**  los dos puntos dicen que cualquier cosa que se ponga asi se puede acceder osea subdirectorios auth/login, /auth/register, /auth/reset- 
 					.anyRequest().authenticated())//para otras solicitudes require autenticacion
 				.sessionManagement(

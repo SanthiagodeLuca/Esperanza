@@ -44,14 +44,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 						
 						
 						if(token==null) {
-							
+							System.out.println("token nulo");
 							//se pasa si no se encuentra el token al siguiente filtro
 							filterChain.doFilter(request,response);
 							//se devuelve al codigo ya con el toen 
 							return;
 						}
 						
-						
+						System.out.println("token no nulo");
+
 						username=jwtservice.getUsernameFromToken(token);
 						if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 						    UserDetails userDetails = userDetailService.loadUserByUsername(username);

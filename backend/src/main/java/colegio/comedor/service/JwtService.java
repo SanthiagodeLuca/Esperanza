@@ -1,12 +1,14 @@
 	package colegio.comedor.service;
 	
 	import java.security.Key;
-	import java.util.Date;
+import java.util.Collection;
+import java.util.Date;
 	import java.util.HashMap;
 	import java.util.Map;
 	import java.util.function.Function;
-	
-	import org.springframework.security.core.userdetails.UserDetails;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 	import org.springframework.stereotype.Service;
 	
 	import io.jsonwebtoken.Claims;
@@ -24,17 +26,23 @@
 		private static final String SECRET_KEY="84415615648911568494151561891561564151515156121";
 	//generar Token 
 		//toma un userDetail y devuelve un token
-		public String getToken(UserDetails user) {
+		public String getToken(CustomUserDetails  user) {
 			
 			Map<String, Object> extraClaims = new HashMap<>();
-		//	extraClaims.put("userId", userId);
+			
+			extraClaims.put("userId", user.getId());
+			extraClaims.put("authorities", user.getAuthorities());
 			
 			return getToken(extraClaims,user);
 		}
 		//toma el userdetail y devulve un token
-		private String getToken(Map<String,Object>extraClaims,UserDetails user) {
+		private String getToken(Map<String,Object>extraClaims,CustomUserDetails user) {
 			
+			Integer userId = user.getId();
+			Collection<GrantedAuthority>	userAuthorities=(Collection<GrantedAuthority>) user.getAuthorities();
 			return Jwts.builder()
+					.claim("userId", userId) // Agrega el ID del usuario como una claim en el token
+					.claim("authorities",userAuthorities)
 					//la firma es valor que se agrega para verificar que los datos no hayan sido
 					//modificados
 					//ese valor se genera con el algoritmo y una llave y ese valors se agrega al token

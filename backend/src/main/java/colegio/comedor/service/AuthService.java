@@ -49,11 +49,13 @@ public class AuthService {
 	        
 	        // se obtiene el userdetail y se genera un token
 	        System.out.println("hola" + request.getUsername());
-	        UserDetails user = userRepository.findByUsername(request.getUsername())
+	        User user = userRepository.findByUsername(request.getUsername())
 	                .orElseThrow(() -> new RuntimeException("No se pudo encontrar el usuario con el nombre de usuario: " + request.getUsername()));
 	       
+	        CustomUserDetails userCustom=new CustomUserDetails(user);	
+	        
 	        // genera un token 
-	        String token = jwtService.getToken(user);
+	        String token = jwtService.getToken(userCustom);
 	        
 	        // devuelve el objeto token creado
 	        return authResponse.builder().token(token).build();
@@ -87,11 +89,14 @@ public class AuthService {
                 .build();
 		     
 		 userRepository.save(user);
+		 CustomUserDetails userDetails = new CustomUserDetails(user);
+		// Genera un token utilizando el objeto CustomUserDetails
+		    String token = jwtService.getToken(userDetails);
 			System.out.println("user"+user.toString());
 			System.out.println(userRepository.listar());
 		
 		
-		return authResponse.builder().token(jwtService.getToken(user)).build();
+		return authResponse.builder().token((token)).build();
 		}
 
 	}
