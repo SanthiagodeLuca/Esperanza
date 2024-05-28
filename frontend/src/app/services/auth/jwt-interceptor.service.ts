@@ -13,6 +13,7 @@
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
       const token = sessionStorage.getItem('token');
+      console.log(token)
     // Verificar si el interceptor está inicializado
   console.log("valor",this.loginService.currentUserLoginOn.value)
     // console.log(token)

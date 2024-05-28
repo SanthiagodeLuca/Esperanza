@@ -1,0 +1,15 @@
+<div class="notification-container">
+    <button class="notification-icon" aria-label="Notification icon button" (click)="toggleNotifications()">
+      <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
+    </button>
+    <!--
+    <div class="notification-dropdown" *ngIf="showNotifications">
+      <ul>
+        <li *ngFor="let asistenciaItem of asistencias">
+          <p>{{ asistenciaItem.fecha }}</p>
+          <p>{{ asistenciaItem.estudiante.id }}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+  -->

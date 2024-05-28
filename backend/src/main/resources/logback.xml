@@ -6,6 +6,8 @@
     </appender>
 
     <logger name="colegio.comedor.controller" level="DEBUG" />
+    <logger name="org.springframework" level="INFO"/>
+
 
     <root level="info">
         <appender-ref ref="STDOUT" />

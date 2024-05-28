@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Asistencia } from '../modelos/asistencia';
-import { HttpClient } from '@angular/common/http';
-import { AsistenciaService } from '../services/asistencia.service';
+import { AsistenciaService } from '../services/asistencia.service'; // Importa el servicio de asistencia
+import { Asistencia } from '../modelos/asistencia'; // Importa el modelo de asistencia
+import { FiltroService } from '../services/filtro.service';
+import { take } from 'rxjs';
+import { NotificacionService } from '../services/notificacion/notificacion.service';
+import { WebSocketService } from '../services/webSocket/web-socket.service';
 
 @Component({
   selector: 'app-list-asistencias',
@@ -9,14 +12,84 @@ import { AsistenciaService } from '../services/asistencia.service';
   styleUrls: ['./list-asistencias.component.scss']
 })
 export class ListAsistenciasComponent implements OnInit {
+
   
-  asistencias:Asistencia[]=[];
-  
- constructor(private asistenciaService:AsistenciaService){}
+
+  asistencias: Asistencia[] = []; // Cambia el tipo de datos a Asistencia[]
+  asistenciaFiltrada: Asistencia[] = [];
+  asistenciaTabla:any[]=[];
+  uniqueValues: string[] = [];
+  filtros: { [key: string]: any } = {};
+
+  constructor(private asistenciaService: AsistenciaService,private filtroService:FiltroService, private notificationService: NotificacionService
+    ,private webSocket:WebSocketService
+  ) {}
 
   ngOnInit(): void {
-   
-    this.asistenciaService.getAsistencias().subscribe(data=>{this.asistencias = data;});
+    this.asistenciaService.getAsistencias().pipe(take(1)).subscribe(data => {
+     
+    
+      
+        this.asistencias = data;
+        this.asistenciaTabla=data;
+        console.log(this.asistencias)
+
+     
+      this.asistenciaFiltrada =JSON.parse(JSON.stringify(this.asistencias)); // Clona los datos para filtrar
+    });
   }
 
+/*
+  getUniqueValues(column: keyof Asistencia): string[] {
+    return this.asistenciaFiltrada
+      .map(asistencia => String(asistencia[column]))
+      .filter((value, index, self) => self.indexOf(value) === index);
+  }
+
+  */
+
+
+
+  getUniqueValues(column: string): string[] {
+    // Divide la cadena de la columna en las propiedades anidadas
+    const properties = column.split('.');
+    // Inicializa un array de datos con los datos filtrados de asistenciaFiltrada
+    let data: any[] = this.asistenciaFiltrada;
+  
+    // Itera sobre las propiedades anidadas para acceder a los valores
+    for (const prop of properties) {
+      // Por cada propiedad, se mapea el array de datos para acceder a la propiedad especificada
+      data = data.map(item => item[prop]);
+    }
+  
+    // Filtra los valores únicos utilizando un conjunto para eliminar duplicados y luego los convierte nuevamente en una lista
+    return [...new Set(data)];
+  }
+  
+
+  
+
+
+  
+  get filtrarAsistencia(): Asistencia[] {
+    return this.filtroService.aplicarFiltros2(this.asistencias, this.filtros);
+  } 
+
+  aplicarFiltros() {
+    this.asistenciaFiltrada = this.asistenciaTabla.filter(asistencia => {
+      // Lógica para filtrar por cada columna
+      const idFilter = !this.filtros['id'] || asistencia.id === this.filtros['id'];
+      const estudianteFilter = !this.filtros['estudiante'] || asistencia.estudiante.id === this.filtros['estudiante'];
+      const comidasFilter = !this.filtros['comidas'] || asistencia.almuerzo === this.filtros['comidas'];
+      // Otros filtros aquí
+      return idFilter && estudianteFilter && comidasFilter /* && otros filtros */;
+    });
+  }
+
+
+  agregarAsistencia() {
+    this.webSocket.subscribeToAsistencias().subscribe(response => {
+    console.log(response)
+    });
+  }
 }

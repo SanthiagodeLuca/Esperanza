@@ -1,7 +1,15 @@
 package colegio.comedor.modelo;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import colegio.comedor.deserializer.AlmuerzoDeserializer;
+import colegio.comedor.deserializer.CustomDeserializer;
+import colegio.comedor.deserializer.EstudianteDeserializer;
+
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.util.Date;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,13 +27,15 @@ public class Asistencia {
     
     @ManyToOne
     @JoinColumn(name = "estudiante_id")
+    @JsonDeserialize(using = EstudianteDeserializer.class)
     private Estudiante estudiante;
 
     @ManyToOne
     @JoinColumn(name = "almuerzos_id")
+    @JsonDeserialize(using = AlmuerzoDeserializer.class)
     private Almuerzo almuerzo;
     
-    
+    @JsonDeserialize(using = CustomDeserializer.class)
     private Date fecha;
     
     // Resto de atributos y Getters/Setters

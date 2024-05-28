@@ -48,7 +48,15 @@ import { LoginComponent } from './login/login.component';
 //import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
 import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
 import { HorarioComponent } from './pages/horario/horario.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatOptionModule } from '@angular/material/core'; // MatOption is part of MatCoreModule
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { DesayunoComponent } from './pages/horario/desayuno/desayuno.component';
+import { AlmuerzoComponent } from './pages/horario/almuerzo/almuerzo.component';
+import { RefrigerioComponent } from './pages/horario/refrigerio/refrigerio.component';
+import { NotificacionComponent } from './pages/notificacion/notificacion.component';
 
 // Import FormsModule
 @NgModule({
@@ -76,7 +84,11 @@ import { HorarioComponent } from './pages/horario/horario.component';
     ListAsistenciasComponent,
     CriteriosComponent,
     LoginComponent,
-    HorarioComponent
+    HorarioComponent,
+    DesayunoComponent,
+    AlmuerzoComponent,
+    RefrigerioComponent,
+    NotificacionComponent
   
   ],
   imports: [
@@ -101,10 +113,15 @@ import { HorarioComponent } from './pages/horario/horario.component';
     FormsModule,
     CommonModule,
 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule // Add this module
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })

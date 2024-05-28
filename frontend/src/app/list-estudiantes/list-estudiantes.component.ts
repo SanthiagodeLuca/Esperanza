@@ -89,7 +89,7 @@ import { TokenInformacionService } from '../services/token/token-informacion.ser
         //aqui en http subcribe ya recibio los datos 
         //lo que haces con el data.map es cambiar los datos que ya tienes y agregar un nuevo elemento
         //... indica que copia todas las propiedades del objeto original ademas se agregan propiedades
-      
+       
         this.estudiantes = data.map(estudiante=>({...estudiante,imagenVisible:false,imagenUrl:API_URL_IMAGEN+estudiante.id+'.png'}));
         // como es asincronico las demas lineas de codigo se ejecutan mientras se espera toda la respuesta 
         // debido a que la respuesta aun no esta lista no guarda nada 

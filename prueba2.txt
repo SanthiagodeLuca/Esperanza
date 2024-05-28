@@ -19,3 +19,14 @@ Deberían aparecer los componentes disponibles para instalar. Marca el checkbox 
 Sigue las instrucciones en pantalla para completar la instalación. Es posible que necesites reiniciar Eclipse después de instalar el plugin.
 
 https://projectlombok.org/p2
+
+
+///Module not found: Error: Can't resolve 'net' in
+ npm i net -S
+
+ npm install global
+npm install crypto-browserify stream-browserify buffer assert stream-http https-browserify os-browserify url
+
+
+    npm install --save-dev crypto-browserify stream-browserify buffer assert stream-http https-browserify os-browserify url
+npm install --save-dev webpack webpack-cli

@@ -16,6 +16,10 @@ import { ComidasComponent } from './comidas/comidas.component';
 import { CriteriosComponent } from './criterio/criterio.component';
 import { LoginComponent } from './login/login.component';
 import { HorarioComponent } from './pages/horario/horario.component';
+import { AlmuerzoComponent } from './pages/horario/almuerzo/almuerzo.component';
+import { DesayunoComponent } from './pages/horario/desayuno/desayuno.component';
+import { RefrigerioComponent } from './pages/horario/refrigerio/refrigerio.component';
+import { NotificacionComponent } from './pages/notificacion/notificacion.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -34,7 +38,11 @@ const routes: Routes = [
   {path:'comidas',component:ComidasComponent},
   {path:'criterio',component:CriteriosComponent},
   {path:'login',component:LoginComponent},
-  {path:'horario',component:HorarioComponent}
+  {path:'horario',component:HorarioComponent},
+  {path:'almuerzo',component:AlmuerzoComponent},
+  {path:'desayuno',component:DesayunoComponent},
+  {path:'refrigerio',component:RefrigerioComponent},
+  {path:'notificacion',component:NotificacionComponent}
 
 
 ];

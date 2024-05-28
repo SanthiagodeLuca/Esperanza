@@ -24,10 +24,13 @@
     <!-- Espaciador flexible -->
   <span class="example-spacer"></span>
 
-   <!-- Botón de notificaciones -->
- <button mat-icon-button class="notification-icon" aria-label="Notification icon button">
+  
+<!-- Botón de notificaciones -->
+<button mat-icon-button class="notification-icon" aria-label="Notification icon button" (click)="toggleNotifications()">
   <mat-icon>notifications</mat-icon>
+  <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
 </button>
+<app-notificacion></app-notificacion>
   <!-- Espacio en blanco -->
   &nbsp;
   <!-- Botón de perfil -->

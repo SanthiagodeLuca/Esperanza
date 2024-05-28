@@ -82,6 +82,17 @@
   }
 }
 
+.notification-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: red;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+
+
 body {
 
   color: white !important;

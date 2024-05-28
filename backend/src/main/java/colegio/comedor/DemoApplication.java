@@ -23,6 +23,8 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 
 @SpringBootApplication
 @ComponentScan("colegio.comedor")
+//@ComponentScan({"colegio.comedor.service", "colegio.comedor.component"})
+
 public class DemoApplication {
 	
 	public static void main(String[] args) {

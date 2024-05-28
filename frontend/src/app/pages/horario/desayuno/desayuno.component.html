@@ -1,0 +1,48 @@
+<div class="mb-3">
+  <label class="form-label">Desayuno:</label>
+  <div class="d-flex flex-column">
+    <div class="d-flex mb-2">
+      <mat-form-field class="me-2" appearance="fill">
+        <mat-label>Inicio</mat-label>
+        <mat-select [(ngModel)]="startHour" (change)="onUpdate()">
+          <mat-option *ngFor="let hour of filteredDesayunoHours | async" [value]="hour">
+            {{ hour < 10 ? '0' + hour : hour }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="ms-3 me-2" appearance="fill">
+        <mat-label>Minuto de Inicio</mat-label>
+        <mat-select [(ngModel)]="startMinute" (change)="onUpdate()">
+          <mat-option *ngFor="let minute of filteredDesayunoMinutes | async" [value]="minute">
+            {{ minute < 10 ? '0' + minute : minute }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="d-flex">
+      <mat-form-field class="me-2" appearance="fill">
+        <mat-label>Fin</mat-label>
+        <mat-select [(ngModel)]="endHour" (change)="onUpdate()">
+          <mat-option *ngFor="let hour of filteredDesayunoHours | async" [value]="hour">
+            {{ hour < 10 ? '0' + hour : hour }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="ms-3 me-2" appearance="fill">
+        <mat-label>Minuto de Fin</mat-label>
+        <mat-select [(ngModel)]="endMinute" (change)="onUpdate()">
+          <mat-option *ngFor="let minute of filteredDesayunoMinutes | async" [value]="minute">
+            {{ minute < 10 ? '0' + minute : minute }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<!-- Mostrar los valores seleccionados -->
+<div *ngIf="startHour !== null && startMinute !== null && endHour !== null && endMinute !== null">
+  <p>Inicio: {{ startHour < 10 ? '0' + startHour : startHour }}:{{ startMinute < 10 ? '0' + startMinute : startMinute }}</p>
+  <p>Fin: {{ endHour < 10 ? '0' + endHour : endHour }}:{{ endMinute < 10 ? '0' + endMinute : endMinute }}</p>
+  <button mat-button color="primary" (click)="enviarDatosDesayuno()">Enviar</button>
+</div>

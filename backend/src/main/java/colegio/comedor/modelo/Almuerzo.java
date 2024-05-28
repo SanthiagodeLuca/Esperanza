@@ -5,15 +5,12 @@ package colegio.comedor.modelo;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
@@ -25,6 +22,7 @@ public class Almuerzo {
     private int id;
     private String nombre;
     
+    @JsonIgnore
     @ManyToMany(mappedBy = "almuerzo")
     private Set<Asistencia> asistencia = new HashSet<>();
 

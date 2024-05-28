@@ -20,6 +20,9 @@ import colegio.comedor.modelo.Estudiante;
 public class AsistenciaService  implements IAsistenciaService{
 
 	@Autowired
+	private HorarioService horarioService;
+	
+	@Autowired
 	private MiClase variablesGlobales;
 	@Autowired
 	private EstudianteService interfazEstudiante;

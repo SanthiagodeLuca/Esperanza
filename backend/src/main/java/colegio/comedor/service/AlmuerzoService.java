@@ -14,6 +14,7 @@ import colegio.comedor.modelo.Asistencia;
 @Service
 public class AlmuerzoService implements IAlmuerzoService {
 
+	
 
 	@Autowired
 	private IntefazAlmuerzo dataAlmuerzo;

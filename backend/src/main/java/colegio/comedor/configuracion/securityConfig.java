@@ -4,11 +4,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@CrossOrigin(origins= {"http://localhost:4200"})
 public class securityConfig {
 	//endpoints protegido y otros que no 
 	
@@ -60,43 +64,58 @@ public class securityConfig {
 				authRequest
 			//	.requestMatchers(HttpMethod.GET).permitAll()
 			//	.requestMatchers(HttpMethod.POST).permitAll()
-				.requestMatchers("/auth/**").permitAll()//Permite el accesto a /auth/**  los dos puntos dicen que cualquier cosa que se ponga asi se puede acceder osea subdirectorios auth/login, /auth/register, /auth/reset- 
-					.anyRequest().authenticated())//para otras solicitudes require autenticacion
+				.requestMatchers("/auth/**").permitAll()//Permite el accesto a /auth/**  los dos puntos dicen que cualquier cosa que se ponga asi se puede acceder osea subdirectorios auth/login, /auth/register, /auth/reset-
+				 .requestMatchers("/", "/ws/**").permitAll() // Permitir acceso a / y /ws/**
+				//.requestMatchers("/ws/**").permitAll() // Permitir acceso a /ws/** sin autenticación
+				.anyRequest().authenticated())
+				//para otras solicitudes require autenticacion
 				.sessionManagement(
 								
 								sessionManager->sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)//politica de creacion de sesion
 			
 								)
 				.authenticationProvider(authProvider)//configura un proveedor de autentificacion
+				 
+				//el filtro CORS se aplique antes del filtro de autenticación JWT.
+				//Esto garantiza que las solicitudes CORS se manejen correctamente antes de intentar autenticarlas.
+				//.cors(withDefaults()) // Utiliza la configuración CORS por defecto
+				  .cors(configurer -> {
+		                CorsConfigurationSource source = corsConfigurationSource();
+		                configurer.configurationSource(source);
+		            }) 
+				.addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class)
 				//dentro de spring security el container de los fiter ejecuta los filtros sin necesidad de se llamados			
+				
+				
 				.addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class)//b Agrega el filtro de autenticación JWT antes del filtro de autenticación por nombre de usuario y contraseña
-				.cors()
-				.and()
 		        .build();//finaliza la contruccion de un objeto 
 						}
-	 @Bean
-	    public CorsConfigurationSource corsConfigurationSource() {
-	        CorsConfiguration configuration = new CorsConfiguration();
-	        configuration.addAllowedOrigin("http://localhost:4200");
-	        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-	        configuration.setAllowCredentials(false);
-	        configuration.setAllowedHeaders(Arrays.asList(
-
-	        		
-	        		HttpHeaders.AUTHORIZATION,
-	        		HttpHeaders.CONTENT_TYPE,
-	        		HttpHeaders.ACCEPT
-	        		
-	        		));
-
-	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-	        source.registerCorsConfiguration("/**", configuration);
-	        return source;
-	    }
-
+	
+//no se usa actualmente
+	 
+	 
+	 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept")); // Encabezados permitidos
+        configuration.setAllowCredentials(true); // Permitir credenciales
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 	    @Bean
 	    public CorsFilter corsFilter() {
-	        return new CorsFilter(corsConfigurationSource());
+	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	        CorsConfiguration config = new CorsConfiguration();
+	        config.setAllowCredentials(true);
+	        config.addAllowedOrigin("http://localhost:4200");
+	        config.addAllowedHeader("*");
+	        config.addAllowedMethod("*");
+	        source.registerCorsConfiguration("/**", config);
+	        return new CorsFilter(source);
 	    }
 
 }

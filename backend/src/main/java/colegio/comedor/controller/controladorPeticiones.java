@@ -21,7 +21,7 @@ import colegio.comedor.interfaceService.IAlmuerzoService;
 import colegio.comedor.interfaceService.IAsistenciaService;
 import colegio.comedor.interfaceService.IEstudianteService;
 import colegio.comedor.modelo.JsonRequest;
-import colegio.comedor.service.BaseDatosService;
+
 
 @Controller
 //@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -41,8 +41,7 @@ public class controladorPeticiones {
 	@Autowired
 	private IAlmuerzoService serviceAlmuerzo;
 	
-	@Autowired
-	private BaseDatosService serviceBaseDatos;
+
 	
 	
 	
