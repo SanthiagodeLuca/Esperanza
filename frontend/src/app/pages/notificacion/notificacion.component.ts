@@ -13,25 +13,26 @@ export class NotificacionComponent implements OnInit, OnDestroy {
   notificationCount: number = 0;
   showNotifications: boolean = false;
   asistencia: Asistencia | null = null;
+  asistencias: any[] = [];
+
   private asistenciaSubscription: Subscription | undefined;
 
   constructor(private webSocketService: WebSocketService) { }
 
   ngOnInit(): void {
     console.log('Inicializando NotificacionComponent...');
-    this.webSocketService.connect();
-    setTimeout(() => {
-      this.asistenciaSubscription = this.webSocketService.subscribeToAsistencias().subscribe(
-        (asistencia: Asistencia) => {
-          console.log('Nueva asistencia recibida:', asistencia);
-          this.notificationCount++;
-          this.asistencia = asistencia;
-        },
-        (error) => {
-          console.error('Error en la suscripción a las asistencias:', error);
-        }
-      );
-    }, 500); // Asegúrate de que la conexión esté establecida antes de suscribirse
+    this.asistenciaSubscription = this.webSocketService.subscribeToAsistencias().subscribe(
+      (asistencia: Asistencia) => {
+        console.log('Nueva asistencia recibida:', asistencia);
+        this.notificationCount++;
+        this.asistencia = asistencia;
+        this.asistencias.push(asistencia);
+
+      },
+      (error) => {
+        console.error('Error en la suscripción a las asistencias:', error);
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -42,5 +43,8 @@ export class NotificacionComponent implements OnInit, OnDestroy {
 
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      this.notificationCount = 0; // Resetear el contador cuando se abran las notificaciones
+    }
   }
 }
