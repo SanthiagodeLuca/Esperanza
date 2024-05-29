@@ -19,25 +19,35 @@ export class WebSocketService {
     this.connect(); // Conectar al WebSocket
   }
 //connect esatablece la conexion con el servidor websocket 
-  public connect(): void {
-    if (!this.token) {
-      console.error('Token de autenticación no encontrado.');
-      return;
-    }
-
-    const socket = new SockJS('http://localhost:8085/ws', {
-      headers: {
-        Authorization: `Bearer ${this.token}`, // Incluir el token en el encabezado Authorization
-      },
-    });
-    this.stompClient = Stomp.over(socket);
-
-    this.stompClient.connect({}, () => {
-      console.log('Conectado al WebSocket');
-    }, (error) => {
-      console.error('Error al conectar al WebSocket', error);
-    });
+public connect(): void {
+  if (!this.token) {
+    console.error('Token de autenticación no encontrado.');
+    return;
   }
+
+  const socket = new SockJS('http://localhost:8085/ws');
+  this.stompClient = Stomp.over(socket);
+
+  this.stompClient.connect(
+    { Authorization: `Bearer ${this.token}` },
+    (frame) => {
+      console.log('Conectado al WebSocket:', frame);
+      // Re-suscribirse al tópico después de la conexión exitosa
+      this.subscribeToAsistencias().subscribe(
+        (asistencia) => {
+          console.log('Recibido en subscribeToAsistencias durante connect:', asistencia);
+        },
+        (error) => {
+          console.error('Error en subscribeToAsistencias durante connect:', error);
+        }
+      );
+    },
+    (error) => {
+      console.error('Error al conectar al WebSocket', error);
+    }
+  );
+}
+
 
   // Métodos para enviar y suscribirse a mensajes en el WebSocket...
 

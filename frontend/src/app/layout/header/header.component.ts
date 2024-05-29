@@ -5,6 +5,8 @@ import { SidebarComponent } from '../sidenav/sidenav.component';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { NotificacionService } from 'src/app/services/notificacion/notificacion.service';
 import  {NotificacionComponent} from 'src/app/pages/notificacion/notificacion.component';
+import { Asistencia } from 'src/app/modelos/asistencia';
+import { WebSocketService } from 'src/app/services/webSocket/web-socket.service';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +19,8 @@ export class HeaderComponent implements OnInit {
   userLoginOn:boolean=false;
   hasNewNotifications = false;
   showNotifications: boolean = false;
-  constructor(private sidebarService: SidebarService,private loginService:LoginService,private notificationService: NotificacionService) {}
+  asistencia: Asistencia | null = null;
+  constructor(private sidebarService: SidebarService,private loginService:LoginService,private notificationService: NotificacionService,private webSocketService:WebSocketService) {}
 
   ngOnInit():void{
     this.notificationService.notifications$.subscribe(() => {
@@ -29,8 +32,8 @@ export class HeaderComponent implements OnInit {
         this.userLoginOn=userLoginOn; 
       }
     })
-
     
+
   }
 
   clearNotifications() {
