@@ -57,6 +57,7 @@ import { DesayunoComponent } from './pages/horario/desayuno/desayuno.component';
 import { AlmuerzoComponent } from './pages/horario/almuerzo/almuerzo.component';
 import { RefrigerioComponent } from './pages/horario/refrigerio/refrigerio.component';
 import { NotificacionComponent } from './pages/notificacion/notificacion.component';
+import { AlertaComponent } from './pages/alerta/alerta.component';
 
 // Import FormsModule
 @NgModule({
@@ -88,7 +89,8 @@ import { NotificacionComponent } from './pages/notificacion/notificacion.compone
     DesayunoComponent,
     AlmuerzoComponent,
     RefrigerioComponent,
-    NotificacionComponent
+    NotificacionComponent,
+    AlertaComponent
   
   ],
   imports: [

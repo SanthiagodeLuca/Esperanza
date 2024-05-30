@@ -20,6 +20,7 @@ import { AlmuerzoComponent } from './pages/horario/almuerzo/almuerzo.component';
 import { DesayunoComponent } from './pages/horario/desayuno/desayuno.component';
 import { RefrigerioComponent } from './pages/horario/refrigerio/refrigerio.component';
 import { NotificacionComponent } from './pages/notificacion/notificacion.component';
+import { AlertaComponent } from './pages/alerta/alerta.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -42,7 +43,8 @@ const routes: Routes = [
   {path:'almuerzo',component:AlmuerzoComponent},
   {path:'desayuno',component:DesayunoComponent},
   {path:'refrigerio',component:RefrigerioComponent},
-  {path:'notificacion',component:NotificacionComponent}
+  {path:'notificacion',component:NotificacionComponent},
+  {path:'alerta',component:AlertaComponent}
 
 
 ];

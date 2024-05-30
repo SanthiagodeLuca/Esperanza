@@ -9,7 +9,6 @@
 
 <!-- Creamos un área donde se mostrarán los valores únicos -->
 <div *ngIf="uniqueValues">
-  <h3>Valores Únicos de la Columna:</h3>
   <ul>
     <!-- Iteramos sobre los valores únicos y los mostramos en una lista -->
     <li *ngFor="let value of uniqueValues">{{ value }}</li>
