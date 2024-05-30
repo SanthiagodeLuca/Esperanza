@@ -21,33 +21,41 @@ import { DesayunoComponent } from './pages/horario/desayuno/desayuno.component';
 import { RefrigerioComponent } from './pages/horario/refrigerio/refrigerio.component';
 import { NotificacionComponent } from './pages/notificacion/notificacion.component';
 import { AlertaComponent } from './pages/alerta/alerta.component';
+import { AuthGuard } from './auth.guard';
+import { MainComponent } from './main/main.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: 'home', pathMatch: 'full' },
-  {path: 'home', component: HomeComponent },
-  {path: 'dashboard', component: DashboardComponent },
-  {path: 'profile', component: ProfileComponent },
-  {path: 'timetable', component: TimetableComponent },
-  {path:'estudiantes',component:EstudiantesComponent},
-  {path:'registro',component:RegistroComponent},
-  {path:'excel',component:ExcelComponent},
-  {path:'seguridad',component:SeguridadComponent},
-  {path:'modificar',component:ModificarComponent},
-  {path:'registro/diario',component:DiarioComponent},
-  {path:'registro/semanal',component:SemanalComponent},
-  {path:'registro/mensual',component:MensualComponent},
-  {path:'comidas',component:ComidasComponent},
-  {path:'criterio',component:CriteriosComponent},
-  {path:'login',component:LoginComponent},
-  {path:'horario',component:HorarioComponent},
-  {path:'almuerzo',component:AlmuerzoComponent},
-  {path:'desayuno',component:DesayunoComponent},
-  {path:'refrigerio',component:RefrigerioComponent},
-  {path:'notificacion',component:NotificacionComponent},
-  {path:'alerta',component:AlertaComponent}
-
-
+  { path: 'login', component: LoginComponent }, // Esta coma estaba mal ubicada
+  {    
+    path: '',
+    component: MainComponent,
+    canActivate: [AuthGuard], // Protege el layout principal
+    children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'home', component: HomeComponent },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'timetable', component: TimetableComponent },
+      { path: 'estudiantes', component: EstudiantesComponent },
+      { path: 'registro', component: RegistroComponent },
+      { path: 'excel', component: ExcelComponent },
+      { path: 'seguridad', component: SeguridadComponent },
+      { path: 'modificar', component: ModificarComponent },
+      { path: 'registro/diario', component: DiarioComponent },
+      { path: 'registro/semanal', component: SemanalComponent },
+      { path: 'registro/mensual', component: MensualComponent },
+      { path: 'comidas', component: ComidasComponent },
+      { path: 'criterio', component: CriteriosComponent },
+      { path: 'horario', component: HorarioComponent },
+      { path: 'almuerzo', component: AlmuerzoComponent },
+      { path: 'desayuno', component: DesayunoComponent },
+      { path: 'refrigerio', component: RefrigerioComponent },
+      { path: 'notificacion', component: NotificacionComponent },
+      { path: 'alerta', component: AlertaComponent }
+    ]
+  }
 ];
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],

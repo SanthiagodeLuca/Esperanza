@@ -47,8 +47,20 @@ private tokenStorageKey = 'userToken';
 
   
 }
+  // Método para verificar si el usuario está autenticado
+  isAuthenticated(): boolean {
+ 
+    // Verificar si el token existe y si no ha expirado
 
-
+    //&& !this.isTokenExpired(token)
+    //convierte el valor a booleano
+    return  !!this.currentUserData.value; ;
+  }
+/*  // Método para verificar si el token ha expirado (puedes usar una biblioteca JWT para esto)
+  private isTokenExpired(token: string): boolean {
+    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
+    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+  } */
 logOut():void{
 
   this.currentUserLoginOn = new BehaviorSubject<boolean>(false);
