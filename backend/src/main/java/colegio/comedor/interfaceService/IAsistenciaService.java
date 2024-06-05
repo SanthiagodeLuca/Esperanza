@@ -17,4 +17,6 @@ public interface IAsistenciaService {
 	public Date guardarFecha(int hora,int minuto);
 	public int guardarAsistenciaQR(Map<String,String> contenidoQR);
 	public void limpiar();
+	public List<Asistencia> obtenerFechasAsistencia(Date startDate, Date endDate);
+
 }

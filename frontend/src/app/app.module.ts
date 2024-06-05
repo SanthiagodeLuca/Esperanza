@@ -49,7 +49,7 @@ import { LoginComponent } from './login/login.component';
 import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
 import { HorarioComponent } from './pages/horario/horario.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MatOptionModule } from '@angular/material/core'; // MatOption is part of MatCoreModule
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core'; // MatOption is part of MatCoreModule
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -58,6 +58,11 @@ import { AlmuerzoComponent } from './pages/horario/almuerzo/almuerzo.component';
 import { RefrigerioComponent } from './pages/horario/refrigerio/refrigerio.component';
 import { NotificacionComponent } from './pages/notificacion/notificacion.component';
 import { AlertaComponent } from './pages/alerta/alerta.component';
+import { EstadisticasComponent } from './pages/estadisticas/estadisticas.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+//import { MatMomentDateModule } from '@angular/material/datemodule';
+
 
 // Import FormsModule
 @NgModule({
@@ -90,7 +95,8 @@ import { AlertaComponent } from './pages/alerta/alerta.component';
     AlmuerzoComponent,
     RefrigerioComponent,
     NotificacionComponent,
-    AlertaComponent
+    AlertaComponent,
+    EstadisticasComponent
   
   ],
   imports: [
@@ -119,7 +125,14 @@ import { AlertaComponent } from './pages/alerta/alerta.component';
 
     MatFormFieldModule,
     MatSelectModule,
-    MatOptionModule // Add this module
+    MatOptionModule, // Add this module
+
+
+    MatDatepickerModule,        // <----- import(must)
+    MatNativeDateModule,
+    MatInputModule       // <----- import for date formating(optional)
+   // MatMomentDateModule
+   
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },

@@ -34,6 +34,8 @@ public class AsistenciaService  implements IAsistenciaService{
 	@Autowired
 	private InterfazAsistencia dataAsistencia;
 	
+	
+	 
 	@Override
 	public List<Asistencia> listar() {
 		// TODO Auto-generated method stub
@@ -126,5 +128,11 @@ public class AsistenciaService  implements IAsistenciaService{
 		// TODO Auto-generated method stub
 		dataAsistencia.deleteAll();
 		}
+//	@Override
+	
+	public List<Asistencia> obtenerFechasAsistencia(Date startDate, Date endDate) {
+		// TODO Auto-generated method stub
+		//@Query("select * from user where remove = false", nativeQuery = true)
+		 return  dataAsistencia.findByFechaBetween(startDate, endDate);	}
 
 }

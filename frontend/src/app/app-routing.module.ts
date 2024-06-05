@@ -23,6 +23,7 @@ import { NotificacionComponent } from './pages/notificacion/notificacion.compone
 import { AlertaComponent } from './pages/alerta/alerta.component';
 import { AuthGuard } from './auth.guard';
 import { MainComponent } from './main/main.component';
+import { EstadisticasComponent } from './pages/estadisticas/estadisticas.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent }, // Esta coma estaba mal ubicada
@@ -51,7 +52,8 @@ const routes: Routes = [
       { path: 'desayuno', component: DesayunoComponent },
       { path: 'refrigerio', component: RefrigerioComponent },
       { path: 'notificacion', component: NotificacionComponent },
-      { path: 'alerta', component: AlertaComponent }
+      { path: 'alerta', component: AlertaComponent },
+      {path:'estadisticas',component:EstadisticasComponent}
     ]
   }
 ];

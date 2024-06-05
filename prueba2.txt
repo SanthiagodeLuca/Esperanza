@@ -30,3 +30,6 @@ npm install crypto-browserify stream-browserify buffer assert stream-http https-
 
     npm install --save-dev crypto-browserify stream-browserify buffer assert stream-http https-browserify os-browserify url
 npm install --save-dev webpack webpack-cli
+
+
+npm install chart.js @types/chart.js

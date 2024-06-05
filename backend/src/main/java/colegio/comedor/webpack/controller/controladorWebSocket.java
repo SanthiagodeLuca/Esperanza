@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import colegio.comedor.modelo.Mensaje;
 
 @Controller
-@CrossOrigin(origins= {"http://localhost:4200"})
+//@CrossOrigin(origins= {"http://localhost:4200"})
 
 public class controladorWebSocket {
 /*	   @MessageMapping("/nuevaAsistencia")

@@ -1,11 +1,14 @@
 package colegio.comedor.controller;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.ui.Model;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import colegio.comedor.MiClase;
@@ -26,6 +30,7 @@ import colegio.comedor.modelo.Almuerzo;
 import colegio.comedor.modelo.Asistencia;
 import colegio.comedor.service.AsistenciaService;
 import colegio.comedor.service.ModificacionHorarioService;
+import colegio.comerdor.filter.modelo.AsistenciaFilter;
 @RestController
 @RequestMapping("/api/asistencias") 
 //@CrossOrigin(origins= {"http://localhost:4200"})
@@ -61,7 +66,19 @@ public class controladorAsistencia{
 	private int inicio=0;
 	
 	
-	
+	  @PostMapping("/fecha")
+	  // @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	  //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	    public List<Asistencia> obtenerAsistencias(@RequestBody AsistenciaFilter data) {
+		 // Map<String, Date> filterParams = AsistenciaFilter.parseJsonToMap(data);
+		
+		  
+		//  System.out.println("Received startDate: " + data.getStartDate());
+		//  System.out.println("Received endDate: " + data.getEndDate());
+
+	        return serviceAsistencia.obtenerFechasAsistencia(data.getStartDate(), data.getEndDate());
+	     //   return null;
+	    }
 	
 	@GetMapping("/queso")
 	    public String mostrarError(Model modelo) {
