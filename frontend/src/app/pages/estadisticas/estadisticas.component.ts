@@ -39,6 +39,12 @@ declare let window: Ventana;
             this.asistencias = data;
            this.generarGraficoPastel(this.asistencias);
            this.generarGraficoBarras(this.asistencias);
+           if (this.startDate && this.endDate) { // Verificar nuevamente
+            this.generarGraficoLinea(this.asistencias, this.startDate, this.endDate);
+          } else {
+            console.error('Fechas no seleccionadas');
+          }
+
           },
           error => {
             console.error('Error al obtener asistencias', error);
@@ -187,8 +193,80 @@ declare let window: Ventana;
         }
       }
     }
+    generarGraficoLinea(asistencias: any[], startDate: Date, endDate: Date): void {
+      // Crear un objeto para almacenar el recuento de asistencias por fecha y tipo de comida
+      const recuentoAsistencias: { [fecha: string]: { [tipoComida: string]: number } } = {};
     
-
+      // Procesar los datos para el gráfico de línea
+      asistencias.forEach(asistencia => {
+        const fecha = new Date(asistencia.fecha).toDateString();
+        const tipoComida = asistencia.almuerzo.nombre;
+    
+        if (!recuentoAsistencias[fecha]) {
+          recuentoAsistencias[fecha] = { Desayuno: 0, Refrigerio: 0, Almuerzo: 0 };
+        }
+        recuentoAsistencias[fecha][tipoComida]++;
+      });
+    
+      // Obtener las fechas únicas y ordenarlas cronológicamente
+      const fechas = Object.keys(recuentoAsistencias).sort();
+      const fechasCompletas = this.obtenerFechasCompletas(startDate, endDate);
+    
+      // Configuración del gráfico de línea
+      const canvas = document.getElementById('historyChart') as HTMLCanvasElement;
+      if (canvas instanceof HTMLCanvasElement) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          // Establecer el color de fondo del canvas
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+          // Crear el gráfico de línea
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: fechasCompletas,
+              datasets: ['Desayuno', 'Refrigerio', 'Almuerzo'].map((tipoComida, index) => {
+                return {
+                  label: tipoComida,
+                  data: fechasCompletas.map(fecha => recuentoAsistencias[fecha]?.[tipoComida] || 0),
+                  fill: false,
+                  borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                  ][index],
+                  borderWidth: 1,
+                  pointRadius: 4, // Tamaño de los puntos
+                  pointHoverRadius: 6, // Tamaño de los puntos al pasar el ratón
+                };
+              })
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        }
+      }
+    }
+    
+  obtenerFechasCompletas(startDate: Date, endDate: Date): string[] {
+    // Crear un array de fechas entre startDate y endDate
+    const fechasCompletas: string[] = [];
+    let currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+      fechasCompletas.push(currentDate.toDateString());
+      currentDate.setDate(currentDate.getDate() + 1); // Incrementar la fecha en 1 día
+    }
+    return fechasCompletas;
+  }
+    
+    
+    
   formatDateToISO(date: Date): string {
     return date.toISOString();
   }
