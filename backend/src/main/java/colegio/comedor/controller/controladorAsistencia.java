@@ -33,7 +33,7 @@ import colegio.comedor.service.ModificacionHorarioService;
 import colegio.comerdor.filter.modelo.AsistenciaFilter;
 @RestController
 @RequestMapping("/api/asistencias") 
-//@CrossOrigin(origins= {"http://localhost:4200"})
+@CrossOrigin(origins= {"http://localhost:4200"})
 public class controladorAsistencia{
 	private static final Logger logger = LoggerFactory.getLogger(controladorAsistencia.class);
 	
@@ -72,9 +72,10 @@ public class controladorAsistencia{
 	    public List<Asistencia> obtenerAsistencias(@RequestBody AsistenciaFilter data) {
 		 // Map<String, Date> filterParams = AsistenciaFilter.parseJsonToMap(data);
 		
-		  
-		//  System.out.println("Received startDate: " + data.getStartDate());
-		//  System.out.println("Received endDate: " + data.getEndDate());
+		  logger.info("Received startDate: " + data.getStartDate());
+	        logger.info("Received endDate: " + data.getEndDate());
+		  System.out.println("Received startDate: " + data.getStartDate());
+		  System.out.println("Received endDate: " + data.getEndDate());
 
 	        return serviceAsistencia.obtenerFechasAsistencia(data.getStartDate(), data.getEndDate());
 	     //   return null;

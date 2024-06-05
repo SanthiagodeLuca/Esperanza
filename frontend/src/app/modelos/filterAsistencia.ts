@@ -1,28 +1,29 @@
 export class filterAsistencia {
-    private _startDate?: Date;
-    private _endDate?: Date;
-  
-    constructor(startDate?: Date, endDate?: Date) {
-      this._startDate = startDate;
-      this._endDate = endDate;
-    }
+
+  private _startDate: string | undefined;
+  private _endDate: string | undefined;
+
+     constructor(startDate?: string, endDate?: string) {
+    this._startDate = startDate;
+    this._endDate = endDate;
+  }
   
     // Getters
-    get startDate(): Date | undefined {
+    get startDate(): String | undefined {
       return this._startDate;
     }
   
-    get endDate(): Date | undefined {
+    get endDate(): String | undefined {
       return this._endDate;
     }
   
-    // Setters
-    set startDate(value: Date | undefined) {
-      this._startDate = value;
-    }
-  
-    set endDate(value: Date | undefined) {
-      this._endDate = value;
-    }
+     // Setters
+  set startDate(value: string | undefined) {
+    this._startDate = value;
+  }
+
+  set endDate(value: string | undefined) {
+    this._endDate = value;
+  }
   }
   
