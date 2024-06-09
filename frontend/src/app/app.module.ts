@@ -61,6 +61,12 @@ import { AlertaComponent } from './pages/alerta/alerta.component';
 import { EstadisticasComponent } from './pages/estadisticas/estadisticas.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import { ChartModule } from 'angular-highcharts';
+import { PastelComponent } from './graficas/pastel/pastel.component';
+import { BarrasComponent } from './graficas/barras/barras.component';
+import { LineaComponent } from './graficas/linea/linea.component';
+
+
 //import { MatMomentDateModule } from '@angular/material/datemodule';
 
 
@@ -96,7 +102,10 @@ import { MatInputModule } from '@angular/material/input';
     RefrigerioComponent,
     NotificacionComponent,
     AlertaComponent,
-    EstadisticasComponent
+    EstadisticasComponent,
+    PastelComponent,
+    BarrasComponent,
+    LineaComponent
   
   ],
   imports: [
@@ -130,7 +139,12 @@ import { MatInputModule } from '@angular/material/input';
 
     MatDatepickerModule,        // <----- import(must)
     MatNativeDateModule,
-    MatInputModule       // <----- import for date formating(optional)
+    MatInputModule ,
+    
+    ChartModule,
+    
+    
+    // <----- import for date formating(optional)
    // MatMomentDateModule
    
   ],

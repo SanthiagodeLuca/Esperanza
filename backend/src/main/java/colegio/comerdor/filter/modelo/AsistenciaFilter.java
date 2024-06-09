@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
+//convertir valores a fechas
 public class AsistenciaFilter {
 	  	@NonNull
 	    @Temporal(TemporalType.TIMESTAMP)

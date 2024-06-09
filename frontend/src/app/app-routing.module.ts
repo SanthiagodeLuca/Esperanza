@@ -24,6 +24,9 @@ import { AlertaComponent } from './pages/alerta/alerta.component';
 import { AuthGuard } from './auth.guard';
 import { MainComponent } from './main/main.component';
 import { EstadisticasComponent } from './pages/estadisticas/estadisticas.component';
+import { PastelComponent } from './graficas/pastel/pastel.component';
+import { BarrasComponent } from './graficas/barras/barras.component';
+import { LineaComponent } from './graficas/linea/linea.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent }, // Esta coma estaba mal ubicada
@@ -53,7 +56,12 @@ const routes: Routes = [
       { path: 'refrigerio', component: RefrigerioComponent },
       { path: 'notificacion', component: NotificacionComponent },
       { path: 'alerta', component: AlertaComponent },
-      {path:'estadisticas',component:EstadisticasComponent}
+      {path:'estadisticas',component:EstadisticasComponent},
+      {path:'pastel',component:PastelComponent},
+     {path:'barras',component:BarrasComponent},
+     {path:'linea',component:LineaComponent}
+
+
     ]
   }
 ];

@@ -1,8 +1,8 @@
-  import { Component, OnInit } from '@angular/core';
+  import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
   import { Asistencia } from 'src/app/modelos/asistencia';
   import { AsistenciaService } from 'src/app/services/asistencia.service';
   import Chart from 'chart.js/auto'; // Import Chart.js using auto module
-  import { LinearScale } from 'chart.js'; // Importa la escala lineal de Chart.js
+  import { BubbleDataPoint, ChartComponentLike, ChartConfiguration, ChartData, ChartOptions, ChartTypeRegistry, LinearScale, Point } from 'chart.js'; // Importa la escala lineal de Chart.js
 
   import { filterAsistencia } from 'src/app/modelos/filterAsistencia';
 import { AsistenciaDia } from 'src/app/modelos/asistenciaDia';
@@ -21,10 +21,135 @@ declare let window: Ventana;
     asistencias: any[] = [];
     startDate: Date | undefined;
     endDate: Date | undefined;
+    categorias:any[]=[];
+    data: any[] = [];
+    categoriasBarras:any[]=[];
+    dataBarras: { [curso: string]: { [almuerzo: string]: number } } = {};
 
-    constructor(private asistenciaService: AsistenciaService) {}
+    dataLinea: { [fecha: string]: { [tipoComida: string]: number } } = {};
+    categoriasLinea:string[]=[];
+    // Luego, donde procesas los datos para dataBarras
+    //this.dataBarras = asistenciasPorCursoYAlmuerzo;
+       // myPieChart: Chart<keyof ChartTypeRegistry, (number | [number, number] | Point | BubbleDataPoint | null)[], unknown> | undefined;
 
-    ngOnInit(): void {}
+
+    myPieChart: Chart<'pie'> | undefined;
+    myBarChart: Chart<'bar'> | undefined;
+    myLineChart: Chart<'line'> | undefined;
+    constructor(private asistenciaService: AsistenciaService,private cdr: ChangeDetectorRef) {
+      this.startDate = new Date();
+      this.endDate = new Date();
+    //  this.inicializarGraficos();
+
+
+    }
+    ngOnInit(): void {
+    
+
+
+    }
+    cambiarRangoFechas(rango: string): void {
+      const hoy = new Date();
+      switch (rango) {
+        case 'dia':
+          this.startDate = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0); // Medianoche
+          this.endDate = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59); // Final del día
+          break;
+        case 'semana':
+          this.startDate = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - hoy.getDay());
+          this.endDate = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + (6 - hoy.getDay()));
+          break;
+        case 'mes':
+          this.startDate = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+          this.endDate = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+          break;
+        default:
+          break;
+      }
+      if (this.startDate && this.endDate) {
+        this.startDate = new Date(this.startDate);
+        this.endDate = new Date(this.endDate);
+      } else {
+        throw new Error('Fechas inválidas');
+      }
+         // Formatea las fechas a ISO
+    const startDateISO = this.formatDateToISO(this.startDate);
+    const endDateISO = this.formatDateToISO(this.endDate);
+    this.cdr.detectChanges();
+
+      this.obtenerAsistencias(); // Actualiza los datos según el nuevo rango de fechas
+    }
+      
+    inicializarPastel(asistencias: any[]):void{
+      const asistenciasPorAlmuerzo = asistencias.reduce((acumulador, asistencia) => {
+        const almuerzoNombre = asistencia.almuerzo.nombre;
+        acumulador[almuerzoNombre] = (acumulador[almuerzoNombre] || 0) + 1;
+        return acumulador;
+      }, {});
+      this.categorias=Object.keys(asistenciasPorAlmuerzo);
+      this.data = Object.values(asistenciasPorAlmuerzo);
+    }
+    inicializarBarras(asistencias: any[]): void {
+      const asistenciasPorCursoYAlmuerzo = asistencias.reduce((acumulador, asistencia) => {
+        const curso = asistencia.estudiante.curso;
+        const almuerzoNombre = asistencia.almuerzo.nombre.charAt(0).toUpperCase() + asistencia.almuerzo.nombre.slice(1).toLowerCase(); // Asegura consistencia en nombres
+        if (!acumulador[curso]) {
+          acumulador[curso] = {
+            'Almuerzo': 0,
+            'Desayuno': 0,
+            'Refrigerio': 0
+          };
+        }
+        if (almuerzoNombre in acumulador[curso]) {
+          acumulador[curso][almuerzoNombre]++;
+        }
+        return acumulador;
+      }, {});
+    
+      // Convertir el objeto en el formato esperado
+      const dataBarrasFormatted: { [curso: string]: { [almuerzo: string]: number } } = {};
+      for (const curso in asistenciasPorCursoYAlmuerzo) {
+        if (asistenciasPorCursoYAlmuerzo.hasOwnProperty(curso)) {
+          dataBarrasFormatted[curso] = asistenciasPorCursoYAlmuerzo[curso];
+        }
+      }
+    
+      this.categoriasBarras = Object.keys(asistenciasPorCursoYAlmuerzo);
+      this.dataBarras = dataBarrasFormatted;
+    }// estadisticas.component.ts
+
+    inicilizarLinea(asistencias: any[], startDate: Date, endDate: Date): void {
+      const recuentoAsistencias: { [fecha: string]: { [tipoComida: string]: number } } = {};
+    
+      // Inicializar recuentoAsistencias con todas las fechas entre startDate y endDate
+      const fechasCompletas = this.obtenerFechasCompletas(startDate, endDate);
+      fechasCompletas.forEach(fecha => {
+        recuentoAsistencias[fecha] = { Desayuno: 0, Refrigerio: 0, Almuerzo: 0 };
+      });
+    
+      // Procesar los datos de asistencias
+      asistencias.forEach(asistencia => {
+        const fecha = new Date(asistencia.fecha).toDateString();
+        const tipoComida = asistencia.almuerzo.nombre.charAt(0).toUpperCase() + asistencia.almuerzo.nombre.slice(1).toLowerCase();
+    
+        if (!recuentoAsistencias[fecha]) {
+          recuentoAsistencias[fecha] = { Desayuno: 0, Refrigerio: 0, Almuerzo: 0 };
+        }
+    
+        if (tipoComida in recuentoAsistencias[fecha]) {
+          recuentoAsistencias[fecha][tipoComida]++;
+        } else {
+          console.error(`Tipo de comida desconocido: ${tipoComida}`);
+        }
+      });
+    
+      // Crear las categorías y los datos para el gráfico de línea
+      this.categoriasLinea = fechasCompletas;
+      this.dataLinea = recuentoAsistencias;
+    }
+    
+    
+    
 
     obtenerAsistencias(): void {
       if (this.startDate && this.endDate) {
@@ -37,13 +162,16 @@ declare let window: Ventana;
         this.asistenciaService.obtenerAsistencias(filter).subscribe(
           data => {
             this.asistencias = data;
-           this.generarGraficoPastel(this.asistencias);
-           this.generarGraficoBarras(this.asistencias);
+            this.inicializarPastel(this.asistencias);
+          this.inicializarBarras(this.asistencias);
+            //this.generarPastel(this.asistencias);
+          // this.generarGraficoBarras(this.asistencias);
            if (this.startDate && this.endDate) { // Verificar nuevamente
-            this.generarGraficoLinea(this.asistencias, this.startDate, this.endDate);
+              this.inicilizarLinea(this.asistencias, this.startDate, this.endDate);
           } else {
             console.error('Fechas no seleccionadas');
           }
+          this.cdr.detectChanges();
 
           },
           error => {
@@ -60,199 +188,14 @@ declare let window: Ventana;
     
     // estadisticas.component.ts (continuación)
 
-    generarGraficoPastel(asistencias: any[]): void {
-      // Procesamiento de datos: Obtener el recuento de asistencias por almuerzo
-      const asistenciasPorAlmuerzo = asistencias.reduce((acumulador, asistencia) => {
-        const almuerzoNombre = asistencia.almuerzo.nombre;
-        acumulador[almuerzoNombre] = (acumulador[almuerzoNombre] || 0) + 1;
-        return acumulador;
-      }, {});
-    
-      // Configuración del gráfico
-      const canvas = document.getElementById('myChart') as HTMLCanvasElement;
-      if (canvas instanceof HTMLCanvasElement) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          // Establecer el color de fondo del canvas
-          if (window.myPieChart) {
-            window.myPieChart.destroy();
-          }
-          ctx.fillStyle = 'white';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-          // Crear el gráfico de pastel
-          const myPieChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-              labels: Object.keys(asistenciasPorAlmuerzo),
-              datasets: [{
-                label: 'Asistencias por almuerzo',
-                data: Object.values(asistenciasPorAlmuerzo),
-                backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)'
-                ],
-                borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)'
-                ],
-                borderWidth: 1
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: (context) => {
-                      const label = context.label || '';
-                      const value = context.raw || '';
-                      return label + ': ' + value;
-                    }
-                  }
-                }
-              }
-            }
-          });
-        }
-      }
-    }
+   
+ 
+
     
     // estadisticas.component.ts
 
-    generarGraficoBarras(asistencias: any[]): void {
-      // Procesamiento de datos: Obtener el recuento de asistencias por curso y tipo de almuerzo
-      const asistenciasPorCursoYAlmuerzo = asistencias.reduce((acumulador, asistencia) => {
-        const curso = asistencia.estudiante.curso;
-        const almuerzoNombre = asistencia.almuerzo.nombre;
-        if (!acumulador[curso]) {
-          acumulador[curso] = {
-            'Almuerzo': 0,
-            'Desayuno': 0,
-            'Refigerio': 0
-          };
-        }
-        acumulador[curso][almuerzoNombre]++;
-        return acumulador;
-      }, {});
     
-      // Configuración del gráfico de barras
-      const canvas = document.getElementById('barrasChart') as HTMLCanvasElement;
-      if (canvas instanceof HTMLCanvasElement) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          // Establecer el color de fondo del canvas
-          ctx.fillStyle = 'white';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-          // Crear el gráfico de barras
-          const cursos = Object.keys(asistenciasPorCursoYAlmuerzo);
-          const datasets = Object.keys(asistenciasPorCursoYAlmuerzo[cursos[0]]).map((almuerzoNombre, index) => {
-            return {
-              label: almuerzoNombre,
-              data: cursos.map(curso => asistenciasPorCursoYAlmuerzo[curso][almuerzoNombre] || 0), // Si no hay asistencias, establecer a 0
-              backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)'
-              ][index],
-              borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)'
-              ][index],
-              borderWidth: 1
-            };
-          });
-    
-          // Crear la gráfica de barras
-          new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: cursos,
-              datasets: datasets
-            },
-            options: {
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          });
-        }
-      }
-    }
-    generarGraficoLinea(asistencias: any[], startDate: Date, endDate: Date): void {
-      // Crear un objeto para almacenar el recuento de asistencias por fecha y tipo de comida
-      const recuentoAsistencias: { [fecha: string]: { [tipoComida: string]: number } } = {};
-    
-      // Procesar los datos para el gráfico de línea
-      asistencias.forEach(asistencia => {
-        const fecha = new Date(asistencia.fecha).toDateString();
-        const tipoComida = asistencia.almuerzo.nombre;
-    
-        if (!recuentoAsistencias[fecha]) {
-          recuentoAsistencias[fecha] = { Desayuno: 0, Refrigerio: 0, Almuerzo: 0 };
-        }
-        recuentoAsistencias[fecha][tipoComida]++;
-      });
-    
-      // Obtener las fechas únicas y ordenarlas cronológicamente
-      const fechas = Object.keys(recuentoAsistencias).sort();
-      const fechasCompletas = this.obtenerFechasCompletas(startDate, endDate);
-    
-      // Configuración del gráfico de línea
-      const canvas = document.getElementById('historyChart') as HTMLCanvasElement;
-      if (canvas instanceof HTMLCanvasElement) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          // Establecer el color de fondo del canvas
-          ctx.fillStyle = 'white';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-          // Crear el gráfico de línea
-          new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: fechasCompletas,
-              datasets: ['Desayuno', 'Refrigerio', 'Almuerzo'].map((tipoComida, index) => {
-                return {
-                  label: tipoComida,
-                  data: fechasCompletas.map(fecha => recuentoAsistencias[fecha]?.[tipoComida] || 0),
-                  fill: false,
-                  borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                  ][index],
-                  borderWidth: 1,
-                  pointRadius: 4, // Tamaño de los puntos
-                  pointHoverRadius: 6, // Tamaño de los puntos al pasar el ratón
-                };
-              })
-            },
-            options: {
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          });
-        }
-      }
-    }
     
   obtenerFechasCompletas(startDate: Date, endDate: Date): string[] {
     // Crear un array de fechas entre startDate y endDate
