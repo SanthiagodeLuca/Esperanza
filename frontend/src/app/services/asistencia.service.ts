@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Asistencia } from '../modelos/asistencia';
 import { filterAsistencia } from '../modelos/filterAsistencia';
+import { AsistenciaNueva } from '../modelos/asistenciaNueva';
 @Injectable({
   providedIn: 'root'
 })
@@ -28,6 +29,22 @@ obtenerAsistencias(filter: filterAsistencia): Observable<Asistencia[]> {
   };
 
   return this.http.post<Asistencia[]>(url, asistenciaFilter, { headers });
+}
+editarAsistencia(asistencia: any): Observable<any> {
+  const url = `${this.apiUrl}/cambiarAsistencia/${asistencia.id}`;
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.http.put<any>(url, asistencia, { headers });
+}
+
+eliminarAsistencia(id:any):Observable<void>{
+//backen devuelve el cuerpo vacio 
+
+  const url = `${this.apiUrl}/eliminarAsistencia/${id}`;
+
+  return this.http.delete<void>(url, { responseType: 'text' as 'json' });
+
+
+
 }
 
 }

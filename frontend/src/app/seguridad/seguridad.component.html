@@ -1,1 +1,10 @@
-<p>seguridad works!</p>
+<div>
+    <app-list-user></app-list-user>
+    <button class="btn btn-success" (click)="abrirFormularioCrearAdministrador()">Agregar Usuario Administrador</button>
+
+    <app-formulario-crear-usuario 
+    [mostrarFormulario]="mostrarFormularioEstudiante"
+      (onClose)="cerrarFormulario()"
+    
+    ></app-formulario-crear-usuario>
+</div>

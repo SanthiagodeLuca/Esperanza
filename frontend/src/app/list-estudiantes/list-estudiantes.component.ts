@@ -42,6 +42,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../modelos/user';
 import { UserService } from '../services/user/user.service';
 import { TokenInformacionService } from '../services/token/token-informacion.service';
+import { Subscription } from 'rxjs';
 
   @Component({
     selector: 'app-list-estudiantes',
@@ -68,6 +69,14 @@ import { TokenInformacionService } from '../services/token/token-informacion.ser
     // Filtros
     filtros: { [key: string]: any } = {};
 
+
+    usuarioRol: string = 'admin'; // Suponiendo que obtienes el rol del usuario de algún servicio o componente
+    estudianteParaEditar: Estudiante | null = null;
+    mostrarFormularioEdicion: boolean = false; // Variable para controlar la visibilidad del formulario de edición
+
+    private subscription: Subscription | null = null; // Inicializar con null
+    estudianteAEliminar: string | null = null;
+    mostrarAlertaEliminar:boolean=false;
     constructor(private estudiantesService:EstudianteService,
       private imagenService:ImagenService,private filtroService:FiltroService,private loginService:LoginService
     ,private http:HttpClient,private userService:UserService,private tokenInformacionService:TokenInformacionService){}
@@ -75,13 +84,17 @@ import { TokenInformacionService } from '../services/token/token-informacion.ser
     //metodo cunado se inica el componente
     ngOnInit(): void {
 
-      
+      this.subscription = this.estudiantesService.behaviorSubjectEstudiantes().subscribe(estudiantes => {
+        this.estudiantes = estudiantes;
+        // Actualiza estudiantesFiltrados cada vez que estudiantes cambie
+        this.estudiantesFiltrados = JSON.parse(JSON.stringify(this.estudiantes));
+      });
       //se llama al metodo de estudiante sevice 
       //se subcribe(observador esta atengo a cualquier datos que envie el observable) al observable 
       //se rellena a los estudiantes(datos) el array con los datos que se tienen  
       //internamente en subcribe cuando se hace un callback el pasa el valor como paremetro de la funcion callback en este caso
       //data pasa a tener el valor del array estudiantes y aqui solo lo inicializamoss
-      this.estudiantesService.getEstudiantes().pipe(take(1)).subscribe(data => {
+    // (1) this.estudiantesService.getEstudiantes().pipe(take(1)).subscribe(data => {
      
         // OPCION  EJECUTAR UNA VEZ this.estudiantesService.getEstudiantes().pipe(take(1)).subscribe(data => {
         //.subcribe se subscribe al observable 
@@ -90,22 +103,32 @@ import { TokenInformacionService } from '../services/token/token-informacion.ser
         //lo que haces con el data.map es cambiar los datos que ya tienes y agregar un nuevo elemento
         //... indica que copia todas las propiedades del objeto original ademas se agregan propiedades
        
-        this.estudiantes = data.map(estudiante=>({...estudiante,imagenVisible:false,imagenUrl:API_URL_IMAGEN+estudiante.id+'.png'}));
+     //(2)   this.estudiantes = data.map(estudiante=>({...estudiante,imagenVisible:false,imagenUrl:API_URL_IMAGEN+estudiante.id+'.png'}));
         // como es asincronico las demas lineas de codigo se ejecutan mientras se espera toda la respuesta 
         // debido a que la respuesta aun no esta lista no guarda nada 
 
-        this.estudiantesFiltrados = JSON.parse(JSON.stringify(this.estudiantes));
+      //(3)  this.estudiantesFiltrados = JSON.parse(JSON.stringify(this.estudiantes));
 
-      });
+     //(4) });
      // this.estudiantesFiltrados = JSON.parse(JSON.stringify(this.estudiantes));
      //this.estudiantesFiltrados = this.estudiantes.slice();
 
      this.cargarImagen();
      this.obtenerAuthoritiesUser();
+    /* this.estudiantesService.behaviorSubjectEstudiantes().subscribe((estudiantes: Estudiante[]) => {
+      this.estudiantes = estudiantes;
+    });*/
     
     // this.obtenerImagen();
     }
 
+
+    ngOnDestroy() {
+      // Cancelamos la suscripción para evitar fugas de memoria
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
+    }
     obtenerAuthoritiesUser(){
 
      this.authorities= this.tokenInformacionService.geAuthoritiesFromToken();
@@ -177,36 +200,8 @@ import { TokenInformacionService } from '../services/token/token-informacion.ser
           }
         );
       }
-       // const urlImagen = `http://localhost:8085/api/images/${estudiante.id}`; // Ejemplo de URL al servidor
       
-     
-        // Realiza la solicitud HTTP para obtener la imagen
-        /*this.http.get(urlImagen, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          responseType: 'blob'
-        }).subscribe(
-          (imagenBlob: Blob) => {
-            // Convierte el blob en una URL de objeto
-            const imagenUrl = URL.createObjectURL(imagenBlob);
-            // Actualiza la URL de la imagen en el objeto estudiante
-            estudiante.imagenUrl = imagenUrl;
-          },
-          error => {
-            console.error('Error al cargar la imagen:', error);
-          }
-        );
-        */
-      
-      
-      
-
-
-
-
-
-
+    
 
       
      //filtros
@@ -311,6 +306,77 @@ import { TokenInformacionService } from '../services/token/token-informacion.ser
       }
     }
 }
+
+cancelarEliminacion() {
+  // Lógica para cancelar la eliminación del estudiante
+  // Oculta la alerta de eliminación
+  this.mostrarAlertaEliminar = false;
+}
+
+confirmarEliminacion(id: string) {
+  this.estudianteAEliminar = id;
+  this.mostrarAlertaEliminar = true;
+}
+
+eliminarEstudiante(id:any){
+  
+  if (this.estudianteAEliminar) {
+this.estudiantesService.eliminiarEstudiantes(id).subscribe(
+
+
+  response => {
+    console.log('Estudiante Eliminado')
+    this.obtenerEstudiantes();
+    this.mostrarAlertaEliminar = false; // Ocultar la alerta después de eliminar
+
+  },error=>{
+    console.error('Error al eliminar la estudiatnte:', error);
+  }
+);}
+
+}
+
+editarEstudiante(estudiante:any){
+  console.log('Editando estudiante:', estudiante);
+    this.estudianteParaEditar = estudiante;
+    this.mostrarFormularioEdicion = true; // Mostrar el formulario de edición
+
+
+}
+
+obtenerEstudiantes() {
+  this.estudiantesService.getEstudiantes().subscribe(
+    estudiantes => {
+      this.estudiantes = estudiantes;
+      this.estudiantesFiltrados = JSON.parse(JSON.stringify(this.estudiantes));
+    },
+    error => {
+      console.error('Error al obtener la lista de estudiantes:', error);
+    }
+  );
+}
+
+guardarEstudiante(estudiante: any) {
+  //sconsole.log(asistencia)
+    this.estudiantesService.editarEstudiantes(estudiante).subscribe(
+      response => {
+        console.log('Asistencia actualizada:', response);
+         // Actualiza los datos de asistencia
+      
+        this.estudianteParaEditar = null;
+        this.mostrarFormularioEdicion = false; // Oculta el formulario después de guardar
+        this.obtenerEstudiantes();
+      },
+      error => {
+        console.error('Error al actualizar la asistencia:', error);
+      }
+    );
+  }
+  cancelarEdicion() {
+    this.estudianteParaEditar = null;
+    this.mostrarFormularioEdicion = false; // Oculta el formulario después de cancelar
+
+  }
 
   }
 

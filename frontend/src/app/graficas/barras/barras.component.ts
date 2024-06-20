@@ -33,7 +33,7 @@ export class BarrasComponent implements OnInit {
         if (ctx) {
           if (this.barrasChart) {
             this.barrasChart.data.labels = this.categories;
-            ['Almuerzo', 'Desayuno', 'Refrigerio'].forEach((almuerzoNombre, index) => {
+            ['Desayuno', 'Refrigerio', 'Almuerzo'].forEach((almuerzoNombre, index) => {
               if (this.barrasChart) {
                 const dataset = this.barrasChart.data.datasets[index];
               

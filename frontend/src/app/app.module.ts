@@ -65,6 +65,13 @@ import { ChartModule } from 'angular-highcharts';
 import { PastelComponent } from './graficas/pastel/pastel.component';
 import { BarrasComponent } from './graficas/barras/barras.component';
 import { LineaComponent } from './graficas/linea/linea.component';
+import { EditarComponent } from './pages/editar/editar.component';
+import { FormularioEstudianteComponent } from './pages/formulario-estudiante/formulario-estudiante.component';
+import { FormularioCrearEstudianteComponent } from './pages/formulario-crear-estudiante/formulario-crear-estudiante.component';
+import { AlertaEstudianteEliminarComponent } from './pages/alerta/alerta-estudiante-eliminar/alerta-estudiante-eliminar.component';
+import { FormularioUsuarioComponent } from './pages/formulario-usuario/formulario-usuario.component';
+import { ListUserComponent } from './list-user/list-user.component';
+import { FormularioCrearUsuarioComponent } from './pages/formulario-crear-usuario/formulario-crear-usuario.component';
 
 
 //import { MatMomentDateModule } from '@angular/material/datemodule';
@@ -105,7 +112,14 @@ import { LineaComponent } from './graficas/linea/linea.component';
     EstadisticasComponent,
     PastelComponent,
     BarrasComponent,
-    LineaComponent
+    LineaComponent,
+    EditarComponent,
+    FormularioEstudianteComponent,
+    FormularioCrearEstudianteComponent,
+    AlertaEstudianteEliminarComponent,
+    ListUserComponent,
+    FormularioUsuarioComponent,
+    FormularioCrearUsuarioComponent
   
   ],
   imports: [

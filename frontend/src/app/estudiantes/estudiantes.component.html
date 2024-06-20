@@ -2,4 +2,13 @@
 <div>
     <h2>Lista de Estudiantes</h2>
     <app-list-estudiantes></app-list-estudiantes>
+    <button class="btn btn-success" (click)="abrirFormulario()">Agregar Estudiante</button>
+
+    <!-- Resto del código -->
+    
+    <app-formulario-crear-estudiante
+      [mostrarFormulario]="mostrarFormularioEstudiante"
+      (onClose)="cerrarFormulario()"
+    ></app-formulario-crear-estudiante>
+    
   </div>

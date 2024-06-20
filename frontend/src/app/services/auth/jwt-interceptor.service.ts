@@ -18,9 +18,9 @@
   console.log("valor",this.loginService.currentUserLoginOn.value)
     // console.log(token)
     
-    const valor=!this.loginService.currentUserLoginOn.value;
+    //const valor=!this.loginService.currentUserLoginOn.value;
 
-    if (valor) {
+    if (token===null) {
       console.log("El usuario no está autenticado, pasando la solicitud sin token.");
       return next.handle(req);
     }

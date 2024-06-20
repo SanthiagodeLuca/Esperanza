@@ -58,9 +58,10 @@ updateChart(): void {
               data: this.categorias.map(fecha => this.data[fecha]?.[tipoComida] || 0), // Datos del dataset
               fill: false, // No llenar el área bajo la línea
               borderColor: [
-                'rgba(255, 99, 132, 1)', // Rojo para Desayuno
-                'rgba(54, 162, 235, 1)', // Azul para Refrigerio
-                'rgba(255, 206, 86, 1)', // Amarillo para Almuerzo
+                'rgba(54, 162, 235, 1)', // Rojo para Desayuno 
+                'rgba(255, 206, 86, 1)', //Azul para Refrigerio
+
+                'rgba(255, 99, 132, 1)', // amarillo 
               ][index], // Color de la línea
               borderWidth: 1, // Ancho del borde de la línea
               pointRadius: 4, // Radio de los puntos en la línea

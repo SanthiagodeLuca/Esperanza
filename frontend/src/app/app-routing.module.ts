@@ -27,6 +27,13 @@ import { EstadisticasComponent } from './pages/estadisticas/estadisticas.compone
 import { PastelComponent } from './graficas/pastel/pastel.component';
 import { BarrasComponent } from './graficas/barras/barras.component';
 import { LineaComponent } from './graficas/linea/linea.component';
+import { EditarComponent } from './pages/editar/editar.component';
+import { FormularioEstudianteComponent } from './pages/formulario-estudiante/formulario-estudiante.component';
+import { FormularioCrearEstudianteComponent } from './pages/formulario-crear-estudiante/formulario-crear-estudiante.component';
+import { AlertaEstudianteEliminarComponent } from './pages/alerta/alerta-estudiante-eliminar/alerta-estudiante-eliminar.component';
+import { FormularioUsuarioComponent } from './pages/formulario-usuario/formulario-usuario.component';
+import { ListUserComponent } from './list-user/list-user.component';
+import { FormularioCrearUsuarioComponent } from './pages/formulario-crear-usuario/formulario-crear-usuario.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent }, // Esta coma estaba mal ubicada
@@ -59,7 +66,18 @@ const routes: Routes = [
       {path:'estadisticas',component:EstadisticasComponent},
       {path:'pastel',component:PastelComponent},
      {path:'barras',component:BarrasComponent},
-     {path:'linea',component:LineaComponent}
+     {path:'linea',component:LineaComponent},
+     {path:'editar',component:EditarComponent},
+     {path:'formularioEstudiante',component:FormularioEstudianteComponent},
+     {path:'formularioCrearEstudiante',component:FormularioCrearEstudianteComponent},
+     {path:'alertaEstudianteEliminar',component:AlertaEstudianteEliminarComponent},
+     {path:'listUser',component:ListUserComponent},
+     {path:'formularioUser',component:FormularioUsuarioComponent},
+     {path:'formularioCrearUser',component:FormularioCrearUsuarioComponent}
+
+
+
+
 
 
     ]

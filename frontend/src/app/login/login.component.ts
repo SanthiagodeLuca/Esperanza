@@ -66,7 +66,7 @@
             if (response.token) {
               console.log("Login exitoso. Token recibido:", response.token);
               // Redirigir al dashboard o realizar otras acciones necesarias
-              this.router.navigateByUrl("/dashboard");
+              this.router.navigateByUrl("/registro");
              this.loginForm.reset();
             } else if (response.error) {
               console.error("Error durante el inicio de sesión:", response.error);
