@@ -3,6 +3,9 @@ package colegio.comedor.modelo;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -15,11 +18,14 @@ import jakarta.persistence.Table;
 public class Estudiante {
     @Id
     private String id;
+    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
+    @NotBlank(message = "La jornada es obligatoria")
     private String jornada;
+    @NotBlank(message = "El curso es obligatorio")
     private String curso;
     private String imagen;
-    
+    @NotNull(message = "El campo especial es obligatorio")
     private boolean especial;
     
     

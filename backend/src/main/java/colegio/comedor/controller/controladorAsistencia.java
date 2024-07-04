@@ -1,33 +1,33 @@
 package colegio.comedor.controller;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import colegio.comedor.GeneradorQR;
 import colegio.comedor.MiClase;
 import colegio.comedor.interfaceService.IAlmuerzoService;
 import colegio.comedor.interfaceService.IEstudianteService;
 import colegio.comedor.interfaceService.IHorarioService;
 import colegio.comedor.modelo.Almuerzo;
 import colegio.comedor.modelo.Asistencia;
+import colegio.comedor.modelo.Estudiante;
 import colegio.comedor.service.AsistenciaService;
 import colegio.comedor.service.ModificacionHorarioService;
 import colegio.comerdor.filter.modelo.AsistenciaFilter;
@@ -112,18 +112,39 @@ public class controladorAsistencia{
 		return "redirect:/asistencias";
 	}
 	
-	@GetMapping("/cambiarAsistencia/{id}")
-	public String editar(@PathVariable int id,Model modelo) {
-		Optional<Asistencia>almuerzo=serviceAsistencia.listarId(id);
-		modelo.addAttribute("almuerzo", almuerzo);
-		return "formularioAsistencia";
-	}
+	@PutMapping("/cambiarAsistencia/{id}")
+    public ResponseEntity<?> editar(@PathVariable int id, @RequestBody Asistencia asistencia) {
+        Optional<Asistencia> asistenciaActualizarOpt = serviceAsistencia.listarId(id);
+        if (asistenciaActualizarOpt.isPresent()) {
+            Asistencia asistenciaActualizar = asistenciaActualizarOpt.get();
+            asistenciaActualizar.setEstudiante(asistencia.getEstudiante());
+            asistenciaActualizar.setAlmuerzo(asistencia.getAlmuerzo());
+            asistenciaActualizar.setFecha(asistencia.getFecha());
+            
+            // Guardar la instancia actualizada
+            serviceAsistencia.edit(asistenciaActualizar);
+            logger.info("editando asistencia: " + asistencia);
 
-	@GetMapping("/eliminarAsistencia/{id}")
-	public String delete(@PathVariable int id) {
-		serviceAsistencia.delete(id);
-		return "redirect:/asistencias";
-	}
+            return ResponseEntity.ok(asistenciaActualizar);
+        } else {
+            // Manejar el caso en que la asistencia no fue encontrada
+            return ResponseEntity.notFound().build();
+        }
+    }
+	
+	@DeleteMapping("/eliminarAsistencia/{id}")
+	public ResponseEntity<?>  delete(@PathVariable int id) {
+		Optional<Asistencia> asistencia=serviceAsistencia.listarId(id);
+		if(asistencia.isPresent()) {
+			serviceAsistencia.delete(id);
+			 return ResponseEntity.noContent().build(); // 204 No Content
+
+			
+		}else {
+			 return ResponseEntity.notFound().build(); // 404 Not Found
+			}
+		}
+	
 	
 	@GetMapping("/limpiarAsistencia")
 	public String limpiarEstudiantes(Model model) {
@@ -149,6 +170,16 @@ public class controladorAsistencia{
 	}
 	@PostMapping("/nuevaAsistencia")
 	public ResponseEntity<String> nuevaAsistencia(@RequestBody Asistencia nuevaAsistencia) {
+		
+		String valor=nuevaAsistencia.getEstudiante().getId()+"";
+		
+	//	Optional<Estudiante> estudiante=serviceEstudiante.listarId(GeneradorQR.desencriptarAES(valor));
+	
+	/*	if(estudiante!=null) {
+			nuevaAsistencia.setEstudiante(estudiante);
+			
+		}*/
+		
 	    // Aquí puedes agregar la lógica para guardar la nueva asistencia en tu base de datos
 	    // Por ejemplo:
 	 
@@ -176,27 +207,6 @@ public class controladorAsistencia{
 	
 	
 
-/*	@GetMapping("/asistencias")
-	public String listar(Model modelo) {
-		
-		modelo.addAttribute("mensaje",globalVariable.getProvicionalVariable());
-		   
-		
-	       if(inicio !=0) {
-	    
-	    	   globalVariable.setProvicionalVariable(globalVariable.getMientrasVariable());
-	       System.out.println("actualiza variable "+globalVariable.getProvicionalVariable());
-	       
-	       }
-	       inicio=1;
-	   
-	      
-		  List<Asistencia> asistencias = serviceAsistencia.listar();// Asegúrate de tener este método en tu servicio
-	      modelo.addAttribute("asistencias", asistencias);
-	      modelo.addAttribute("miTablaAsistencias","tablaAsistencias");
-		
-	     // throw new ApiRequestException("se intengo Ingresar al mismo estudiante");
-	      return "asistencias";
-	}*/
+
 
 }

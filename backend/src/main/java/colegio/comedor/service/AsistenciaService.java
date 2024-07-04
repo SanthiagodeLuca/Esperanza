@@ -135,4 +135,14 @@ public class AsistenciaService  implements IAsistenciaService{
 		//@Query("select * from user where remove = false", nativeQuery = true)
 		 return  dataAsistencia.findByFechaBetween(startDate, endDate);	}
 
+	@Override
+	public void edit(Asistencia e) {
+	
+	
+		    // Realiza los cambios necesarios en la asistencia
+		   
+		    // Ahora puedes guardar la asistencia actualizada
+		    dataAsistencia.save(e);
+	
+	}
 }

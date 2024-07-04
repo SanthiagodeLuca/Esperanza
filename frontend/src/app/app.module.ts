@@ -72,6 +72,7 @@ import { AlertaEstudianteEliminarComponent } from './pages/alerta/alerta-estudia
 import { FormularioUsuarioComponent } from './pages/formulario-usuario/formulario-usuario.component';
 import { ListUserComponent } from './list-user/list-user.component';
 import { FormularioCrearUsuarioComponent } from './pages/formulario-crear-usuario/formulario-crear-usuario.component';
+import { AlertaAsistenciaEliminarComponent } from './pages/alerta-asistencia-eliminar/alerta-asistencia-eliminar.component';
 
 
 //import { MatMomentDateModule } from '@angular/material/datemodule';
@@ -119,7 +120,9 @@ import { FormularioCrearUsuarioComponent } from './pages/formulario-crear-usuari
     AlertaEstudianteEliminarComponent,
     ListUserComponent,
     FormularioUsuarioComponent,
-    FormularioCrearUsuarioComponent
+    FormularioCrearUsuarioComponent,
+    AlertaAsistenciaEliminarComponent,
+    AlertaEstudianteEliminarComponent
   
   ],
   imports: [

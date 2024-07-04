@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AsistenciaService } from '../services/asistencia.service'; // Importa el servicio de asistencia
 import { Asistencia } from '../modelos/asistencia'; // Importa el modelo de asistencia
 import { FiltroService } from '../services/filtro.service';
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { NotificacionService } from '../services/notificacion/notificacion.service';
 import { WebSocketService } from '../services/webSocket/web-socket.service';
 import { AsistenciaNueva } from '../modelos/asistenciaNueva';
@@ -22,16 +22,19 @@ export class ListAsistenciasComponent implements OnInit {
   asistenciaTabla:any[]=[];
   uniqueValues: string[] = [];
   filtros: { [key: string]: any } = {};
-  usuarioRol: string = 'user'; // Suponiendo que obtienes el rol del usuario de algún servicio o componente
+  usuarioRol: string = 'admin'; // Suponiendo que obtienes el rol del usuario de algún servicio o componente
   asistenciaParaEditar: AsistenciaNueva | null = null;
   mostrarFormularioEdicion: boolean = false; // Variable para controlar la visibilidad del formulario de edición
+  mostrarAlertaEliminar:boolean=false;
+  private subscription: Subscription | null = null; // Inicializar con null
+asistenciaAEliminar: number | null = null;
 
   constructor(private asistenciaService: AsistenciaService,private filtroService:FiltroService, private notificationService: NotificacionService
     ,private webSocket:WebSocketService,private cdr: ChangeDetectorRef,private router:Router
   ) {}
 
   ngOnInit(): void {
-    this.asistenciaService.getAsistencias().pipe(take(1)).subscribe(data => {
+   this.subscription= this.asistenciaService.behaviorSubjectEstudiantes().subscribe(data => {
      
     
       
@@ -43,7 +46,12 @@ export class ListAsistenciasComponent implements OnInit {
       this.asistenciaFiltrada =JSON.parse(JSON.stringify(this.asistencias)); // Clona los datos para filtrar
     });
   }
+ngOnDestroy(){
 
+  if (this.subscription) {
+    this.subscription.unsubscribe();
+  }
+}
 
 
   getUniqueValues(column: string): string[] {
@@ -122,17 +130,35 @@ export class ListAsistenciasComponent implements OnInit {
   }
 
   eliminarAsistencia(id: number) {
+
+    if (this.asistenciaAEliminar) {
+
     this.asistenciaService.eliminarAsistencia(id).subscribe(
       () => {
         console.log('Asistencia eliminada');
         this.asistencias = this.asistencias.filter(asistencia => asistencia.id !== id);
         this.asistenciaFiltrada = this.asistenciaFiltrada.filter(asistencia => asistencia.id !== id);
         this.asistenciaTabla = this.asistenciaTabla.filter(asistencia => asistencia.id !== id);
+        this.mostrarAlertaEliminar = false; // Ocultar la alerta después de eliminar
+
       },
       error => {
         console.error('Error al eliminar la asistencia:', error);
       }
-    );
+    );}
   }
   
+
+
+  confirmarEliminacion(id: number) {
+    this.asistenciaAEliminar = id;
+    this.mostrarAlertaEliminar = true;
+  }
+
+  cancelarEliminacion() {
+    // Lógica para cancelar la eliminación del estudiante
+    // Oculta la alerta de eliminación
+    this.mostrarAlertaEliminar = false;
+  }
+
 }

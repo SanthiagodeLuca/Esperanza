@@ -46,14 +46,22 @@
           <td>{{ asistencia.almuerzo.id }}</td>
           <td>{{ asistencia.fecha }}</td>
           <td>
-            <button *ngIf="usuarioRol === 'user'" class="btn btn-primary mr-1" (click)="editarAsistencia(asistencia)">Editar</button>
-            <button *ngIf="usuarioRol === 'user'" class="btn btn-danger" (click)="eliminarAsistencia(asistencia.id)">Eliminar</button>
+            <button *ngIf="usuarioRol === 'ADMIN'" class="btn btn-primary mr-1" (click)="editarAsistencia(asistencia)">Editar</button>
+            <button *ngIf="usuarioRol === 'ADMIN'" class="btn btn-danger" (click)="confirmarEliminacion(asistencia.id)">Eliminar</button>
         </td>        
         </tr>
       </ng-template>
     </p-table>
-<!-- Formulario de edición -->
-<!-- Formulario de edición -->
+    <app-alerta-asistencia-eliminar
+    *ngIf="mostrarAlertaEliminar"
+    (confirm)="asistenciaAEliminar !== null ? eliminarAsistencia(asistenciaAEliminar) : null" 
+    (cancel)="cancelarEliminacion()"
+    message="¿Está seguro de que quiere eliminar este Asistencia?"
+    confirmButtonText="Sí, eliminarlo"
+    cancelButtonText="Cancelar">
+  </app-alerta-asistencia-eliminar>
+  
+  <!-- Formulario de edición -->
 <div class="modal-overlay" *ngIf="mostrarFormularioEdicion"></div>
 
 <app-editar

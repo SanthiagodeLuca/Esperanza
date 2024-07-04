@@ -18,5 +18,6 @@ public interface IAsistenciaService {
 	public int guardarAsistenciaQR(Map<String,String> contenidoQR);
 	public void limpiar();
 	public List<Asistencia> obtenerFechasAsistencia(Date startDate, Date endDate);
+    public void edit(Asistencia e); // Método para editar una asistencia existente
 
 }

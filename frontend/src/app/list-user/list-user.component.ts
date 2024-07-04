@@ -18,7 +18,7 @@ export class ListUserComponent implements OnInit {
   mostrarFormularioUsuarioEdicion: boolean = false;
   private subscription: Subscription | null = null; // Inicializar con null
 
-
+  usuariosFiltrados:User[] = []; 
 
   constructor(private userService: UserService) {}
 
@@ -28,17 +28,12 @@ export class ListUserComponent implements OnInit {
       datos=>{
 
         this.usuarios=datos;
+        console.log(this.usuarios)
+        this.usuariosFiltrados = JSON.parse(JSON.stringify(this.usuarios));
+
       }
     );
-   /* this.userService.getUsuarios().subscribe(
-      (data: any[]) => {
-        this.usuarios = data;
-        this.getUniqueValues();
-      },
-      (error) => {
-        console.error('Error al obtener usuarios: ', error);
-      }
-    );*/
+  
 
   }
    ngOnDestroy() {

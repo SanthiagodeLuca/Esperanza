@@ -33,8 +33,7 @@ public class userService implements IUserService {
 	}
 	@Override
 	public void delete(String id) {
-		// TODO Auto-generated method stub
-		
+		userRepository.deleteById(id);		
 	}
 
 	@Override

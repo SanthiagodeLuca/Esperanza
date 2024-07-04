@@ -5,19 +5,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import colegio.comedor.ActualizadorImagenes;
 import colegio.comedor.PowerShellExecutor;
 import colegio.comedor.interfaceService.IAsistenciaService;
 import colegio.comedor.interfaceService.IEstudianteService;
@@ -99,14 +106,51 @@ public class controladorEstudiante {
 		serviceEstudiante.imagenQR(e);
 		return "redirect:/listar";
 	} 
-	
-	@GetMapping("/editar/{id}")
-	public String editar(@PathVariable String id,Model modelo) {
-		Optional<Estudiante>estudiante=serviceEstudiante.listarId(id);
-		modelo.addAttribute("estudiante", estudiante);
-		return "formulario";
+	@PostMapping("/agregar")
+	public ResponseEntity agregarEstudiante(@Valid @RequestBody Estudiante nuevoEstudiante){
+		
+		
+		serviceEstudiante.save(nuevoEstudiante);
+		serviceEstudiante.imagenQR(nuevoEstudiante);
+		ActualizadorImagenes.actualizarImagenes(nuevoEstudiante.getId());
+		
+        return new ResponseEntity<>(nuevoEstudiante, HttpStatus.CREATED);
 	}
+	//ver que ocurre con esto se supone que no funcionaria
+	@PutMapping("/cambiarEstudiante/{id}")
+	public ResponseEntity editar(@PathVariable String id,@RequestBody Estudiante estudiante) {
 	
+		Optional<Estudiante>estudianteOpt=serviceEstudiante.listarId(id);
+		  if (estudianteOpt.isPresent()) {
+	            Estudiante estudianteActualizar = estudianteOpt.get();
+	        //    estudianteActualizar.setId(estudiante.getId());
+	            estudianteActualizar.setImagen(estudiante.getImagen());
+	            estudianteActualizar.setJornada(estudiante.getJornada());
+	            estudianteActualizar.setNombre(estudiante.getNombre());
+	            
+	            // Guardar la instancia actualizada
+	            serviceEstudiante.save(estudianteActualizar);
+	            logger.info("editando asistencia: " + estudiante);
+
+	            return ResponseEntity.ok(estudianteActualizar);
+	        } else {
+	            // Manejar el caso en que la asistencia no fue encontrada
+	            return ResponseEntity.notFound().build();
+	        
+	}
+		  }
+	
+	
+	
+	@DeleteMapping("/eliminarEstudiante/{id}")
+	public ResponseEntity eliminarEstudiante(@PathVariable String id) {
+		
+		serviceEstudiante.delete(id);
+		 serviceEstudiante.eliminarQR(id);
+		
+		
+		return ResponseEntity.ok("chill");
+	}
 	@GetMapping("/eliminar/{id}")
 	public String eliminar(Model modelo,@PathVariable String id) {
 		

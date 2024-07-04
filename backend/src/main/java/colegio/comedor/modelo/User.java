@@ -14,6 +14,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -32,8 +33,8 @@ public class User implements UserDetails, Serializable {
 	 private static final long serialVersionUID = 1L;
 	
 	@Id
- @GeneratedValue
- Integer Id;
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+ Integer id;
  @Column(nullable=false)
  String username;
  String lastname;
