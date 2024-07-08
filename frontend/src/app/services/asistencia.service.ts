@@ -44,7 +44,12 @@ obtenerAsistencias(filter: filterAsistencia): Observable<Asistencia[]> {
     endDate: filter.endDate
   };
 
-  return this.http.post<Asistencia[]>(url, asistenciaFilter, { headers });
+  return this.http.post<Asistencia[]>(url, asistenciaFilter, { headers }).pipe(
+    tap((asistencias: Asistencia[]) => {
+      this.asistencias = asistencias;
+      this.asistenciasSubject.next(asistencias);
+    })
+  );;
 }
 editarAsistencia(asistencia: any): Observable<any> {
   const url = `${this.apiUrl}/cambiarAsistencia/${asistencia.id}`;

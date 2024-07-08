@@ -13,5 +13,7 @@ public interface IEstudianteService {
 	public int imagenQR(Estudiante e);
 	public void eliminarQR(String id);	
 	public void limpiar();
+	public Long contarEstudiantes();
 	//Estudiante buscarEstudiantePorNombre(String nombre);
+
 }

@@ -7,6 +7,7 @@
   import { filterAsistencia } from 'src/app/modelos/filterAsistencia';
 import { AsistenciaDia } from 'src/app/modelos/asistenciaDia';
 import { Ventana } from 'src/app/modelos/ventana';
+import { EstudianteService } from 'src/app/services/estudiante.service';
 declare let window: Ventana;
   
 
@@ -21,7 +22,7 @@ declare let window: Ventana;
     asistencias: any[] = [];
     startDate: Date | undefined;
     endDate: Date | undefined;
-    categorias:any[]=[];
+    categorias:any[]= ['Desayuno', 'Almuerzo', 'Refrigerio'];
     data: any[] = [];
     categoriasBarras:any[]=[];
     dataBarras: { [curso: string]: { [almuerzo: string]: number } } = {};
@@ -36,16 +37,34 @@ declare let window: Ventana;
     myPieChart: Chart<'pie'> | undefined;
     myBarChart: Chart<'bar'> | undefined;
     myLineChart: Chart<'line'> | undefined;
-    constructor(private asistenciaService: AsistenciaService,private cdr: ChangeDetectorRef) {
+
+
+    totalEstudiantes: number = 0; // Propiedad para almacenar el total de estudiantes
+    selectedCategory: string = 'Desayuno'; // Inicializar con una categoría por defecto
+    categoriasDisponibles: string[] =  ['Desayuno', 'Almuerzo', 'Refrigerio']; // Asegurar que esta propiedad esté definida y sea inicializada
+
+
+
+    constructor(private estudianteService:EstudianteService,  private asistenciaService: AsistenciaService,private cdr: ChangeDetectorRef) {
       this.startDate = new Date();
       this.endDate = new Date();
     //  this.inicializarGraficos();
+    this.categorias = [this.selectedCategory, 'No asistidos'];
 
 
     }
     ngOnInit(): void {
-    
-
+      this.estudianteService.obtenerTotalEstudiantes().subscribe(
+        (total: number) => { // Especificar el tipo de 'total' como number
+          this.totalEstudiantes = total;
+          console.log('Total de estudiantes:', this.totalEstudiantes);
+          this.obtenerAsistencias(); // Llamar a obtenerAsistencias después de obtener el total de estudiantes
+        },
+        error => {
+          console.error('Error al obtener el número total de estudiantes', error);
+        }
+      );
+      
 
     }
     cambiarRangoFechas(rango: string): void {
@@ -80,15 +99,27 @@ declare let window: Ventana;
       this.obtenerAsistencias(); // Actualiza los datos según el nuevo rango de fechas
     }
       
-    inicializarPastel(asistencias: any[]):void{
-      const asistenciasPorAlmuerzo = asistencias.reduce((acumulador, asistencia) => {
-        const almuerzoNombre = asistencia.almuerzo.nombre;
-        acumulador[almuerzoNombre] = (acumulador[almuerzoNombre] || 0) + 1;
-        return acumulador;
-      }, {});
-      this.categorias=Object.keys(asistenciasPorAlmuerzo);
-      this.data = Object.values(asistenciasPorAlmuerzo);
-    }
+   
+  inicializarPastel(asistencias: any[],): void {
+    const asistenciasPorCategoria = asistencias.reduce((acumulador, asistencia) => {
+      const categoriaNombre = asistencia.almuerzo.nombre;
+      acumulador[categoriaNombre] = (acumulador[categoriaNombre] || 0) + 1;
+      return acumulador;
+    }, {});
+
+    // Calcular estudiantes no asistidos
+    const estudiantesConAsistencia = Object.values<number>(asistenciasPorCategoria).reduce((totalEstudiantes: number, cantidad: number) => totalEstudiantes + cantidad, 0);
+    const estudiantesSinAsistencia = this.totalEstudiantes - estudiantesConAsistencia;
+
+    // Actualizar datos para el gráfico de pastel
+    this.data = [asistenciasPorCategoria[this.selectedCategory] || 0, estudiantesSinAsistencia];
+  }
+ 
+  onCategorySelectionChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedCategory = selectElement.value;
+    this.obtenerAsistencias();
+  }
     inicializarBarras(asistencias: any[]): void {
       const asistenciasPorCursoYAlmuerzo = asistencias.reduce((acumulador, asistencia) => {
         const curso = asistencia.estudiante.curso;
@@ -162,15 +193,25 @@ declare let window: Ventana;
         this.asistenciaService.obtenerAsistencias(filter).subscribe(
           data => {
             this.asistencias = data;
+
+            this.actualizarCategoriasDisponibles(this.asistencias);
+
+
             this.inicializarPastel(this.asistencias);
           this.inicializarBarras(this.asistencias);
-            //this.generarPastel(this.asistencias);
-          // this.generarGraficoBarras(this.asistencias);
+         
+
+
+
+          
            if (this.startDate && this.endDate) { // Verificar nuevamente
               this.inicilizarLinea(this.asistencias, this.startDate, this.endDate);
           } else {
             console.error('Fechas no seleccionadas');
           }
+
+           // Calcular estudiantes sin asistencia
+    
           this.cdr.detectChanges();
 
           },
@@ -184,7 +225,13 @@ declare let window: Ventana;
         console.error('Fechas no seleccionadas');
       }
     }
+    actualizarCategoriasDisponibles(asistencias: any[]): void {
+      // Obtener todas las categorías únicas de las asistencias
+      const categoriasUnicas = Array.from(new Set(asistencias.map(asistencia => asistencia.almuerzo.nombre)));
     
+      // Ordenar alfabéticamente o según tus criterios
+      this.categoriasDisponibles = categoriasUnicas.sort();
+    }
     
     // estadisticas.component.ts (continuación)
 

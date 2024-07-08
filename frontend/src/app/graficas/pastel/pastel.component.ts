@@ -10,6 +10,8 @@ export class PastelComponent implements OnInit {
   @Input() categories: string[] = [];
   @Input() data: number[] = [];
 
+  //selectedCategory: string = 'Desayuno';
+
   pieChart: Chart<'pie'> | undefined;
 
   constructor() { }

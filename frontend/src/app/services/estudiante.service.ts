@@ -9,6 +9,7 @@ import { Estudiante } from '../modelos/estudiante';
 export class EstudianteService {
   private apiUrl = 'http://localhost:8085/api/estudiantes';
   private estudiantes: Estudiante[] = [];
+  private totalEstudiantes: number = 0; // Añadir esta línea
 
   private estudiantesSubject: BehaviorSubject<Estudiante[]> = new BehaviorSubject(this.estudiantes);
   
@@ -26,7 +27,13 @@ export class EstudianteService {
     //Devuelve un observable 
     return this.http.get<Estudiante[]>('http://localhost:8085/api/estudiantes');
   }
+  obtenerTotalEstudiantes(): Observable<number> {
+    const url = `${this.apiUrl}/cambiarEstudiante/total`;
 
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.get<number>(`${this.apiUrl}/total`);
+  }
  
   private cargarEstudiantes() {
     this.http.get<Estudiante[]>('http://localhost:8085/api/estudiantes').subscribe(

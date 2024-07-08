@@ -22,7 +22,7 @@ export class ListAsistenciasComponent implements OnInit {
   asistenciaTabla:any[]=[];
   uniqueValues: string[] = [];
   filtros: { [key: string]: any } = {};
-  usuarioRol: string = 'admin'; // Suponiendo que obtienes el rol del usuario de algún servicio o componente
+  usuarioRol: string = 'ADMIN'; // Suponiendo que obtienes el rol del usuario de algún servicio o componente
   asistenciaParaEditar: AsistenciaNueva | null = null;
   mostrarFormularioEdicion: boolean = false; // Variable para controlar la visibilidad del formulario de edición
   mostrarAlertaEliminar:boolean=false;

@@ -92,6 +92,12 @@ public class EstudianteService implements IEstudianteService {
 		// TODO Auto-generated method stub
 		//return data.findByid(nombre);
 	/*}*/
+
+	@Override
+	public Long contarEstudiantes() {
+		// TODO Auto-generated method stub
+		return data.count();
+	}
 	
 	
 	

@@ -175,7 +175,11 @@ public class controladorEstudiante {
         return ResponseEntity.ok(estudiantes);
     }
 	
-	
+	   @GetMapping("/total")
+	    public ResponseEntity<Long> obtenerTotalEstudiantes() {
+	        long totalEstudiantes = serviceEstudiante.contarEstudiantes(); // Método en tu servicio para contar los estudiantes
+	        return ResponseEntity.ok(totalEstudiantes);
+	    }
 	
 	
 }
