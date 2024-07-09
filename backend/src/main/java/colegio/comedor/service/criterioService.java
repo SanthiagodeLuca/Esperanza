@@ -28,7 +28,7 @@ public class criterioService implements ICriterioService {
 		@Override
 		public Optional<Criterio> listarIdCriterios(int id) {
 			// TODO Auto-generated method stub
-			return dataCriterio.findById((long) id);
+			return dataCriterio.findById(id);
 		}
 
 		@Override
@@ -40,7 +40,7 @@ public class criterioService implements ICriterioService {
 
 		@Override
 		public void delete(int id) {
-			dataCriterio.deleteById((long) id);
+			dataCriterio.deleteById(id);
 			
 		}
 

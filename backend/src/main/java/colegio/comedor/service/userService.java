@@ -23,7 +23,7 @@ public class userService implements IUserService {
 	@Override
 	public Optional<User> listarId(String id) {
 		// TODO Auto-generated method stub
-		return userRepository.findById(id);
+		return userRepository.findById(Integer.parseInt(id));
 
 	}
 	@Override
@@ -33,7 +33,7 @@ public class userService implements IUserService {
 	}
 	@Override
 	public void delete(String id) {
-		userRepository.deleteById(id);		
+		userRepository.deleteById(Integer.parseInt(id));		
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class userService implements IUserService {
 	@Override
 	public Optional<User> buscarUsuario(double id) {
 		// TODO Auto-generated method stub
-		 return userRepository.findById(String.valueOf((int) id));
+		 return userRepository.findById((int) id);
 	}
 
 }

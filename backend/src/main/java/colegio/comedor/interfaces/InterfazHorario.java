@@ -7,6 +7,6 @@ import colegio.comedor.modelo.Estudiante;
 import colegio.comedor.modelo.Horario;
 
 @Repository
-public interface InterfazHorario extends  CrudRepository<Horario,String> {
+public interface InterfazHorario extends  CrudRepository<Horario,Integer> {
 
 }

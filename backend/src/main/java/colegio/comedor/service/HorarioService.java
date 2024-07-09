@@ -30,7 +30,7 @@ public class HorarioService implements IHorarioService{
 	@Override
 	public Optional<Horario> listarId(String id) {
 		// TODO Auto-generated method stub
-		return dataHorario.findById(id);
+		return dataHorario.findById(Integer.parseInt(id));
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class HorarioService implements IHorarioService{
 
 	@Override
 	public void delete(String id) {
-		dataHorario.deleteById(id);
+		dataHorario.deleteById(Integer.parseInt(id));
 		
 	}
 
@@ -60,9 +60,7 @@ public class HorarioService implements IHorarioService{
 
 	@Override
 	public  Optional<Horario> findById(Integer id) {
-		String valor=id.toString();
-		// TODO Auto-generated method stub
-		return dataHorario.findById(valor);
+		return dataHorario.findById(id);
 	}
 
 	

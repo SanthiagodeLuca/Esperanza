@@ -9,7 +9,7 @@
 	import colegio.comedor.modelo.User;
 	
 	@Repository
-	public interface InterfazUser extends CrudRepository<User,String> {
+	public interface InterfazUser extends CrudRepository<User,Integer> {
 	
 	  Optional<User> findByUsername(String username); // Agrega este método
  	
