@@ -43,14 +43,19 @@
   <app-linea [categorias]="categoriasLinea" [data]="dataLinea"></app-linea>
   <canvas id="historyChart" width="800" height="400"></canvas>
 </div>  
-<!-- estadisticas.component.html -->
+<!-- 
 <div>
   <label for="categoriaSelector">Selecciona una categoría:</label>
   <select id="categoriaSelector" (change)="onCategorySelectionChange($event)">
     <option *ngFor="let categoria of categoriasDisponibles" [value]="categoria">{{ categoria }}</option>
   </select>
-</div>
+</div>estadisticas.component.html -->
 
+<div class="categoria-buttons">
+  <button mat-raised-button color="primary" [class.selected]="selectedCategory === 'desayuno'" (click)="seleccionarCategoria('desayuno')">Desayuno</button>
+  <button mat-raised-button color="primary" [class.selected]="selectedCategory === 'almuerzo'" (click)="seleccionarCategoria('almuerzo')">Almuerzo</button>
+  <button mat-raised-button color="primary" [class.selected]="selectedCategory === 'refrigerio'" (click)="seleccionarCategoria('refrigerio')">Refrigerio</button>
+</div>
 
 
 

@@ -43,8 +43,8 @@
         <tr>
           <td>{{ asistencia.id }}</td>
           <td>{{ asistencia.estudiante.id }}</td>
-          <td>{{ asistencia.almuerzo.id }}</td>
-          <td>{{ asistencia.fecha }}</td>
+          <td>{{ asistencia.almuerzo.nombre }}</td>
+          <td>{{ formatDate(asistencia.fecha) }}</td>
           <td>
             <button *ngIf="usuarioRol === 'ADMIN'" class="btn btn-primary mr-1" (click)="editarAsistencia(asistencia)">Editar</button>
             <button *ngIf="usuarioRol === 'ADMIN'" class="btn btn-danger" (click)="confirmarEliminacion(asistencia.id)">Eliminar</button>

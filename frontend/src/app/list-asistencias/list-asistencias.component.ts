@@ -7,11 +7,14 @@ import { NotificacionService } from '../services/notificacion/notificacion.servi
 import { WebSocketService } from '../services/webSocket/web-socket.service';
 import { AsistenciaNueva } from '../modelos/asistenciaNueva';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-list-asistencias',
   templateUrl: './list-asistencias.component.html',
-  styleUrls: ['./list-asistencias.component.scss']
+  styleUrls: ['./list-asistencias.component.scss'],
+  providers: [DatePipe] // Asegúrate de incluir DatePipe en los providers del componente
+
 })
 export class ListAsistenciasComponent implements OnInit {
 
@@ -29,7 +32,7 @@ export class ListAsistenciasComponent implements OnInit {
   private subscription: Subscription | null = null; // Inicializar con null
 asistenciaAEliminar: number | null = null;
 
-  constructor(private asistenciaService: AsistenciaService,private filtroService:FiltroService, private notificationService: NotificacionService
+  constructor(private datePipe:DatePipe,private asistenciaService: AsistenciaService,private filtroService:FiltroService, private notificationService: NotificacionService
     ,private webSocket:WebSocketService,private cdr: ChangeDetectorRef,private router:Router
   ) {}
 
@@ -159,6 +162,9 @@ ngOnDestroy(){
     // Lógica para cancelar la eliminación del estudiante
     // Oculta la alerta de eliminación
     this.mostrarAlertaEliminar = false;
+  }
+  formatDate(date: string): string {
+    return this.datePipe.transform(date, 'yyyy-MM-dd HH:mm:ss') || '';
   }
 
 }
