@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/chart"
+        android:title="@string/estadisticas" />
+
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/alert"
+        android:title="@string/alertas" />
+
+    <item
+        android:id="@+id/navigation_qr"
+        android:icon="@drawable/qr"
+        android:title="@string/qr" />
+
+    <item
+        android:id="@+id/navigation_registry"
+        android:icon="@drawable/registry"
+        android:title="@string/registro" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/profile"
+        android:title="@string/perfil" />
+
+</menu>
