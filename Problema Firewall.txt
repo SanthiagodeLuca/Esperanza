@@ -1,0 +1,33 @@
+
+Para asegurarte de que el firewall de Windows 11 no esté bloqueando las solicitudes ICMP (ping), puedes seguir estos pasos para permitir el tráfico ICMP en tu firewall:
+
+Abrir Configuración de Firewall de Windows:
+
+Presiona Windows + R para abrir el cuadro de diálogo "Ejecutar".
+Escribe wf.msc y presiona Enter para abrir el Firewall de Windows con seguridad avanzada.
+Crear una nueva regla de entrada:
+
+En la ventana del Firewall de Windows con seguridad avanzada, en el panel izquierdo, haz clic en Reglas de entrada.
+En el panel derecho, haz clic en Nueva regla... para abrir el asistente para crear nuevas reglas.
+Seleccionar tipo de regla:
+
+Selecciona Personalizada y haz clic en Siguiente.
+Aplicar a todos los programas:
+
+Deja seleccionado Todos los programas y haz clic en Siguiente.
+Configurar protocolo y puertos:
+
+En la sección Protocolo y puertos, selecciona ICMPv4 en el menú desplegable de Protocolo y haz clic en Siguiente.
+Especificar dirección de origen y destino:
+
+Deja las configuraciones predeterminadas para la dirección de origen y destino y haz clic en Siguiente.
+Permitir la conexión:
+
+Selecciona Permitir la conexión y haz clic en Siguiente.
+Especificar los perfiles:
+
+Selecciona los perfiles en los que deseas que se aplique la regla (Dominio, Privado, Público) y haz clic en Siguiente.
+Nombrar la regla:
+
+Asigna un nombre a la regla, por ejemplo, Permitir ICMP (Ping), y haz clic en Finalizar.
+Este proceso creará una regla en el firewall de Windows 11 que permitirá las solicitudes ICMP (ping) a tu laptop. Esto debería resolver cualquier problema relacionado con el firewall que esté bloqueando inetAddress.isReachable().

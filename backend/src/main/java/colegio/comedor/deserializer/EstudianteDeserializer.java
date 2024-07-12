@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
+import colegio.comedor.GeneradorQR;
 import colegio.comedor.interfaceService.IEstudianteService;
 import colegio.comedor.modelo.Estudiante;
 
@@ -19,8 +20,14 @@ public class EstudianteDeserializer extends JsonDeserializer<Estudiante>  {
 
     @Override
     public Estudiante deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        String estudianteId = p.getText();
-        return estudianteService.listarId(estudianteId).orElse(null);
+    /*  buscar con id desencriptado
+    	String estudianteId = p.getText();
+        return estudianteService.listarId(estudianteId).orElse(null);*/
+        
+        String estudianteIdEncriptado = p.getText();
+        String estudianteId = GeneradorQR.desencriptarAES(estudianteIdEncriptado);
+       return estudianteService.listarId(estudianteId).orElse(null);
+       /*cifrado */
     }
 
 

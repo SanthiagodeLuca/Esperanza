@@ -37,10 +37,19 @@ public class GeneradorQR {
 	            SecretKeySpec clave = new SecretKeySpec(CLAVE.getBytes(), "AES");
 	            Cipher cifrador = Cipher.getInstance("AES/ECB/PKCS5Padding");
 	            cifrador.init(Cipher.DECRYPT_MODE, clave);
+	         // Log del texto encriptado que se está desencriptando
+	            System.out.println("Texto encriptado recibido para desencriptar: " + textoEncriptado);
+	            
 	            byte[] textoDesencriptado = cifrador.doFinal(Base64.getDecoder().decode(textoEncriptado));
-	            return new String(textoDesencriptado);
+	            String textoPlano = new String(textoDesencriptado);
+	            
+	            // Log del texto desencriptado
+	            System.out.println("Texto desencriptado: " + textoPlano);
+	            
+	            return textoPlano;
 	        } catch (Exception e) {
 	            e.printStackTrace();
+	            System.out.println("No se desencripto nada");
 	            return null;
 	        }
 	    }
