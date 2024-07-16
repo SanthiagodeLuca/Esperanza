@@ -177,7 +177,7 @@ public class QrFragment extends Fragment {
             jsonBody.put("id", "138"); // ID específico para la solicitud
             jsonBody.put("estudiante", qrContent); // Contenido del QR escaneado, ajustar según la estructura del QR
             jsonBody.put("almuerzo", "1"); // Ejemplo de parámetro adicional
-            jsonBody.put("fecha", "2024-07-10 1:16:00"); // Ejemplo de fecha y hora
+            jsonBody.put("fecha", fechaActual); // Ejemplo de fecha y hora "2024-07-10 1:16:00"
         } catch (JSONException e) {
             e.printStackTrace();
         }

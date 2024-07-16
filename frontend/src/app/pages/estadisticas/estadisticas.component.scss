@@ -12,3 +12,19 @@
     margin: 0 10px; /* Margen horizontal entre los gráficos */
   }
   
+  .categoria-buttons {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+  }
+  
+  .categoria-buttons button {
+    flex: 1; /* Los botones ocupan el mismo espacio */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
+  }
+  
+  .categoria-buttons button.selected {
+    background-color: #2196f3; /* Color de fondo cuando está seleccionado */
+    color: white; /* Color de texto cuando está seleccionado */
+  }
+  

@@ -1,3 +1,38 @@
-# Default ignored files
-/shelf/
-/workspace.xml
+# Built application files
+*.apk
+*.ap_
+*.dex
+*.aar
+*.jar
+
+# Files for the ART/Dalvik VM
+*.o
+*.so
+*.obj
+
+# IDE files
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio Captures
+captures/
+
+# Auto-generated files
+gen/
+out/
+
+# Other
+*.class
+.DS_Store
