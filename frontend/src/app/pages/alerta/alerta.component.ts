@@ -9,6 +9,8 @@ import { WebSocketService } from 'src/app/services/webSocket/web-socket.service'
   styleUrls: ['./alerta.component.scss']
 })
 export class AlertaComponent implements OnInit, OnDestroy {
+  isSuccess: boolean = true; // Añadido para manejar el estado de éxito o error
+
   message: string | null = null;
   asistencia: any | null = null;
   asistencias: any[] = [];
@@ -18,13 +20,20 @@ export class AlertaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.asistenciaSubscription = this.webSocketService.subscribeToAsistencias().subscribe(
-      (asistencia: any) => {
-        this.asistencia = asistencia;
-        this.asistencias.push(asistencia);
-        this.showMessage(`Asistencia agregada correctamente: ${asistencia.estudiante.nombre}`);
+      (data: any) => {
+        if (data.message) {
+          // Manejar mensaje de error
+          this.showMessage(data.message, false);
+        } else {
+          // Manejar objeto Asistencia
+          this.asistencia = data;
+          this.asistencias.push(data);
+          this.showMessage(`Asistencia agregada correctamente: ${data.estudiante.nombre}`, true);
+        }
       },
       (error) => {
         console.error('Error en la suscripción a las asistencias:', error);
+        this.showMessage('Error al agregar asistencia.', false);
       }
     );
   }
@@ -35,8 +44,10 @@ export class AlertaComponent implements OnInit, OnDestroy {
     }
   }
 
-  showMessage(message: string): void {
+  
+  showMessage(message: string, isSuccess: boolean): void {
     this.message = message;
+    this.isSuccess = isSuccess;
     setTimeout(() => {
       this.message = null;
     }, 3000); // Oculta el mensaje después de 3 segundos

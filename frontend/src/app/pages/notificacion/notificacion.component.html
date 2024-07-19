@@ -7,7 +7,7 @@
     <div class="notification-dropdown" [class.show]="showNotifications">
       <ul>
         <li *ngFor="let asistencia of asistencias">
-          {{ asistencia.id }} - {{ asistencia.estudiante.id }}
+          {{ asistencia?.id }} - {{ asistencia?.estudiante?.id }}
         </li>
       </ul>
     </div>

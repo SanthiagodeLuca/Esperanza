@@ -1,5 +1,6 @@
 package colegio.comedor.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -145,4 +146,26 @@ public class AsistenciaService  implements IAsistenciaService{
 		    dataAsistencia.save(e);
 	
 	}
+	
+
+
+	 @Override
+	    public Optional<Asistencia> buscarAsistenciaExistente(String estudianteId, Date fecha, int tipoComida) {
+	        // Ajustar la fecha para que coincida con el formato esperado en la consulta JPQL
+	        Calendar calendar = Calendar.getInstance();
+	        calendar.setTime(fecha);
+	        calendar.set(Calendar.HOUR_OF_DAY, 0);
+	        calendar.set(Calendar.MINUTE, 0);
+	        calendar.set(Calendar.SECOND, 0);
+	        Date fechaStart = calendar.getTime();
+	        calendar.set(Calendar.HOUR_OF_DAY, 23);
+	        calendar.set(Calendar.MINUTE, 59);
+	        calendar.set(Calendar.SECOND, 59);
+	        Date fechaEnd = calendar.getTime();
+
+	        return dataAsistencia.buscarAsistenciaExistente(estudianteId, fechaStart, fechaEnd, tipoComida);
+	    }
+
+	
+	
 }

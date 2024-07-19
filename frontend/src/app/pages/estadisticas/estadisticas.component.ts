@@ -126,6 +126,7 @@
         acumulador[categoriaNombre] = (acumulador[categoriaNombre] || 0) + 1;
         return acumulador;
       }, {});
+      
   // Calcular estudiantes no asistidos en la categoría seleccionada
   const estudiantesAsistidosEnCategoria = asistenciasPorCategoria[this.selectedCategory] || 0;
   const estudiantesSinAsistenciaEnCategoria = this.totalEstudiantesPeriodo - estudiantesAsistidosEnCategoria;
@@ -209,6 +210,8 @@
       
           console.log('Filter data:', filter); // Verifica los datos aquí
       
+          //peticion
+          //peticion /fecha 
           this.asistenciaService.obtenerAsistencias(filter).subscribe(
             data => {
               this.asistencias = data;

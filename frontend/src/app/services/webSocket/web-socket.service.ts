@@ -47,15 +47,21 @@ export class WebSocketService {
     }
   }
 
-  public subscribeToAsistencias(): Observable<Asistencia> {
-    const subject = new Subject<Asistencia>();
+  public subscribeToAsistencias(): Observable<any> {
+    const subject = new Subject<any>();
 
     this.connectionPromise.then(() => {
       this.stompClient.subscribe('/topic/asistencias', (message: { body: string }) => {
-        subject.next(JSON.parse(message.body) as Asistencia);
+        try {
+          const parsedMessage = JSON.parse(message.body);
+          subject.next(parsedMessage);
+        } catch (error) {
+          console.error('Error al analizar el mensaje:', error);
+        }
       });
     }).catch((error) => {
       console.error('Error al suscribirse a las asistencias:', error);
+      subject.error('Error al suscribirse a las asistencias.');
     });
 
     return subject.asObservable();
