@@ -313,8 +313,10 @@ public class QrFragment extends Fragment {
         // Verificar si se ha otorgado el permiso de cámara
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
-            // Resumir la vista de escáner de código de barras
+            // Detener y reiniciar el escáner
+            barcodeView.pause();
             barcodeView.resume();
+            startBarcodeScanner(); // Reinicia el escáner
         }
     }
 
@@ -327,6 +329,8 @@ public class QrFragment extends Fragment {
         // Detener el temporizador si está activo
         if (handler != null && scannerRunnable != null) {
             handler.removeCallbacks(scannerRunnable);
+            handler = null;
+            scannerRunnable = null;
         }
     }
 
