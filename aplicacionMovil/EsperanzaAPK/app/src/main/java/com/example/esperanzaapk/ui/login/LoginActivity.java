@@ -15,6 +15,8 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -63,8 +65,27 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Configura la barra de estado para que tenga un fondo blanco y los íconos sean negros
+        Window window = getWindow();
+        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        window.setStatusBarColor(getResources().getColor(android.R.color.white));
+
         context = this;
         mainHandler = new Handler(Looper.getMainLooper());
+
+        // Verificar si hay un token guardado
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null);
+        if (token != null) {
+            // Si hay un token guardado, verificar la IP antes de redirigir
+            String savedIp = getSavedIp();
+            if (savedIp != null && !savedIp.equals("No IP saved")) {
+                verifyIpAndProceed(savedIp);
+            } else {
+                showEditIpDialog();
+            }
+        }
 
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
@@ -86,6 +107,30 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         editIpButton.setOnClickListener(v -> showEditIpDialog());
+    }
+
+    private void verifyIpAndProceed(String ip) {
+        // Verificar la conexión a WiFi antes de proceder
+        if (!isConnectedToWifi()) {
+            Toast.makeText(LoginActivity.this, "Por favor, conéctese a una red WiFi para verificar la IP.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        new Thread(() -> {
+            boolean ipIsValid = checkHttpServer(ip);
+
+            runOnUiThread(() -> {
+                if (ipIsValid) {
+                    // Redirigir a MainActivity
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();  // Finalizar LoginActivity
+                } else {
+                    Toast.makeText(LoginActivity.this, "La IP guardada no es válida. Por favor, actualice la IP.", Toast.LENGTH_LONG).show();
+                    showEditIpDialog(); // Mostrar diálogo para actualizar IP
+                }
+            });
+        }).start();
     }
 
     private void showEditIpDialog() {

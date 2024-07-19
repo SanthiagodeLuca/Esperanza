@@ -10,4 +10,6 @@
     <color name="some_color">#FF0000</color>
     <color name="pie_asistidos">#FFA726</color>
     <color name="pie_no_asistidos">#66BB6A</color>
+    <color name="colorPrimaryVariant">#00FFFFFF</color>
+    <color name="white_transparent">#80FFFFFF</color> <!-- 50% de opacidad -->
 </resources>

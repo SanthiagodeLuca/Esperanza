@@ -102,17 +102,17 @@ public class DashboardFragment extends Fragment {
 
         buttonBreakfast.setOnClickListener(v -> {
             selectedCategory = "Desayuno";
-            obtenerAsistencias();
+            obtenerTotalEstudiantes();
             textdashboard.setText(selectedCategory);
         });
         buttonLunch.setOnClickListener(v -> {
             selectedCategory = "Almuerzo";
-            obtenerAsistencias();
+            obtenerTotalEstudiantes();
             textdashboard.setText(selectedCategory);
         });
         buttonRefri.setOnClickListener(v -> {
             selectedCategory = "Refrigerio";
-            obtenerAsistencias();
+            obtenerTotalEstudiantes();
             textdashboard.setText(selectedCategory);
         });
 
@@ -147,7 +147,8 @@ public class DashboardFragment extends Fragment {
             asistenciaService = retrofit.create(AsistenciaService.class);
 
             obtenerTotalEstudiantes();
-            obtenerAsistencias();
+
+
         }
         return root;
     }
@@ -177,6 +178,11 @@ public class DashboardFragment extends Fragment {
         for (int i = 0; i < labels.length; i++) {
             chart.addPieSlice(new PieModel(labels[i], values[i], colors[i]));
         }
+
+        // Configurar el color de fondo interno del gráfico
+        chart.setInnerPaddingColor(Color.parseColor("#FFFFFFFF"));
+
+        chart.setAnimationTime(500);
 
         chart.startAnimation();
 
@@ -233,6 +239,7 @@ public class DashboardFragment extends Fragment {
                 if (response.isSuccessful()) {
                     totalEstudiantes = response.body();
                     Log.d("API_CALL", "Total de estudiantes: " + totalEstudiantes);
+                    obtenerAsistencias();
                     // No actualizar el gráfico aquí, esperar hasta obtener asistencias
                 } else {
                     Log.e("API_CALL", "Error al obtener el total de estudiantes");
@@ -247,6 +254,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void obtenerAsistencias() {
+
         if (editTextDate.getText().toString().isEmpty() || editTextDate2.getText().toString().isEmpty()) {
             Log.e("API_CALL", "Fechas no seleccionadas");
             return;
