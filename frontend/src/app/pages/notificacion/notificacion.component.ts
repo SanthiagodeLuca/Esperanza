@@ -14,11 +14,36 @@ export class NotificacionComponent implements OnInit, OnDestroy {
   showNotifications: boolean = false;
   asistencia: Asistencia | null = null;
   asistencias: any[] = [];
+  errorMessage: string | null = null; // Agregado para manejar mensajes de error
 
   private asistenciaSubscription: Subscription | undefined;
 
   constructor(private webSocketService: WebSocketService) { }
 
+  ngOnInit(): void {
+    this.asistenciaSubscription = this.webSocketService.subscribeToAsistencias().subscribe(
+      (data: any) => {
+        console.log('Datos recibidos:', data);
+        if (data.message) {
+          this.errorMessage = data.message;
+          console.error('Error: ' + this.errorMessage);
+        } else {
+          // Asegúrate de que `data` es del tipo `Asistencia` esperado
+          if (data && data.id && data.estudiante) {
+            this.notificationCount++;
+            this.asistencia = data;
+            this.asistencias.push(data);
+          } else {
+            console.error('Datos recibidos no tienen la estructura esperada:', data);
+          }
+        }
+      },
+      (error) => {
+        console.error('Error en la suscripción a las asistencias:', error);
+      }
+    );
+  }
+/*
   ngOnInit(): void {
     console.log('Inicializando NotificacionComponent...');
     this.asistenciaSubscription = this.webSocketService.subscribeToAsistencias().subscribe(
@@ -34,7 +59,7 @@ export class NotificacionComponent implements OnInit, OnDestroy {
       }
     );
   }
-
+*/
   ngOnDestroy(): void {
     if (this.asistenciaSubscription) {
       this.asistenciaSubscription.unsubscribe();

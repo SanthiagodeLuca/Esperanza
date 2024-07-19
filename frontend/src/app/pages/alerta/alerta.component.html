@@ -1,6 +1,7 @@
-<div *ngIf="message" class="alert">
+<div *ngIf="message" [ngClass]="{'alert-success': isSuccess, 'alert-error': !isSuccess}">
   {{ message }}
 </div>
+
 <!--
 <div *ngFor="let asistencia of asistencias" class="asistencia-alert">
   {{ asistencia.id }} - {{ asistencia.estudiante.id }} - {{ asistencia.estudiante.nombre }}

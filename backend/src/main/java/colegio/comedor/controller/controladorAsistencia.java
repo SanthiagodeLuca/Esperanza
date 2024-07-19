@@ -1,11 +1,13 @@
 package colegio.comedor.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.ui.Model;
@@ -30,6 +32,7 @@ import colegio.comedor.modelo.Asistencia;
 import colegio.comedor.modelo.Estudiante;
 import colegio.comedor.service.AsistenciaService;
 import colegio.comedor.service.ModificacionHorarioService;
+import colegio.comedor.webpack.controller.ErrorMessage;
 import colegio.comerdor.filter.modelo.AsistenciaFilter;
 @RestController
 @RequestMapping("/api/asistencias") 
@@ -171,21 +174,20 @@ public class controladorAsistencia{
 	@PostMapping("/nuevaAsistencia")
 	public ResponseEntity<String> nuevaAsistencia(@RequestBody Asistencia nuevaAsistencia) {
 		
-		String valor=nuevaAsistencia.getEstudiante().getId()+"";
-		
-	//	Optional<Estudiante> estudiante=serviceEstudiante.listarId(GeneradorQR.desencriptarAES(valor));
-	
-	/*	if(estudiante!=null) {
-			nuevaAsistencia.setEstudiante(estudiante);
-			
-		}*/
-		
-	    // Aquí puedes agregar la lógica para guardar la nueva asistencia en tu base de datos
-	    // Por ejemplo:
-	 
 		ModificacionHorarioService resolverHorario = new ModificacionHorarioService(serviceAlmuerzo,serviceHorario);
 		Almuerzo almuerzo = resolverHorario.determinarHorario(nuevaAsistencia);
 		nuevaAsistencia.setAlmuerzo(almuerzo);
+		
+		   String estudianteId = nuevaAsistencia.getEstudiante().getId();
+		    Date fecha = nuevaAsistencia.getFecha();
+		    int almuerzoNombre = nuevaAsistencia.getAlmuerzo().getId();
+
+		    // Verificar si ya existe una asistencia con el mismo estudiante, fecha y tipo de comida
+		    Optional<Asistencia> asistenciaExistente = serviceAsistencia.buscarAsistenciaExistente(estudianteId, fecha, almuerzoNombre);
+		    if (asistenciaExistente.isPresent()) {
+		        messagingTemplate.convertAndSend("/topic/asistencias",  new ErrorMessage("Asistencia ya existe para este estudiante en esta fecha con este tipo de comida"));
+		        return ResponseEntity.status(HttpStatus.CONFLICT).body("Asistencia ya existe para este estudiante en esta fecha con este tipo de comida");
+		    }
 		
 		
 		

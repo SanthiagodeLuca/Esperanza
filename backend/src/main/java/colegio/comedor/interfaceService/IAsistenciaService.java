@@ -19,5 +19,5 @@ public interface IAsistenciaService {
 	public void limpiar();
 	public List<Asistencia> obtenerFechasAsistencia(Date startDate, Date endDate);
     public void edit(Asistencia e); // Método para editar una asistencia existente
-
+public Optional<Asistencia>buscarAsistenciaExistente(String estudianteId, Date fecha, int tipoComida);
 }
