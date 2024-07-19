@@ -18,7 +18,23 @@
         android:inputType="none"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_dashboard" />
+
+    <EditText
+        android:id="@+id/edit_text_date2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:clickable="true"
+        android:drawableEnd="@android:drawable/ic_menu_today"
+        android:focusable="false"
+        android:hint="Seleccionar Fecha"
+        android:inputType="none"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.962"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_dashboard" />
 
@@ -33,11 +49,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_dinner"
+        android:id="@+id/button_refri"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="116dp"
-        android:text="Comida"
+        android:text="Refrigerio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_lunch"
         app:layout_constraintTop_toTopOf="parent" />
@@ -48,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="116dp"
         android:text="Almuerzo"
-        app:layout_constraintEnd_toStartOf="@+id/button_dinner"
+        app:layout_constraintEnd_toStartOf="@+id/button_refri"
         app:layout_constraintStart_toEndOf="@+id/button_breakfast"
         app:layout_constraintTop_toTopOf="parent" />
 
