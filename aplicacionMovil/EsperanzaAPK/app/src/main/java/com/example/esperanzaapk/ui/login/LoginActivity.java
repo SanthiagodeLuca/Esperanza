@@ -1,8 +1,10 @@
 package com.example.esperanzaapk.ui.login;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -19,6 +21,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Button editIpButton;
     private SharedPreferences sharedPreferences;
+    private Dialog progressDialog;
 
     private static final String FILE_NAME = "server_ip.txt";
     private static final String TAG = "LoginActivity";
@@ -65,11 +69,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         // Configura la barra de estado para que tenga un fondo blanco y los íconos sean negros
         Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        window.setStatusBarColor(getResources().getColor(android.R.color.white));
 
         context = this;
         mainHandler = new Handler(Looper.getMainLooper());
@@ -94,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         editIpButton = findViewById(R.id.edit_ip_button);
         ipDisplayTextView = findViewById(R.id.ip_display);
 
+
         displaySavedIp();
 
         loginButton.setOnClickListener(v -> {
@@ -109,10 +115,33 @@ public class LoginActivity extends AppCompatActivity {
         editIpButton.setOnClickListener(v -> showEditIpDialog());
     }
 
+    private void showLoading(boolean show) {
+        if (show) {
+            // Crear y configurar el Dialog
+            progressDialog = new Dialog(this);
+            LayoutInflater inflater = getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.dialog_progress, null);
+
+            progressDialog.setContentView(dialogView);
+            progressDialog.setCancelable(false); // Desactiva el botón de cancelar
+
+            // Muestra el Dialog
+            progressDialog.show();
+
+        } else {
+            // Oculta el Dialog si está mostrando
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
+    }
+
     private void verifyIpAndProceed(String ip) {
+        showLoading(true);
         // Verificar la conexión a WiFi antes de proceder
         if (!isConnectedToWifi()) {
             Toast.makeText(LoginActivity.this, "Por favor, conéctese a una red WiFi para verificar la IP.", Toast.LENGTH_LONG).show();
+            showLoading(false); // Ocultar el ProgressBar si no hay conexión WiFi
             return;
         }
 
@@ -129,9 +158,12 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "La IP guardada no es válida. Por favor, actualice la IP.", Toast.LENGTH_LONG).show();
                     showEditIpDialog(); // Mostrar diálogo para actualizar IP
                 }
+                showLoading(false); // Ocultar el ProgressBar si no hay conexión WiFi
             });
         }).start();
     }
+
+
 
     private void showEditIpDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -141,6 +173,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText ipEditText = dialogView.findViewById(R.id.ip_edit_text);
         final TextView ipSavedDisplay = dialogView.findViewById(R.id.ip_saved_display);
+
         String savedIp = getSavedIp();
         ipSavedDisplay.setText("IP guardada: " + savedIp);
 
@@ -153,8 +186,10 @@ public class LoginActivity extends AppCompatActivity {
         Button closeButton = dialogView.findViewById(R.id.close_button);
 
         automaticButton.setOnClickListener(view -> {
+            showLoading(true);
             if (!isConnectedToWifi()) {
                 Toast.makeText(context, "Por favor, conéctese a una red WiFi", Toast.LENGTH_SHORT).show();
+                showLoading(false);
                 return;
             }
 
@@ -193,6 +228,7 @@ public class LoginActivity extends AppCompatActivity {
                     latch.await(); // Espera hasta que todos los hilos terminen
                     // Cuando todos los hilos terminan, muestra el Toast y oculta el ProgressBar
                     mainHandler.post(() -> {
+                        showLoading(false);
                         if (ipSavedFlag.get()) {
                             Toast.makeText(context, "Se actualizó la IP correctamente", Toast.LENGTH_SHORT).show();
                         } else {
@@ -203,11 +239,13 @@ public class LoginActivity extends AppCompatActivity {
                     });
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Error esperando a que terminen los hilos", e);
+                    showLoading(false);
                 }
             }).start();
         });
 
         saveButton.setOnClickListener(view -> {
+            showLoading(true);
             String ip = ipEditText.getText().toString();
             if (ip.isEmpty()) {
                 Toast.makeText(LoginActivity.this, "Por favor, ingrese una IP", Toast.LENGTH_SHORT).show();
@@ -216,6 +254,7 @@ public class LoginActivity extends AppCompatActivity {
             saveIp(ip); // Guardar la IP ingresada
             dialog.dismiss();
             displaySavedIp();
+            showLoading(false);
         });
 
         closeButton.setOnClickListener(view -> dialog.dismiss());

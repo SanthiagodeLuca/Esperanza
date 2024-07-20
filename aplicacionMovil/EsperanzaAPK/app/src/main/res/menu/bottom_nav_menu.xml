@@ -9,7 +9,8 @@
     <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/alert"
-        android:title="@string/alertas" />
+        android:title="@string/alertas"
+        android:visible="false"/>
 
     <item
         android:id="@+id/navigation_qr"
@@ -19,7 +20,8 @@
     <item
         android:id="@+id/navigation_registry"
         android:icon="@drawable/registry"
-        android:title="@string/registro" />
+        android:title="@string/registro"
+        android:visible="false"/>
 
     <item
         android:id="@+id/navigation_profile"

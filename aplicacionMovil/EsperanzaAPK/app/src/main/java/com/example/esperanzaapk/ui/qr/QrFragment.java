@@ -3,6 +3,7 @@ package com.example.esperanzaapk.ui.qr;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -64,6 +65,7 @@ public class QrFragment extends Fragment {
     private ImageView imageCross; // Imagen de marca de equis roja para mostrar después de un registro fallido
 
     private static final String FILE_NAME = "server_ip.txt";
+    private static final int DISPLAY_TIME_MS = 4000; // Tiempo de espera en milisegundos (5 segundos)
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -108,8 +110,8 @@ public class QrFragment extends Fragment {
                     qrRead = true; // Marca que el QR ha sido leído para detener la lectura
 
                     // Obtiene y actualiza el TextView textQr del layout con el contenido del QR escaneado
-                    final TextView textView = binding.textQr;
-                    textView.setText(result.getText());
+                    //final TextView textView = binding.textQr;
+                    //textView.setText(result.getText());
 
                     // Procesa el contenido del QR escaneado
                     procesarCodigoQR(result.getText());
@@ -124,7 +126,7 @@ public class QrFragment extends Fragment {
                             startBarcodeScanner(); // Reactiva el escáner nuevamente
                         }
                     };
-                    handler.postDelayed(scannerRunnable, 5000); // Programa la ejecución después de 5000 milisegundos (5 segundos)
+                    handler.postDelayed(scannerRunnable, DISPLAY_TIME_MS ); // Programa la ejecución después de 5000 milisegundos (5 segundos)
                 }
             }
 
@@ -210,21 +212,33 @@ public class QrFragment extends Fragment {
                     showCrossMark(); // Mostrar la marca de cruz roja*/
 
                     // Mostrar el mensaje de error en el TextView con id text_qr
-                    TextView textView = binding.textQr;
-                    textView.setText(errorMessage);
+                    //TextView textView = binding.textQr;
+                    //textView.setText(errorMessage);
+                    //Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
                     Log.e("RequestError", errorMessage); // Registrar el mensaje de error en el Log
                     showCrossMark(); // Mostrar la marca de cruz roja
+                    showAlert(errorMessage);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 // Mostrar un Toast indicando el error de red
-                Toast.makeText(requireContext(), "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("NetworkError", "Error de red: " + t.getMessage()); // Registrar el error de red en el Log
+                String errorMessage = "Error de red: " + t.getMessage();
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                Log.e("NetworkError", errorMessage); // Registrar el error de red en el Log
                 showCrossMark(); // Mostrar la marca de cruz roja
+                showAlert(errorMessage);
             }
         });
+    }
+
+    private void showAlert(String message) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Error")
+                .setMessage(message)
+                .setPositiveButton("Aceptar", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     // Método para obtener la fecha y hora actual en el formato deseado y usando la zona horaria del dispositivo
@@ -256,7 +270,7 @@ public class QrFragment extends Fragment {
                             }
                         }).start();
                     }
-                }, 5000); // 5000 milisegundos = 5 segundos
+                }, DISPLAY_TIME_MS/2 ); // 5000 milisegundos = 5 segundos
             }
         }).start(); // Iniciar la animación de aparición de la imagen
     }
@@ -301,7 +315,7 @@ public class QrFragment extends Fragment {
                             }
                         }).start();
                     }
-                }, 5000); // 5000 milisegundos = 5 segundos
+                }, DISPLAY_TIME_MS/2 ); // 5000 milisegundos = 5 segundos
             }
         }).start(); // Iniciar la animación de aparición de la imagen
     }

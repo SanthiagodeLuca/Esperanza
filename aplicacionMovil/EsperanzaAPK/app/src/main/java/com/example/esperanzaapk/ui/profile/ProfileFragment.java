@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -19,9 +18,7 @@ import android.widget.TextView;
 
 import com.example.esperanzaapk.R;
 import com.example.esperanzaapk.databinding.FragmentProfileBinding;
-import com.example.esperanzaapk.databinding.FragmentQrBinding;
 import com.example.esperanzaapk.ui.login.LoginActivity;
-import com.example.esperanzaapk.ui.qr.QrViewModel;
 
 public class ProfileFragment extends Fragment {
 

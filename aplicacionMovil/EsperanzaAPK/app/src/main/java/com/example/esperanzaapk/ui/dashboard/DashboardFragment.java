@@ -173,7 +173,7 @@ public class DashboardFragment extends Fragment {
         chart.clearChart();
 
         int[] colors = {Color.parseColor("#66BB6A"), Color.parseColor("#EF5350")};
-        String[] labels = {"Ya reclamaron", "Faltan por reclamar"};
+        String[] labels = {"Registrados", "No Registrados"};
 
         for (int i = 0; i < labels.length; i++) {
             chart.addPieSlice(new PieModel(labels[i], values[i], colors[i]));
