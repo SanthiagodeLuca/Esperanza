@@ -2,12 +2,16 @@ package com.example.esperanzaapk.ui.dashboard;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +63,7 @@ public class DashboardFragment extends Fragment {
     private AsistenciaService asistenciaService;
 
     private TextView textdashboard;
+    private TextView selectedTab;
 
     private int totalEstudiantes;
 
@@ -66,9 +71,15 @@ public class DashboardFragment extends Fragment {
     private EditText editTextDate2;
 
     private List<Asistencia> asistencias;
-    private String selectedCategory = "Almuerzo";
+    private String selectedCategory;
 
     private static final String FILE_NAME = "server_ip.txt";
+    private static final String PREFS_NAME = "MyPrefs";
+    private static final String CATEGORY_KEY = "selectedCategory";
+
+    private TextView buttonBreakfast;
+    private TextView buttonLunch;
+    private TextView buttonRefri;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -80,9 +91,9 @@ public class DashboardFragment extends Fragment {
 
         textdashboard = binding.textDashboard;
 
-        Button buttonBreakfast = binding.buttonBreakfast;
-        Button buttonLunch = binding.buttonLunch;
-        Button buttonRefri = binding.buttonRefri;
+        buttonBreakfast = binding.buttonBreakfast;
+        buttonLunch = binding.buttonLunch;
+        buttonRefri = binding.buttonRefri;
 
         editTextDate = binding.editTextDate;
         editTextDate2 = binding.editTextDate2;
@@ -96,28 +107,38 @@ public class DashboardFragment extends Fragment {
         editTextDate.setText(todayFormatted);
         editTextDate2.setText(todayFormatted);
 
-        selectedCategory = "Desayuno";
-        textdashboard.setText(selectedCategory);
+        // Recuperar la categoría seleccionada desde SharedPreferences, por defecto "Desayuno"
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        selectedCategory = sharedPreferences.getString(CATEGORY_KEY, "Desayuno");
 
+
+        // Configura la categoría y la pestaña seleccionada
+        setSelectedCategoryAndTab();
 
         buttonBreakfast.setOnClickListener(v -> {
             selectedCategory = "Desayuno";
+            saveSelectedCategory(selectedCategory);
             obtenerTotalEstudiantes();
-            textdashboard.setText(selectedCategory);
+            setSelectedTab(buttonBreakfast);
         });
         buttonLunch.setOnClickListener(v -> {
             selectedCategory = "Almuerzo";
+            saveSelectedCategory(selectedCategory);
             obtenerTotalEstudiantes();
-            textdashboard.setText(selectedCategory);
+            setSelectedTab(buttonLunch);
         });
         buttonRefri.setOnClickListener(v -> {
             selectedCategory = "Refrigerio";
+            saveSelectedCategory(selectedCategory);
             obtenerTotalEstudiantes();
-            textdashboard.setText(selectedCategory);
+            setSelectedTab(buttonRefri);
         });
 
         editTextDate.setOnClickListener(v -> showDatePickerDialog(editTextDate));
         editTextDate2.setOnClickListener(v -> showDatePickerDialog(editTextDate2));
+
+        editTextDate.addTextChangedListener(dateTextWatcher);
+        editTextDate2.addTextChangedListener(dateTextWatcher);
 
         String savedIp = readServerIpFromFile();
 
@@ -127,7 +148,6 @@ public class DashboardFragment extends Fragment {
             Toast.makeText(requireContext(), "IP no encontrada", Toast.LENGTH_SHORT).show();
         } else {
             // Obtener el token almacenado en SharedPreferences
-            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
             String token = sharedPreferences.getString("token", "");
 
             // Configurar OkHttpClient con un interceptor para agregar el token JWT a las peticiones
@@ -151,6 +171,60 @@ public class DashboardFragment extends Fragment {
 
         }
         return root;
+    }
+
+    private void saveSelectedCategory(String category) {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(CATEGORY_KEY, category);
+        editor.apply();
+    }
+
+    private final TextWatcher dateTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // No hacer nada antes del cambio de texto
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // No hacer nada durante el cambio de texto
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            obtenerTotalEstudiantes();
+        }
+    };
+
+    private void setSelectedCategoryAndTab() {
+        // Establece la categoría actual
+        if (selectedCategory.equalsIgnoreCase("Desayuno")) {
+            setSelectedTab(buttonBreakfast);
+        } else if (selectedCategory.equalsIgnoreCase("Almuerzo")) {
+            setSelectedTab(buttonLunch);
+        } else if (selectedCategory.equalsIgnoreCase("Refrigerio")) {
+            setSelectedTab(buttonRefri);
+        }
+    }
+
+    private void setSelectedTab(TextView selectedTab) {
+        // Reset all tabs
+        resetTab(buttonBreakfast);
+        resetTab(buttonLunch);
+        resetTab(buttonRefri);
+
+        // Set selected tab
+        selectedTab.setTextColor(getResources().getColor(R.color.green_009047));
+        selectedTab.setBackgroundResource(R.drawable.tab_selected);
+
+        // Save the selected tab
+        this.selectedTab = selectedTab;
+    }
+
+    private void resetTab(TextView tab) {
+        tab.setTextColor(getResources().getColor(R.color.black));
+        tab.setBackgroundResource(0);
     }
 
     private String readServerIpFromFile() {
@@ -212,10 +286,24 @@ public class DashboardFragment extends Fragment {
     }
 
     private void showDatePickerDialog(EditText editText) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Obtener la fecha seleccionada del EditText
+        String dateText = editText.getText().toString();
+        int year, month, day;
+
+        if (dateText.isEmpty()) {
+            // Si no hay una fecha seleccionada, usa la fecha actual
+            Calendar calendar = Calendar.getInstance();
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+        } else {
+            // Parsear la fecha del EditText
+            String[] dateParts = dateText.split("/");
+            day = Integer.parseInt(dateParts[0]);
+            month = Integer.parseInt(dateParts[1]) - 1; // Meses en Calendar son 0-based
+            year = Integer.parseInt(dateParts[2]);
+        }
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getContext(),
@@ -263,6 +351,12 @@ public class DashboardFragment extends Fragment {
         String startDate = formatDateForBackend(editTextDate.getText().toString(), true);
         String endDate = formatDateForBackend(editTextDate2.getText().toString(), false);
 
+        // Validar fechas
+        if (isStartDateAfterEndDate(startDate, endDate)) {
+            showInvalidDateDialog();
+            return;
+        }
+
         FilterAsistencia filter = new FilterAsistencia(startDate, endDate);
 
         // Imprime el filtro para verificación
@@ -285,6 +379,25 @@ public class DashboardFragment extends Fragment {
                 Log.e("API_CALL", "Error de red al obtener las asistencias", t);
             }
         });
+    }
+
+    private boolean isStartDateAfterEndDate(String startDate, String endDate) {
+        LocalDate start = LocalDate.parse(startDate.split("T")[0]);
+        LocalDate end = LocalDate.parse(endDate.split("T")[0]);
+        return start.isAfter(end);
+    }
+
+    private void showInvalidDateDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Fechas Inválidas")
+                .setMessage("La fecha de inicio no puede ser posterior a la fecha de fin. Por favor, selecciona fechas válidas.")
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Opcional: Puedes hacer algo cuando se acepta el diálogo
+                    }
+                })
+                .show();
     }
 
     private String formatDateForBackend(String date, boolean isStartDate) {
@@ -320,8 +433,21 @@ public class DashboardFragment extends Fragment {
             }
         }
 
-        int asistenciasFaltantes = totalEstudiantes - totalAsistencias;
+        // Calcular el número de días entre el rango de fechas
+        int numDias = calcularNumeroDeDiasEntreFechas(
+                LocalDate.parse(formatDateForBackend(editTextDate.getText().toString(), true).split("T")[0]),
+                LocalDate.parse(formatDateForBackend(editTextDate2.getText().toString(), false).split("T")[0])
+        );
+
+        // Multiplicar el total de estudiantes por el número de días
+        int totalEstudiantesAjustado = totalEstudiantes * numDias;
+        int asistenciasFaltantes = totalEstudiantesAjustado - totalAsistencias;
         setupPieChart(chart, new int[]{totalAsistencias, asistenciasFaltantes});
+    }
+
+    private int calcularNumeroDeDiasEntreFechas(LocalDate startDate, LocalDate endDate) {
+        // Calcula el número de días entre dos fechas
+        return (int) java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1; // +1 para incluir el último día
     }
 
     /*

@@ -324,20 +324,25 @@ public class QrFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Verificar si se ha otorgado el permiso de cámara
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
-            // Detener y reiniciar el escáner
-            barcodeView.pause();
+        // Verifica si se ha otorgado el permiso de cámara
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            // Reanudar el escáner si está en pausa
             barcodeView.resume();
-            startBarcodeScanner(); // Reinicia el escáner
+            // Inicia el escáner si no está ya en ejecución
+
+            if (!qrRead) {
+                startBarcodeScanner();
+            }else{
+                qrRead = false;
+                startBarcodeScanner();
+            }
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        // Pausar la vista de escáner de código de barras
+        // Pausar la vista del escáner de código de barras
         barcodeView.pause();
 
         // Detener el temporizador si está activo

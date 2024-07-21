@@ -183,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Button automaticButton = dialogView.findViewById(R.id.automatic_button);
         Button saveButton = dialogView.findViewById(R.id.save_button);
-        Button closeButton = dialogView.findViewById(R.id.close_button);
+        TextView closeButton = dialogView.findViewById(R.id.close_button);
 
         automaticButton.setOnClickListener(view -> {
             showLoading(true);

@@ -82,14 +82,14 @@
         android:id="@+id/text_dashboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:text="Estadisticas"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textSize="20dp"
         android:textStyle="bold"
-        android:elevation="10dp"
-        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -119,31 +119,55 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/white"
                 android:orientation="horizontal">
 
-                <Button
+                <TextView
                     android:id="@+id/button_breakfast"
+                    android:padding="5dp"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:text="Desayuno"
-                    android:textSize="12sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <Button
+                <TextView
                     android:id="@+id/button_refri"
+                    android:padding="5dp"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:text="Refrigerio"
-                    android:textSize="12sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <Button
+                <TextView
                     android:id="@+id/button_lunch"
+                    android:padding="5dp"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:text="Almuerzo"
-                    android:textSize="12sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <org.eazegraph.lib.charts.PieChart
