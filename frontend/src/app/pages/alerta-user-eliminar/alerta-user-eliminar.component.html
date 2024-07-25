@@ -1,1 +1,8 @@
-<p>alerta-user-eliminar works!</p>
+<div class="alert-backdrop">
+    <div class="alert-box">
+      <p>{{ message }}</p>
+      <button class="btn btn-danger" (click)="onConfirm()">{{ confirmButtonText }}</button>
+      <button class="btn btn-secondary" (click)="onCancel()">{{ cancelButtonText }}</button>
+    </div>
+  </div>
+  

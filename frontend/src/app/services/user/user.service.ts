@@ -62,22 +62,40 @@ return this.usuariosSubject.asObservable();
   }
 
 
-  editarUsuario(user:any){
+  editarUsuario(user: any): Observable<User> {
     const url = `${this.apiUrl}/cambiarUser/${user.id}`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.put<User>(url, user, { headers })/*.pipe(
-      
-        this.usuariosSubject.next();
-    
-    );*/
+    return this.http.put<User>(url, user, { headers }).pipe(
+      tap(updatedUser => {
+        // Actualizar el usuario en la lista local y emitir el nuevo valor
+        const index = this.usuarios.findIndex(u => u.id === updatedUser.id);
+        if (index !== -1) {
+          this.usuarios[index] = updatedUser;
+          this.usuariosSubject.next(this.usuarios);
+        }
+      }),
+      catchError(this.handleError)
+    );
+  }
+  
+  eliminarUsuario(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/eliminarUsuario/${id}`, { responseType: 'text' as 'json' }).pipe(
+ tap(respuesta=>{
+
+  this.cargarUsuarios();
+ }),catchError(this.handleError)
+
+    );
   }
 
-    agregarUser(user:any){
-    return this.http.post<any>(environment.BACKEND_URL+`auth/register`, user).pipe(
-      tap((nuevoUser: User) => {
-        this.usuarios.push(nuevoUser);
-        this.usuariosSubject.next(this.usuarios);
-      })
+  agregarUser(user: any): Observable<User> {
+    return this.http.post<User>(environment.BACKEND_URL + `auth/register`, user).pipe(
+      tap(respuesta => {
+        this.cargarUsuarios();
+      //  this.usuarios.push(nuevoUser);
+       // this.usuariosSubject.next(this.usuarios);
+      }),
+      catchError(this.handleError)
     );
   }
 
@@ -86,12 +104,7 @@ return this.usuariosSubject.asObservable();
     return this.usuariosSubject.asObservable();
   }
   
-  eliminarUsuario(id: number): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/eliminarUsuario/${id}`).pipe(
-      tap(() => this.obtenerUsuarios().subscribe()), // Refrescar la lista de usuarios
-      catchError(this.handleError)
-    );
-  }
+
   obtenerUsuarios(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl).pipe(
       tap(usuarios => this.usuariosSubject.next(usuarios)), // Actualizar el BehaviorSubject

@@ -43,6 +43,7 @@ import { User } from '../modelos/user';
 import { UserService } from '../services/user/user.service';
 import { TokenInformacionService } from '../services/token/token-informacion.service';
 import { Subscription } from 'rxjs';
+import { UserRoleService } from '../services/userRole/user-role.service';
 
   @Component({
     selector: 'app-list-estudiantes',
@@ -77,12 +78,21 @@ import { Subscription } from 'rxjs';
     private subscription: Subscription | null = null; // Inicializar con null
     estudianteAEliminar: string | null = null;
     mostrarAlertaEliminar:boolean=false;
+
+    currentUserRole: string | null = null;
+
+
+
     constructor(private estudiantesService:EstudianteService,
       private imagenService:ImagenService,private filtroService:FiltroService,private loginService:LoginService
-    ,private http:HttpClient,private userService:UserService,private tokenInformacionService:TokenInformacionService){}
+    ,private http:HttpClient,private userService:UserService,private tokenInformacionService:TokenInformacionService,private userRoleService:UserRoleService){}
     data=this.loginService.currentUserData;
     //metodo cunado se inica el componente
     ngOnInit(): void {
+      //rol del usuario
+      this.userRoleService.currentUser$.subscribe(user => {
+        this.currentUserRole = user && user.role !== undefined ? user.role : null;
+      });
 
       this.subscription = this.estudiantesService.behaviorSubjectEstudiantes().subscribe(estudiantes => {
         this.estudiantes = estudiantes;
@@ -121,7 +131,9 @@ import { Subscription } from 'rxjs';
     
     // this.obtenerImagen();
     }
-
+    isUserRole(role: string): boolean {
+      return this.currentUserRole === role;
+    }
 
     ngOnDestroy() {
       // Cancelamos la suscripción para evitar fugas de memoria

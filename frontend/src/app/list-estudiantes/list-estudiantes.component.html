@@ -62,9 +62,9 @@
         <!--<td> <img [src]="'http://localhost:8085/api/imagen/image/' + estudiante.id + '.png'" alt="Imagen">  -->
           <td>
             <!-- Botón Editar -->
-            <button *ngIf="usuarioRol === 'admin'" class="btn btn-primary mr-1" (click)="editarEstudiante(estudiante)">Editar</button>
+            <button Editar  class="btn btn-primary mr-1" (click)="editarEstudiante(estudiante)"   [disabled]="isUserRole('USER')">Editar</button>
             <!-- Botón Eliminar -->
-            <button *ngIf="usuarioRol === 'admin'" class="btn btn-danger" (click)="confirmarEliminacion(estudiante.id)">Eliminar</button>
+            <button  class="btn btn-danger" (click)="confirmarEliminacion(estudiante.id)"   [disabled]="isUserRole('USER')"> Eliminar</button>
           </td>
       </tr>
       

@@ -8,6 +8,7 @@ import { WebSocketService } from '../services/webSocket/web-socket.service';
 import { AsistenciaNueva } from '../modelos/asistenciaNueva';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { UserRoleService } from '../services/userRole/user-role.service';
 
 @Component({
   selector: 'app-list-asistencias',
@@ -32,11 +33,20 @@ export class ListAsistenciasComponent implements OnInit {
   private subscription: Subscription | null = null; // Inicializar con null
 asistenciaAEliminar: number | null = null;
 
+currentUserRole: string | null = null;
+
+
   constructor(private datePipe:DatePipe,private asistenciaService: AsistenciaService,private filtroService:FiltroService, private notificationService: NotificacionService
-    ,private webSocket:WebSocketService,private cdr: ChangeDetectorRef,private router:Router
+    ,private webSocket:WebSocketService,private cdr: ChangeDetectorRef,private router:Router,private userRoleService:UserRoleService
   ) {}
 
   ngOnInit(): void {
+
+      //rol del usuario
+      this.userRoleService.currentUser$.subscribe(user => {
+        this.currentUserRole = user && user.role !== undefined ? user.role : null;
+      });
+
    this.subscription= this.asistenciaService.behaviorSubjectEstudiantes().subscribe(data => {
      
     
@@ -56,7 +66,9 @@ ngOnDestroy(){
   }
 }
 
-
+ isUserRole(role: string): boolean {
+      return this.currentUserRole === role;
+    }
   getUniqueValues(column: string): string[] {
     // Divide la cadena de la columna en las propiedades anidadas
     const properties = column.split('.');
