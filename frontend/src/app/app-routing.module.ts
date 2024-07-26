@@ -36,6 +36,7 @@ import { ListUserComponent } from './list-user/list-user.component';
 import { FormularioCrearUsuarioComponent } from './pages/formulario-crear-usuario/formulario-crear-usuario.component';
 import { AlertaAsistenciaEliminarComponent } from './pages/alerta-asistencia-eliminar/alerta-asistencia-eliminar.component';
 import { AlertaUserEliminarComponent } from './pages/alerta-user-eliminar/alerta-user-eliminar.component';
+import { DailyScheduleComponent } from './pages/horario/daily-schedule/daily-schedule.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent }, // Esta coma estaba mal ubicada
@@ -77,7 +78,8 @@ const routes: Routes = [
      {path:'formularioUser',component:FormularioUsuarioComponent},
      {path:'formularioCrearUser',component:FormularioCrearUsuarioComponent},
      {path:'alertaEliminarAsistencia',component:AlertaAsistenciaEliminarComponent},
-     {path:'alertaEliminarUser',component:AlertaUserEliminarComponent}
+     {path:'alertaEliminarUser',component:AlertaUserEliminarComponent},
+     {path:'dailySchedule',component:DailyScheduleComponent}
 
 
 

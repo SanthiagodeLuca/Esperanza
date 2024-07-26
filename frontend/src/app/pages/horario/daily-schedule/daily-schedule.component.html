@@ -1,0 +1,32 @@
+<div class="daily-calendar">
+    <div class="calendar-header">
+      <h2>Daily Calendar</h2>
+      <div class="date">DATE: {{ currentDate }}</div>
+    </div>
+    <div class="calendar-body">
+      <div class="hours-column">
+        <div class="hour" *ngFor="let hour of hours">{{ hour }}</div>
+      </div>
+      <div class="schedule-column">
+        <div class="schedule" *ngIf="snack" [ngStyle]="getSchedulePosition(snack)">
+          <div class="meal-type">Refrigerio</div> <!-- Texto de tipo de comida antes -->
+          <div class="time-range">
+            {{ snack.startHour }}:{{ snack.startMinute }} - {{ snack.endHour }}:{{ snack.endMinute }}
+          </div>
+        </div>
+        <div class="schedule" *ngIf="breakfast" [ngStyle]="getSchedulePosition(breakfast)">
+          <div class="meal-type">Desayuno</div> <!-- Texto de tipo de comida antes -->
+          <div class="time-range">
+            {{ breakfast.startHour }}:{{ breakfast.startMinute }} - {{ breakfast.endHour }}:{{ breakfast.endMinute }}
+          </div>
+        </div>
+        <div class="schedule" *ngIf="lunch" [ngStyle]="getSchedulePosition(lunch)">
+          <div class="meal-type">Almuerzo</div> <!-- Texto de tipo de comida antes -->
+          <div class="time-range">
+            {{ lunch.startHour }}:{{ lunch.startMinute }} - {{ lunch.endHour }}:{{ lunch.endMinute }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

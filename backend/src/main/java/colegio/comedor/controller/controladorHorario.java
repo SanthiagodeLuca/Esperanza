@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,4 +58,34 @@ public class controladorHorario {
     
         return ResponseEntity.ok().body(horarioActualizado);
     }
-}
+    @GetMapping("/refrigerio/{id}")
+    public ResponseEntity<?> obtenerRefrigerio(@PathVariable Integer id) {
+        Optional<Horario> refrigerio = horarioService.findById(id);
+        if (refrigerio.isPresent()) {
+            return ResponseEntity.ok().body(refrigerio.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("/desayuno/{id}")
+    public ResponseEntity<?> obtenerDesayuno(@PathVariable Integer id) {
+        Optional<Horario> desayuno = horarioService.findById(id);
+        if (desayuno.isPresent()) {
+            return ResponseEntity.ok().body(desayuno.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    
+    @GetMapping("/almuerzo/{id}")
+    public ResponseEntity<?> obtenerAlmuerzo(@PathVariable Integer id) {
+        Optional<Horario> desayuno = horarioService.findById(id);
+        if (desayuno.isPresent()) {
+            return ResponseEntity.ok().body(desayuno.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    }
