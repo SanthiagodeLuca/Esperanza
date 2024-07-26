@@ -1,21 +1,32 @@
 <p-table [value]="usuariosFiltrados" [rows]="10" [paginator]="true">
   <ng-template pTemplate="header">
     <tr>
-      <th>Id</th>
+      <th>
+        <select [(ngModel)]="filtros['id']" (change)="aplicarFiltros()">
+          <option *ngFor="let id of uniqueValues['id']" [value]="id">{{ id }}</option>
+        </select>
+      </th>
       <th>
         <input type="text" pInputText placeholder="Nombre" (input)="aplicarFiltros()" [(ngModel)]="filtros['firstname']">
       </th>
-     <!-- <th>
+      <th>
         <select [(ngModel)]="filtros['role']" (change)="aplicarFiltros()">
           <option *ngFor="let role of uniqueValues['role']" [value]="role">{{ role }}</option>
         </select>
-      </th>-->
-      <th>Role</th>
-      <th>País</th>
+      </th>
+      <th>
+        <select [(ngModel)]="filtros['country']" (change)="aplicarFiltros()">
+          <option *ngFor="let country of uniqueValues['country']" [value]="country">{{ country }}</option>
+        </select>
+      </th>
       <th>Acciones</th>
+      <th>
+        <!-- Botón para limpiar los filtros -->
+        <button (click)="limpiarFiltros()" class="btn btn-secondary">Limpiar Filtros</button>
+      </th>
     </tr>
   </ng-template>
-  
+
   <ng-template pTemplate="body" let-usuario>
     <tr>
       <td>{{usuario.id}}</td>
@@ -35,12 +46,14 @@
           [disabled]="isUserRole('USER')">
           Eliminar
         </button>
+      </td>
     </tr>
   </ng-template>
 </p-table>
+
 <app-alerta-user-eliminar
     *ngIf="mostrarAlertaEliminar"
-    (confirm)="eliminarAsistencia()" 
+    (confirm)="eliminarUsuario()" 
     (cancel)="cancelarEliminacion()"
     message="¿Está seguro de que quiere eliminar este Usuario?"
     confirmButtonText="Sí, eliminarlo"
@@ -51,6 +64,6 @@
   <app-formulario-usuario
     [usuario]="usuarioParaEditar"
     (onSave)="guardarUsuario($event)"
-    (onCancel)="cancelarEliminacion()"
+    (onCancel)="cancelarEdicion()"
   ></app-formulario-usuario>
 </div>

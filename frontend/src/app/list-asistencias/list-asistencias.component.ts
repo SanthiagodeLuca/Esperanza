@@ -80,6 +80,13 @@ ngOnDestroy(){
       // Por cada propiedad, se mapea el array de datos para acceder a la propiedad especificada
       data = data.map(item => item[prop]);
     }
+
+    // Formatea la fecha para obtener valores únicos de solo fecha (sin tiempo)
+    if (column === 'fecha') {
+      data = data.map(date => this.datePipe.transform(date, 'yyyy-MM-dd'));
+    }
+
+
   
     // Filtra los valores únicos utilizando un conjunto para eliminar duplicados y luego los convierte nuevamente en una lista
     return [...new Set(data)];
@@ -95,15 +102,56 @@ ngOnDestroy(){
   } 
 
   aplicarFiltros() {
+    console.log('Filtros aplicados:', this.filtros);
+    console.log('Asistencias originales:', this.asistenciaTabla);
+    console.log('Filtro ID:', this.filtros['id']); // Add this line
+  
     this.asistenciaFiltrada = this.asistenciaTabla.filter(asistencia => {
-      // Lógica para filtrar por cada columna
-      const idFilter = !this.filtros['id'] || asistencia.id === this.filtros['id'];
-      const estudianteFilter = !this.filtros['estudiante'] || asistencia.estudiante.id === this.filtros['estudiante'];
-      const comidasFilter = !this.filtros['comidas'] || asistencia.almuerzo === this.filtros['comidas'];
-      // Otros filtros aquí
-      return idFilter && estudianteFilter && comidasFilter /* && otros filtros */;
+      // Convert the filter value to a number if necessary
+      const idFilter = !this.filtros['id'] || asistencia.id === +this.filtros['id']; // Convert filter value to a number
+      const fechaFilter = !this.filtros['fecha'] || this.datePipe.transform(asistencia.fecha, 'yyyy-MM-dd') === this.filtros['fecha'];
+      const estudianteIdFilter = !this.filtros['estudiante.id'] || this.matchNestedProperty(asistencia, 'estudiante.id', this.filtros['estudiante.id']);
+      const cursoFilter = !this.filtros['estudiante.curso'] || this.matchNestedProperty(asistencia, 'estudiante.curso', this.filtros['estudiante.curso']);
+      const comidasFilter = !this.filtros['almuerzo.nombre'] || this.matchNestedProperty(asistencia, 'almuerzo.nombre', this.filtros['almuerzo.nombre']);
+  
+      console.log(`ID Filter: ${idFilter}, Fecha Filter: ${fechaFilter}, Estudiante ID Filter: ${estudianteIdFilter}, Curso Filter: ${cursoFilter}, Comidas Filter: ${comidasFilter}`);
+      
+      return idFilter && fechaFilter && estudianteIdFilter && cursoFilter && comidasFilter;
+    });
+  
+    console.log('Asistencias filtradas:', this.asistenciaFiltrada);
+  }
+  
+  
+
+  matchNestedProperty(object: any, propertyPath: string, value: any): boolean {
+    const properties = propertyPath.split('.');
+    let nestedObject = object;
+  
+    for (const prop of properties) {
+      if (nestedObject[prop] === undefined) {
+        console.log(`Property '${prop}' not found`);
+        return false;
+      }
+      nestedObject = nestedObject[prop];
+    }
+  
+    const result = nestedObject === value;
+    console.log(`Matching ${propertyPath}: expected ${value}, got ${nestedObject}, result ${result}`);
+    return result;
+  }
+  
+  filtrarSoloPorFecha(fecha: string) {
+    this.asistenciaFiltrada = this.asistenciaTabla.filter(asistencia => {
+      return this.datePipe.transform(asistencia.fecha, 'yyyy-MM-dd') === fecha;
     });
   }
+
+  limpiarFiltros() {
+    this.filtros = {}; // Resetea todos los filtros a un objeto vacío
+    this.asistenciaFiltrada = [...this.asistenciaTabla]; // Restablece la lista filtrada a la lista completa
+  }
+
 
 
   agregarAsistencia() {

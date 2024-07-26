@@ -390,5 +390,11 @@ guardarEstudiante(estudiante: any) {
 
   }
 
+
+  limpiarFiltros(): void {
+    this.filtros = {}; // Resetea todos los filtros a un objeto vacío
+    this.estudiantesFiltrados = [...this.estudiantes]; // Restablece la lista filtrada a la lista completa
+  }
+  
   }
 

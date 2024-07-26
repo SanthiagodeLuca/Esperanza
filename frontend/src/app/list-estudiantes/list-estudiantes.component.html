@@ -18,7 +18,11 @@
   <ng-template pTemplate="header">
     <!-- Encabezados de la tabla -->
     <tr>
-      <th>Cedula</th>
+      <th>
+      <select [(ngModel)]="filtros['id']" >
+        <option *ngFor="let id of getUniqueValues('id')" [value]="id">{{ id }}</option>
+      </select>
+    </th>
       <th>
         <input type="text" pInputText placeholder="Nombre" (input)="aplicarFiltros()" [(ngModel)]="filtros['nombre']">
       <th> 
@@ -37,6 +41,10 @@
       <th>Imagen</th>
 
       <th>Acciones</th>
+      <th>
+        <!-- Botón para limpiar los filtros -->
+        <button (click)="limpiarFiltros()" class="btn btn-secondary">Limpiar Filtros</button>
+      </th>
     </tr>
 
   </ng-template>

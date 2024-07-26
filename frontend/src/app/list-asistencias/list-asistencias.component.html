@@ -1,75 +1,50 @@
-<p></p>
- <!-- <div *ngIf="uniqueValues">
-      <ul>
-        <li *ngFor="let value of uniqueValues">{{ value }}</li>
-      </ul>
-    </div>-->
-    
-    <p-table [value]="filtrarAsistencia" [rows]="10" [paginator]="true">
-      <ng-template pTemplate="header">
-        <tr>
-        <!--asinga valores a filtro['id']= al valor seleccionado en la opcion-->
-          <th>
-            <select [(ngModel)]="filtros['id']"  (ngModelChange)="aplicarFiltros()">
-                      <!--ciclo de todas las opciones que genera getUniqueValues-->
-
-              <option *ngFor="let id of getUniqueValues('id')" [value]="id" >{{ id }}</option>
-            </select>
-          </th>
+<p-table [value]="asistenciaFiltrada" [rows]="10" [paginator]="true">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>
+        <select [(ngModel)]="filtros['id']" (ngModelChange)="aplicarFiltros()">
+          <option *ngFor="let id of getUniqueValues('id')" [value]="id">{{ id }}</option>
+        </select>
+      </th>
+      <th>
+        <select [(ngModel)]="filtros['estudiante.id']" (ngModelChange)="aplicarFiltros()">
+          <option *ngFor="let estudianteId of getUniqueValues('estudiante.id')" [value]="estudianteId">{{ estudianteId }}</option>
+        </select>
+      </th>
+      <th>
+        <select [(ngModel)]="filtros['estudiante.curso']" (ngModelChange)="aplicarFiltros()">
+          <option *ngFor="let curso of getUniqueValues('estudiante.curso')" [value]="curso">{{ curso }}</option>
+        </select>
+      </th>
+      <th>
+        <select [(ngModel)]="filtros['almuerzo.nombre']" (ngModelChange)="aplicarFiltros()">
+          <option *ngFor="let comida of getUniqueValues('almuerzo.nombre')" [value]="comida">{{ comida }}</option>
+        </select>
+      </th>
+      <th>
+        <select [(ngModel)]="filtros['fecha']" (ngModelChange)="aplicarFiltros()">
+          <option *ngFor="let fecha of getUniqueValues('fecha')" [value]="fecha">{{ fecha }}</option>
+        </select>
+      </th>
       
-          <th>
-            <select [(ngModel)]="filtros['estudiante']" (ngModelChange)="aplicarFiltros()">
-              <option *ngFor="let estudiante of getUniqueValues('estudiante.id')" [value]="estudiante" >{{ estudiante }}</option>
-            </select>
-          </th>
-          
-          <th>
-            <select [(ngModel)]="filtros['comidas']"  (change)="aplicarFiltros()">
-              <option *ngFor="let comida of getUniqueValues('almuerzo.id')" [value]="comida">{{ comida }}</option>
-            </select>
-          </th>
-          
-          
-          <th>
-            <select [(ngModel)]="filtros['fecha']">
-              <option *ngFor="let fecha of getUniqueValues('fecha')" [value]="fecha">{{ fecha }}</option>
-            </select>
-          </th>
-        
-          <th>Acciones</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-asistencia>
-        <tr>
-          <td>{{ asistencia.id }}</td>
-          <td>{{ asistencia.estudiante.id }}</td>
-          <td>{{ asistencia.almuerzo.nombre }}</td>
-          <td>{{ formatDate(asistencia.fecha) }}</td>
-          <td>
-            <button  class="btn btn-primary mr-1" (click)="editarAsistencia(asistencia)"  [disabled]="isUserRole('USER')">Editar</button>
-            <button class="btn btn-danger" (click)="confirmarEliminacion(asistencia.id)"  [disabled]="isUserRole('USER')">Eliminar</button>
-        </td>        
-        </tr>
-      </ng-template>
-    </p-table>
-    <app-alerta-asistencia-eliminar
-    *ngIf="mostrarAlertaEliminar"
-    (confirm)="asistenciaAEliminar !== null ? eliminarAsistencia(asistenciaAEliminar) : null" 
-    (cancel)="cancelarEliminacion()"
-    message="¿Está seguro de que quiere eliminar este Asistencia?"
-    confirmButtonText="Sí, eliminarlo"
-    cancelButtonText="Cancelar">
-  </app-alerta-asistencia-eliminar>
-  
-  <!-- Formulario de edición -->
-<div class="modal-overlay" *ngIf="mostrarFormularioEdicion"></div>
-
-<app-editar
-  [asistencia]="asistenciaParaEditar"
-  (onSave)="guardarAsistencia($event)"
-  (onCancel)="cancelarEdicion()"
-  *ngIf="mostrarFormularioEdicion"
-></app-editar>
-
-
-<!-- Aquí va el resto del contenido -->
+      <th>Acciones</th>
+      <th>
+        <!-- Botón para limpiar los filtros -->
+        <button (click)="limpiarFiltros()" class="btn btn-secondary">Limpiar Filtros</button>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-asistencia>
+    <tr>
+      <td>{{ asistencia.id }}</td>
+      <td>{{ asistencia.estudiante.id }}</td>
+      <td>{{ asistencia.estudiante.curso }}</td>
+      <td>{{ asistencia.almuerzo.nombre }}</td>
+      <td>{{ formatDate(asistencia.fecha) }}</td>
+      <td>
+        <button class="btn btn-primary mr-1" (click)="editarAsistencia(asistencia)" [disabled]="isUserRole('USER')">Editar</button>
+        <button class="btn btn-danger" (click)="confirmarEliminacion(asistencia.id)" [disabled]="isUserRole('USER')">Eliminar</button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
