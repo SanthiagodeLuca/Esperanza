@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from '../services/user/user.service';
+import { UserRoleService } from '../services/userRole/user-role.service';
 
 @Component({
   selector: 'app-seguridad',
@@ -9,13 +10,22 @@ import { UserService } from '../services/user/user.service';
 export class SeguridadComponent {
   mostrarFormularioEstudiante: boolean = false;
   usuarios: any[] = []; // Array to hold the list of users
+  currentUserRole: string | null = null;
 
 
-constructor(private userService: UserService) {}
+constructor(private userService: UserService,private userRoleService:UserRoleService) {}
 
 ngOnInit() {
+
+  this.userRoleService.currentUser$.subscribe(user => {
+    this.currentUserRole = user && user.role !== undefined ? user.role : null;
+  });
   // Load the initial list of users when the component is initialized
   this.refrescarListaUsuarios();
+}
+
+isUserRole(role: string): boolean {
+  return this.currentUserRole === role;
 }
 
   abrirFormularioCrearAdministrador(){
