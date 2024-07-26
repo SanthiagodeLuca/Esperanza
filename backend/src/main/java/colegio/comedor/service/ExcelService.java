@@ -25,6 +25,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import colegio.comedor.modelo.Asistencia;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.apache.poi.ss.usermodel.CellType;
@@ -32,6 +35,39 @@ import org.apache.poi.ss.usermodel.CellType;
 @Service
 public class ExcelService {
  
+	 public byte[] generateExcelFile(List<Asistencia> asistencias) throws IOException {
+	        try (Workbook workbook = new XSSFWorkbook()) {
+	            Sheet sheet = workbook.createSheet("Asistencias");
+	            
+	            // Crear fila de encabezado
+	            Row headerRow = sheet.createRow(0);
+	            headerRow.createCell(0).setCellValue("ID Estudiante");
+	            headerRow.createCell(1).setCellValue("Nombre");
+	            headerRow.createCell(2).setCellValue("Jornada");
+	            headerRow.createCell(3).setCellValue("Curso");
+	            headerRow.createCell(4).setCellValue("Fecha");
+	            headerRow.createCell(5).setCellValue("Almuerzo");
+
+	            // Agregar datos de asistencia
+	            int rowNum = 1;
+	            for (Asistencia asistencia : asistencias) {
+	                Row row = sheet.createRow(rowNum++);
+	                row.createCell(0).setCellValue(asistencia.getEstudiante().getId());
+	                row.createCell(1).setCellValue(asistencia.getEstudiante().getNombre());
+	                row.createCell(2).setCellValue(asistencia.getEstudiante().getJornada());
+	                row.createCell(3).setCellValue(asistencia.getEstudiante().getCurso());
+	                row.createCell(4).setCellValue(asistencia.getFecha().toString());
+	                row.createCell(5).setCellValue(asistencia.getAlmuerzo().getNombre());
+	            }
+
+	            // Escribir datos a un ByteArrayOutputStream
+	            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+	                workbook.write(out);
+	                return out.toByteArray();
+	            }
+	        }
+	    }
+	 
     public Sheet procesarArchivo(MultipartFile file) throws IOException {
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);

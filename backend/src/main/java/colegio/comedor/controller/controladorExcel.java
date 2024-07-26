@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -16,13 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import colegio.comedor.modelo.Asistencia;
 import colegio.comedor.modelo.Estudiante;
+import colegio.comedor.service.AsistenciaService;
 import colegio.comedor.service.EstudianteService;
 import colegio.comedor.service.ExcelService;
 import jakarta.annotation.Resource;
@@ -33,9 +39,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
-@Controller
+@RestController
+@RequestMapping("/api/excel") 
+@CrossOrigin(origins= {"http://localhost:4200"})
 public class controladorExcel {
 
 	@Autowired
@@ -44,6 +53,8 @@ public class controladorExcel {
 	@Autowired
 	private EstudianteService operacionEstudiante;
 	
+	@Autowired
+	private AsistenciaService serviceAsistencia;
 	
 	private Sheet hoja;
 	
@@ -56,29 +67,34 @@ public class controladorExcel {
 	}
 	
 	@PostMapping("/subirExcel")
-	public ResponseEntity<String> manejadorSubidaArchivos(@RequestParam("file") MultipartFile file,Model modelo) throws IOException {
-		
+	public ResponseEntity<String> manejadorSubidaArchivos(@RequestParam("file") MultipartFile file, Model modelo) throws IOException {
+	    String[] requiredHeaders = {
+	        "NRO_DOCUMENTO", "APELLIDO1", "APELLIDO2", "NOMBRE1", "NOMBRE2",
+	        "DESCRIP_JORNADA", "GRUPO", "ESPECIAL"
+	    };
 
-		    try {
-		        hoja = excelService.procesarArchivo(file);
-		        System.out.println("Hoja procesada correctamente.");
-		        insertarDatos(modelo);
-		        //frotend espera una respuesta tipo JSON 
-		        return ResponseEntity.ok().body("{\"message\": \"Archivo subido correctamente\"}");
-		    } catch (IOException e) {
-		        // Manejar la excepción de IO aquí
-		        e.printStackTrace();
-		        // Devolver una respuesta adecuada al cliente, por ejemplo, un mensaje de error
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                    .body("Error de lectura del archivo: " + e.getMessage());
-		    }catch (Exception e) {
-		        // Manejar otras excepciones aquí
-		        e.printStackTrace();
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Archivo no correspondiente: " + e.getMessage());
-		    }
-		
+	    try (InputStream is = file.getInputStream()) {
+	        hoja = excelService.procesarArchivo(file);
+	        Row headerRow = hoja.getRow(0);
+	        for (int i = 0; i < requiredHeaders.length; i++) {
+	            if (headerRow.getCell(i) == null || !headerRow.getCell(i).getStringCellValue().equals(requiredHeaders[i])) {
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                    .body("El archivo no tiene el formato correcto.");
+	            }
+	        }
 
+	        insertarDatos(modelo);
+	        return ResponseEntity.ok().body("{\"message\": \"Archivo subido correctamente\"}");
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	            .body("Error de lectura del archivo: " + e.getMessage());
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Archivo no correspondiente: " + e.getMessage());
+	    }
 	}
+
 	@GetMapping("/insertarDatos")
 	public ResponseEntity insertarDatos(Model modelo) {
 	    Estudiante estudiante = new Estudiante();
@@ -138,10 +154,31 @@ public class controladorExcel {
 	   
 	    return "codigoQR";
 	}
-	
 	@GetMapping("/export")
+	public ResponseEntity<ByteArrayResource> exportExcel(
+	        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+	        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) throws IOException {
+	    // Obtener asistencias entre las fechas especificadas
+	    List<Asistencia> asistencias = serviceAsistencia.obtenerFechasAsistencia(startDate, endDate);
+	    
+	    // Generar archivo Excel con las asistencias obtenidas
+	    byte[] excelBytes = excelService.generateExcelFile(asistencias);
+	    
+	    // Preparar las cabeceras HTTP
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=asistencias.xlsx");
+	    headers.add(HttpHeaders.CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+	    // Construir y retornar la respuesta
+	    return ResponseEntity.ok()
+	            .headers(headers)
+	            .body(new ByteArrayResource(excelBytes));
+	}
+	/*@GetMapping("/export")
 	public ResponseEntity<ByteArrayResource> exportExcel() throws IOException {
-		//representa al archivo en bytes del excel
+
+		
+			//representa al archivo en bytes del excel
 		 byte[] excelBytes = excelService.generateExcelFile(); // Llamar al método que genera el archivo Excel en bytes
 		 //prepara cabeceras http
 		 HttpHeaders headers = new HttpHeaders();
@@ -153,7 +190,7 @@ public class controladorExcel {
 	        return ResponseEntity.ok()
 	                .headers(headers)
 	                .body(new ByteArrayResource(excelBytes));
-    }
+    }*/
 	
 	
 	@PostMapping("/actualizarDatosInforme")

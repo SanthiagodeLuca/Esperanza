@@ -33,3 +33,12 @@ npm install --save-dev webpack webpack-cli
 
 
 npm install chart.js @types/chart.js
+
+
+
+
+
+ npm install @types/xlsx
+
+ npm install file-saver
+npm install --save-dev @types/file-saver

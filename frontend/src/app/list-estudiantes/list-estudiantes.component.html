@@ -18,6 +18,7 @@
   <ng-template pTemplate="header">
     <!-- Encabezados de la tabla -->
     <tr>
+      <th>Cedula</th>
       <th>
         <input type="text" pInputText placeholder="Nombre" (input)="aplicarFiltros()" [(ngModel)]="filtros['nombre']">
       <th> 
@@ -41,6 +42,7 @@
   </ng-template>
     <ng-template pTemplate="body" let-estudiante>
       <tr>
+        <td>{{estudiante.id}}</td>
         <!-- Celdas de la tabla -->
        <td> {{ estudiante.nombre }}</td>
        <td> {{ estudiante.jornada }}</td>

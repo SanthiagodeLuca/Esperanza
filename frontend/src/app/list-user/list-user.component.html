@@ -1,6 +1,7 @@
 <p-table [value]="usuariosFiltrados" [rows]="10" [paginator]="true">
   <ng-template pTemplate="header">
     <tr>
+      <th>Id</th>
       <th>
         <input type="text" pInputText placeholder="Nombre" (input)="aplicarFiltros()" [(ngModel)]="filtros['firstname']">
       </th>
@@ -9,6 +10,7 @@
           <option *ngFor="let role of uniqueValues['role']" [value]="role">{{ role }}</option>
         </select>
       </th>-->
+      <th>Role</th>
       <th>País</th>
       <th>Acciones</th>
     </tr>

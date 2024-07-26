@@ -1,3 +1,28 @@
-<p>Exportar Excel</p>
-<input type="file" (change)="cargaArchivo($event)">
-<div *ngIf="mensaje" class="message">{{ mensaje }}</div>
+<p class="title">Exportar Excel</p>
+<div class="file-upload-container">
+  <input type="file" (change)="cargaArchivo($event)" class="file-input">
+  <button (click)="validarArchivo()" [disabled]="!archivo" class="submit-button">Enviar</button>
+</div>
+<!-- Message div with dynamic class based on mensajeTipo -->
+
+
+<div>
+  <mat-form-field appearance="fill">
+    <mat-label>Fecha de inicio</mat-label>
+    <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
+    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+    <mat-datepicker #startPicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Fecha de fin</mat-label>
+    <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate">
+    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+    <mat-datepicker #endPicker></mat-datepicker>
+  </mat-form-field>
+
+  <button (click)="exportExcel()" [disabled]="!startDate || !endDate" class="submit-button">Exportar Excel</button>
+</div>
+<div *ngIf="mensaje" [ngClass]="{'message-success': mensajeTipo === 'success', 'message-error': mensajeTipo === 'error'}">
+    {{ mensaje }}
+  </div>
