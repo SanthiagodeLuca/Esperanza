@@ -85,6 +85,9 @@
           this.loginForm.markAllAsTouched();
         }
       }
+      redirectToRegister() {
+        this.router.navigateByUrl('/register');
+      }
       
       //propiedad get
       get username(){

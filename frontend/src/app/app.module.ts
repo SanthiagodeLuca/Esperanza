@@ -75,6 +75,7 @@ import { FormularioCrearUsuarioComponent } from './pages/formulario-crear-usuari
 import { AlertaAsistenciaEliminarComponent } from './pages/alerta-asistencia-eliminar/alerta-asistencia-eliminar.component';
 import { AlertaUserEliminarComponent } from './pages/alerta-user-eliminar/alerta-user-eliminar.component';
 import { DailyScheduleComponent } from './pages/horario/daily-schedule/daily-schedule.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 
 //import { MatMomentDateModule } from '@angular/material/datemodule';
@@ -125,7 +126,8 @@ import { DailyScheduleComponent } from './pages/horario/daily-schedule/daily-sch
     FormularioCrearUsuarioComponent,
     AlertaAsistenciaEliminarComponent,
     AlertaUserEliminarComponent,
-    DailyScheduleComponent
+    DailyScheduleComponent,
+    RegisterComponent
   
   ],
   imports: [

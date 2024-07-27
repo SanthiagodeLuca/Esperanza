@@ -37,9 +37,12 @@ import { FormularioCrearUsuarioComponent } from './pages/formulario-crear-usuari
 import { AlertaAsistenciaEliminarComponent } from './pages/alerta-asistencia-eliminar/alerta-asistencia-eliminar.component';
 import { AlertaUserEliminarComponent } from './pages/alerta-user-eliminar/alerta-user-eliminar.component';
 import { DailyScheduleComponent } from './pages/horario/daily-schedule/daily-schedule.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent }, // Esta coma estaba mal ubicada
+  { path: 'login', component: LoginComponent },
+  {path:'register',component:RegisterComponent},
+  // Esta coma estaba mal ubicada
   {    
     path: '',
     component: MainComponent,
@@ -79,7 +82,8 @@ const routes: Routes = [
      {path:'formularioCrearUser',component:FormularioCrearUsuarioComponent},
      {path:'alertaEliminarAsistencia',component:AlertaAsistenciaEliminarComponent},
      {path:'alertaEliminarUser',component:AlertaUserEliminarComponent},
-     {path:'dailySchedule',component:DailyScheduleComponent}
+     {path:'dailySchedule',component:DailyScheduleComponent},
+
 
 
 
