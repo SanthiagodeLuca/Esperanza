@@ -20,3 +20,53 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra para resaltar */
   }
   
+
+  th{
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Estilos específicos para el botón */
+.custom-button {
+  color: #28a746 !important; /* Color de texto verde */
+  background-color: transparent; /* Fondo transparente si quieres solo color de texto verde */
+}
+
+.custom-button:hover {
+  background-color: #28a74621; /* Fondo verde en el hover */
+}
+
+/* Estado active (cuando se hace clic) del botón */
+.custom-button:active {
+  background-color: #28a7466e !important; /* Fondo verde al hacer clic */
+}
+
+/* Archivo de estilos CSS */
+.column-id {
+  width: 10%;
+}
+
+.column-estudiante-id {
+  width: 15%;
+}
+
+.column-curso {
+  width: 20%;
+}
+
+.column-comida {
+  width: 20%;
+}
+
+.column-fecha {
+  width: 20%;
+}
+
+.column-acciones {
+  width: 15%;
+}
+
+/* Estilo para la opción del placeholder */
+select option:first-of-type {
+  color: #6c757d; /* Color del texto del placeholder */
+}

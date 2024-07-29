@@ -1,74 +1,93 @@
-  <!-- estadisticas.component.html -->
-  <div>
-      <mat-form-field appearance="fill">
-        <mat-label>Fecha de inicio</mat-label>
-        <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
-        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-        <mat-datepicker #startPicker></mat-datepicker>
-      </mat-form-field>
+<div class="container mt-4">
+  <div class="card mb-4">
+    <div class="card-body pt-0 pb-0">
+      <div class="d-flex justify-content-between align-items-center">
+        <!-- Primera sección: alineada a la izquierda -->
+        <div class="d-flex align-items-center">
+          <p class="mb-0 me-2">Mostrando:</p>
+          <mat-form-field appearance="outline" class="pt-4 mb-0">
+            <mat-select [(value)]="selectedValue" (selectionChange)="cambiarRangoFechas($event.value)">
+              <mat-option value="dia">Hoy</mat-option>
+              <mat-option value="semana">Semana</mat-option>
+              <mat-option value="mes">Mes</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
     
-      <mat-form-field appearance="fill">
-        <mat-label>Fecha de fin</mat-label>
-        <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate">
-        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-        <mat-datepicker #endPicker></mat-datepicker>
-      </mat-form-field>
+        <!-- Segunda sección: alineada a la derecha -->
+        <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center ">
+            <div class="me-2">
+              <mat-form-field appearance="outline" class="pt-4">
+                <mat-label>Fecha de inicio</mat-label>
+                <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" />
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="me-3">
+              <mat-form-field appearance="outline" class="pt-4">
+                <mat-label>Fecha de fin</mat-label>
+                <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" />
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" class="custom-button" (click)="obtenerAsistencias()">Obtener Asistencias</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Estadisticas</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <!-- Primera Tarjeta con Botones de Categoría -->
+    <div class="col-md-4 d-flex">
+      <div class="card flex-grow-1 d-flex flex-column">
+        <div class="card-body d-flex flex-column">
+          <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+            <app-pastel [categories]="categorias" [data]="data"></app-pastel>
+          </div>
+          <div class="categoria-buttons mt-3"> <!-- Cambiado a mt-3 para el margen superior -->
+            <button mat-stroked-button class="categoria-btn" [class.selected]="selectedCategory === 'desayuno'" (click)="seleccionarCategoria('desayuno')">Desayuno</button>
+            <button mat-stroked-button class="categoria-btn" [class.selected]="selectedCategory === 'refrigerio'" (click)="seleccionarCategoria('refrigerio')">Refrigerio</button>
+            <button mat-stroked-button class="categoria-btn" [class.selected]="selectedCategory === 'almuerzo'" (click)="seleccionarCategoria('almuerzo')">Almuerzo</button>
+          </div>
+        </div>
+      </div>
+    </div>
     
-      <button mat-raised-button color="primary" (click)="obtenerAsistencias()">Obtener Asistencias</button>
+
+    <!-- Segunda Tarjeta con Gráfico de Barras -->
+    <div class="col-md-4 d-flex">
+      <div class="card flex-grow-1 d-flex flex-column">
+        <div class="card-body d-flex flex-column">
+          <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+            <app-barras [categories]="categoriasBarras" [data]="dataBarras"></app-barras>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Botones para cambiar el rango de fechas -->
-    <div>
-      <!-- Lista desplegable para cambiar el rango de fechas -->
-<mat-form-field appearance="fill">
-  <mat-label>Fecha</mat-label>
-  <mat-select (selectionChange)="cambiarRangoFechas($event.value)">
-    <mat-option value="dia">Día</mat-option>
-    <mat-option value="semana">Semana</mat-option>
-    <mat-option value="mes">Mes</mat-option>
-  </mat-select>
-</mat-form-field>
-
+    <!-- Tercera Tarjeta con Gráfico de Línea -->
+    <div class="col-md-4 d-flex">
+      <div class="card flex-grow-1 d-flex flex-column">
+        <div class="card-body d-flex flex-column">
+          <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+            <app-linea [categorias]="categoriasLinea" [data]="dataLinea"></app-linea>
+          </div>
+        </div>
+      </div>
     </div>
-  
-
-      <!-- estadisticas.component.html (continuación) -->
-   <!-- estadisticas.component.html -->
-<!-- estadisticas.component.html -->
-<!-- estadisticas.component.html -->
-<!-- estadisticas.component.html -->
-<div class="chart-container">
-  <app-pastel [categories]="categorias" [data]="data"></app-pastel>
-  <app-barras [categories]="categoriasBarras" [data]="dataBarras"></app-barras>
-  <app-linea [categorias]="categoriasLinea" [data]="dataLinea"></app-linea>
-  <canvas id="historyChart" width="800" height="400"></canvas>
-</div>  
-<!-- 
-<div>
-  <label for="categoriaSelector">Selecciona una categoría:</label>
-  <select id="categoriaSelector" (change)="onCategorySelectionChange($event)">
-    <option *ngFor="let categoria of categoriasDisponibles" [value]="categoria">{{ categoria }}</option>
-  </select>
-</div>estadisticas.component.html -->
-
-<div class="categoria-buttons">
-  <button mat-raised-button color="primary" [class.selected]="selectedCategory === 'desayuno'" (click)="seleccionarCategoria('desayuno')">Desayuno</button>
-  <button mat-raised-button color="primary" [class.selected]="selectedCategory === 'almuerzo'" (click)="seleccionarCategoria('almuerzo')">Almuerzo</button>
-  <button mat-raised-button color="primary" [class.selected]="selectedCategory === 'refrigerio'" (click)="seleccionarCategoria('refrigerio')">Refrigerio</button>
+  </div>
 </div>
-
-
-
-
-
-
-  
-  
-
-
-
-
-
-
-    
-    

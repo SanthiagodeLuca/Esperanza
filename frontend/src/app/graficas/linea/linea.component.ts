@@ -57,12 +57,16 @@ updateChart(): void {
               label: tipoComida, // Etiqueta del dataset (Desayuno, Refrigerio, Almuerzo)
               data: this.categorias.map(fecha => this.data[fecha]?.[tipoComida] || 0), // Datos del dataset
               fill: false, // No llenar el área bajo la línea
+              backgroundColor: [
+                'rgba(0, 144, 71, 0.9)',
+                'rgba(205, 113, 0, 0.9)',
+                'rgba(180, 0, 64, 0.9)'
+              ][index],
               borderColor: [
-                'rgba(54, 162, 235, 1)', // Rojo para Desayuno 
-                'rgba(255, 206, 86, 1)', //Azul para Refrigerio
-
-                'rgba(255, 99, 132, 1)', // amarillo 
-              ][index], // Color de la línea
+                'rgba(0, 144, 71, 1)',
+                'rgba(205, 113, 0, 1)',
+                'rgba(180, 0, 64, 1)'
+              ][index],
               borderWidth: 1, // Ancho del borde de la línea
               pointRadius: 4, // Radio de los puntos en la línea
               pointHoverRadius: 6, // Radio de los puntos al pasar el mouse sobre ellos

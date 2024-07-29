@@ -4,16 +4,7 @@
         <a routerLink="/registro" routerLinkActive="active" (click)="toggleSubmenu()">
           <span class="menu-icon material-icons"> assignment</span>
           <span class="menu-text">Registros</span>
-          <span class="sub-menu-icon" [ngClass]="{ 'sub-menu-open': isSubmenuOpen }">
-            <mat-icon>{{ isSubmenuOpen ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</mat-icon>
-          </span>
         </a>
-        <!-- sub menu registros-->
-        <ul *ngIf="isSubmenuOpen" class="sub-menu">
-          <li><a routerLink="/registro/diario" routerLinkActive="active"><span class="menu-icon material-icons">event_note</span><span class="menu-text">Diario</span></a></li>
-          <li><a routerLink="/registro/semanal" routerLinkActive="active"><span class="menu-icon material-icons">view_week</span><span class="menu-text">Semanal</span></a></li>
-          <li><a routerLink="/registro/mensual" routerLinkActive="active"><span class="menu-icon material-icons">date_range</span><span class="menu-text">Mensual</span></a></li>
-        </ul>
       </li>
       <!--
       <li>
@@ -37,12 +28,14 @@
           <span class="menu-text">Estudiantes</span>
         </a>
       </li>
+      <!--
       <li>
         <a routerLink="/comidas" routerLinkActive="active">
           <span class="menu-icon material-icons">restaurant</span>
           <span class="menu-text">Comidas</span>
         </a>
       </li>
+      -->
       <li>
         <a routerLink="/excel" routerLinkActive="active">
           <span class="menu-icon material-icons">send</span>

@@ -7,12 +7,12 @@ import Chart from 'chart.js/auto';
   styleUrls: ['./pastel.component.scss']
 })
 export class PastelComponent implements OnInit {
-  @Input() categories: string[] = [];
-  @Input() data: number[] = [];
+  @Input() categories: string[] = ['Registrados', 'No Registrados']; // Etiquetas actualizadas
+  @Input() data: number[] = [0, 0]; // Datos por defecto
 
   //selectedCategory: string = 'Desayuno';
 
-  pieChart: Chart<'pie'> | undefined;
+  pieChart: Chart<'doughnut'> | undefined;
 
   constructor() { }
 
@@ -31,23 +31,25 @@ export class PastelComponent implements OnInit {
       const ctx = canvas.getContext('2d');
       if (ctx) {
         this.pieChart = new Chart(ctx, {
-          type: 'pie',
+          type: 'doughnut',
           data: {
             labels: this.categories,
             datasets: [{
               data: this.data,
               backgroundColor: [
-                'rgba(255, 99, 132, 0.2)', // Rojo
-                'rgba(255, 206, 86, 0.2)',  // Amarillo
-                'rgba(54, 162, 235, 0.2)',  // Azul
+                'rgba(17, 174, 94, 1)', // Verde
+                'rgba(205, 49, 0, 1)',  // Rojo
               ],
               borderColor: [
-                'rgba(255, 99, 132, 1)', // Rojo
-                'rgba(255, 206, 86, 1)',  // Amarillo
-                'rgba(54, 162, 235, 1)',  // Azul
+                'rgba(17, 174, 94, 1)', // Verde
+                'rgba(205, 49, 0, 1)',  // Rojo
               ],
               borderWidth: 1
             }]
+          },
+
+          options: {
+            cutout: '70%', // Tamaño del agujero en el centro del gráfico
           }
         });
       }

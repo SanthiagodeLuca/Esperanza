@@ -1,30 +1,67 @@
-/* estadisticas.component.scss */
+/* Ajustar estilo para los botones */
+.categoria-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.categoria-btn {
+  font-size: 12px; /* Tamaño pequeño */
+  border: 1px solid #CD7100 !important; /* Borde naranja y asegura que se aplique el color */
+  color: #CD7100 !important; /* Texto naranja */
+  border-radius: 0 !important; /* Sin redondeo */
+  height: 30px; /* Ajusta la altura del botón */
+  min-width: 100px; /* Ancho mínimo del botón */
+  padding: 0 12px; /* Ajuste del padding para los botones */
+  background-color: transparent; /* Fondo transparente para el botón no seleccionado */
+}
+
+.categoria-btn.selected {
+  background-color: #CD7100 !important; /* Fondo naranja al seleccionar */
+  color: white !important; /* Texto blanco al seleccionar */
+}
+
+.card {
+  background-color: #ffffff; /* Fondo blanco */
+  border: 1px solid #d3d3d3; /* Borde gris claro */
+  border-radius: 8px; /* Bordes redondeados */
+  margin-bottom: 20px; /* Espacio entre tarjetas */
+}
+
+.card-body {
+  padding: 20px; /* Espaciado interno de la tarjeta */
+}
+
+app-pastel, app-barras, app-linea {
+  width: 75%;
+}
 
 .chart-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px; /* Espacio entre los gráficos */
-    justify-content: space-around; /* Alinea los elementos horizontalmente */
-  }
-  
-  .chart-container > * {
-    width: 300px; /* Ancho fijo para los gráficos */
-    margin: 0 10px; /* Margen horizontal entre los gráficos */
-  }
-  
-  .categoria-buttons {
-    display: flex;
-    gap: 10px; /* Espacio entre los botones */
-  }
-  
-  .categoria-buttons button {
-    flex: 1; /* Los botones ocupan el mismo espacio */
-    border-radius: 5px; /* Bordes redondeados */
-    transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
-  }
-  
-  .categoria-buttons button.selected {
-    background-color: #2196f3; /* Color de fondo cuando está seleccionado */
-    color: white; /* Color de texto cuando está seleccionado */
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Espacio entre los gráficos */
+  justify-content: space-around; /* Alinea los elementos horizontalmente */
+}
+
+.chart-container > * {
+  width: 100%; /* Ancho completo para mejorar la responsividad */
+  max-width: 300px; /* Máximo ancho para gráficos */
+  margin: 0 auto; /* Centra los gráficos horizontalmente */
+}
+
+
+/* Estilos específicos para el botón */
+.custom-button {
+  color: #28a746 !important; /* Color de texto verde */
+  background-color: transparent; /* Fondo transparente si quieres solo color de texto verde */
+}
+
+.custom-button:hover {
+  background-color: #28a74621; /* Fondo verde en el hover */
+}
+
+/* Estado active (cuando se hace clic) del botón */
+.custom-button:active {
+  background-color: #28a7466e !important; /* Fondo verde al hacer clic */
+}

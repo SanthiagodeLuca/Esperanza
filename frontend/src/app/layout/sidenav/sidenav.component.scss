@@ -20,12 +20,18 @@
   left: 0; /* Pegado a la izquierda */
   overflow-x: hidden; /* Oculta el desbordamiento horizontal */
   margin-top: 48px; /* Margen superior */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
 }
 
 /* Estilos para la lista no ordenada dentro de la barra lateral */
 .sidebar ul {
   list-style: none; /* Sin viñetas */
   padding: 0; /* Sin relleno */
+}
+
+/* Estilos para el primer elemento del menú en la barra lateral */
+.sidebar ul li:first-child {
+  margin-top: 20px; /* Ajusta este valor según sea necesario */
 }
 
 /* Estilos para cada elemento de la lista en la barra lateral */
@@ -69,4 +75,13 @@
   transform: translateX(0); /* Muestra la barra lateral */
   opacity: 1; /* Opacidad 1 */
   transition: transform 0.3s, opacity 0.3s; /* Transición suave */
+}
+
+/* Estilos para los iconos y el texto en los elementos del menú */
+.sidebar .menu-icon {
+  margin-right: 5px; /* Ajusta este valor según sea necesario */
+}
+
+.sidebar .menu-text {
+  margin-left: 5px; /* Ajusta este valor según sea necesario */
 }

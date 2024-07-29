@@ -54,14 +54,14 @@ export class BarrasComponent implements OnInit {
                     label: almuerzoNombre,
                     data: this.categories.map(curso => this.data[curso]?.[almuerzoNombre] || 0),
                     backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)'
+                      'rgba(0, 144, 71, 0.9)',
+                      'rgba(205, 113, 0, 0.9)',
+                      'rgba(180, 0, 64, 0.9)'
                     ][index],
                     borderColor: [
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)'
+                      'rgba(0, 144, 71, 1)',
+                      'rgba(205, 113, 0, 1)',
+                      'rgba(180, 0, 64, 1)'
                     ][index],
                     borderWidth: 1
                   };

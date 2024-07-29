@@ -25,7 +25,14 @@ export class ListAsistenciasComponent implements OnInit {
   asistenciaFiltrada: Asistencia[] = [];
   asistenciaTabla:any[]=[];
   uniqueValues: string[] = [];
-  filtros: { [key: string]: any } = {};
+  filtros: { [key: string]: any } = {
+    'id': '',
+    'estudiante.id': '',
+    'estudiante.nombre': '',
+    'estudiante.curso': '',
+    'almuerzo.nombre': '',
+    'fecha': ''
+  };
   usuarioRol: string = 'ADMIN'; // Suponiendo que obtienes el rol del usuario de algún servicio o componente
   asistenciaParaEditar: AsistenciaNueva | null = null;
   mostrarFormularioEdicion: boolean = false; // Variable para controlar la visibilidad del formulario de edición
@@ -41,24 +48,22 @@ currentUserRole: string | null = null;
   ) {}
 
   ngOnInit(): void {
-
-      //rol del usuario
-      this.userRoleService.currentUser$.subscribe(user => {
-        this.currentUserRole = user && user.role !== undefined ? user.role : null;
-      });
-
-   this.subscription= this.asistenciaService.behaviorSubjectEstudiantes().subscribe(data => {
-     
-    
+    // Rol del usuario
+    this.userRoleService.currentUser$.subscribe(user => {
+      this.currentUserRole = user && user.role !== undefined ? user.role : null;
+    });
+  
+    this.subscription = this.asistenciaService.behaviorSubjectEstudiantes().subscribe(data => {
+      this.asistencias = data;
+  
+      // Ordenar las asistencias por ID de forma descendente
+      this.asistencias.sort((a, b) => b.id - a.id);
       
-        this.asistencias = data;
-        this.asistenciaTabla=data;
-        console.log(this.asistencias)
-
-     
-      this.asistenciaFiltrada =JSON.parse(JSON.stringify(this.asistencias)); // Clona los datos para filtrar
+      this.asistenciaTabla = this.asistencias;
+      this.asistenciaFiltrada = JSON.parse(JSON.stringify(this.asistencias)); // Clona los datos para filtrar
     });
   }
+  
 ngOnDestroy(){
 
   if (this.subscription) {
@@ -111,12 +116,13 @@ ngOnDestroy(){
       const idFilter = !this.filtros['id'] || asistencia.id === +this.filtros['id']; // Convert filter value to a number
       const fechaFilter = !this.filtros['fecha'] || this.datePipe.transform(asistencia.fecha, 'yyyy-MM-dd') === this.filtros['fecha'];
       const estudianteIdFilter = !this.filtros['estudiante.id'] || this.matchNestedProperty(asistencia, 'estudiante.id', this.filtros['estudiante.id']);
+      const estudianteNombreFilter = !this.filtros['estudiante.nombre'] || this.matchNestedProperty(asistencia, 'estudiante.nombre', this.filtros['estudiante.nombre']);
       const cursoFilter = !this.filtros['estudiante.curso'] || this.matchNestedProperty(asistencia, 'estudiante.curso', this.filtros['estudiante.curso']);
       const comidasFilter = !this.filtros['almuerzo.nombre'] || this.matchNestedProperty(asistencia, 'almuerzo.nombre', this.filtros['almuerzo.nombre']);
   
       console.log(`ID Filter: ${idFilter}, Fecha Filter: ${fechaFilter}, Estudiante ID Filter: ${estudianteIdFilter}, Curso Filter: ${cursoFilter}, Comidas Filter: ${comidasFilter}`);
       
-      return idFilter && fechaFilter && estudianteIdFilter && cursoFilter && comidasFilter;
+      return idFilter && fechaFilter && estudianteIdFilter && estudianteNombreFilter && cursoFilter && comidasFilter;
     });
   
     console.log('Asistencias filtradas:', this.asistenciaFiltrada);
@@ -148,7 +154,14 @@ ngOnDestroy(){
   }
 
   limpiarFiltros() {
-    this.filtros = {}; // Resetea todos los filtros a un objeto vacío
+    this.filtros = {
+      'id': '',
+      'estudiante.id': '',
+      'estudiante.nombre': '',
+      'estudiante.curso': '',
+      'almuerzo.nombre': '',
+      'fecha': ''
+    }; // Resetea todos los filtros a una cadena vacía
     this.asistenciaFiltrada = [...this.asistenciaTabla]; // Restablece la lista filtrada a la lista completa
   }
 

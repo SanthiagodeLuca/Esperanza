@@ -1,50 +1,76 @@
-<p-table [value]="asistenciaFiltrada" [rows]="10" [paginator]="true">
-  <ng-template pTemplate="header">
-    <tr>
-      <th>
-        <select [(ngModel)]="filtros['id']" (ngModelChange)="aplicarFiltros()">
-          <option *ngFor="let id of getUniqueValues('id')" [value]="id">{{ id }}</option>
-        </select>
-      </th>
-      <th>
-        <select [(ngModel)]="filtros['estudiante.id']" (ngModelChange)="aplicarFiltros()">
-          <option *ngFor="let estudianteId of getUniqueValues('estudiante.id')" [value]="estudianteId">{{ estudianteId }}</option>
-        </select>
-      </th>
-      <th>
-        <select [(ngModel)]="filtros['estudiante.curso']" (ngModelChange)="aplicarFiltros()">
-          <option *ngFor="let curso of getUniqueValues('estudiante.curso')" [value]="curso">{{ curso }}</option>
-        </select>
-      </th>
-      <th>
-        <select [(ngModel)]="filtros['almuerzo.nombre']" (ngModelChange)="aplicarFiltros()">
-          <option *ngFor="let comida of getUniqueValues('almuerzo.nombre')" [value]="comida">{{ comida }}</option>
-        </select>
-      </th>
-      <th>
-        <select [(ngModel)]="filtros['fecha']" (ngModelChange)="aplicarFiltros()">
-          <option *ngFor="let fecha of getUniqueValues('fecha')" [value]="fecha">{{ fecha }}</option>
-        </select>
-      </th>
-      
-      <th>Acciones</th>
-      <th>
-        <!-- Botón para limpiar los filtros -->
-        <button (click)="limpiarFiltros()" class="btn btn-secondary">Limpiar Filtros</button>
-      </th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-asistencia>
-    <tr>
-      <td>{{ asistencia.id }}</td>
-      <td>{{ asistencia.estudiante.id }}</td>
-      <td>{{ asistencia.estudiante.curso }}</td>
-      <td>{{ asistencia.almuerzo.nombre }}</td>
-      <td>{{ formatDate(asistencia.fecha) }}</td>
-      <td>
-        <button class="btn btn-primary mr-1" (click)="editarAsistencia(asistencia)" [disabled]="isUserRole('USER')">Editar</button>
-        <button class="btn btn-danger" (click)="confirmarEliminacion(asistencia.id)" [disabled]="isUserRole('USER')">Eliminar</button>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Listado de estudiantes registrados</h4>
+        <button mat-raised-button color="primary" class="custom-button" (click)="limpiarFiltros()">Limpiar Filtros</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="card pt-5 ps-3 pe-3">
+        <div class="card-body p-0">
+          <p-table [value]="asistenciaFiltrada" [rows]="10" [paginator]="true">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 5%;" class="text-center align-middle">
+                  <select [(ngModel)]="filtros['id']" (ngModelChange)="aplicarFiltros()" class="form-select form-select-sm">
+                    <option value="" hidden  disabled selected>ID</option>
+                    <option *ngFor="let id of getUniqueValues('id')" [value]="id">{{ id }}</option>
+                  </select>
+                </th>
+                <th style="width: 10%;" class="text-center align-middle">
+                  <select [(ngModel)]="filtros['estudiante.id']" (ngModelChange)="aplicarFiltros()" class="form-select form-select-sm">
+                    <option value=""  hidden  disabled  selected>T.I. / C.C.</option>
+                    <option *ngFor="let estudianteId of getUniqueValues('estudiante.id')" [value]="estudianteId">{{ estudianteId }}</option>
+                  </select>
+                </th>
+                <th style="width: 25%;" class="text-start align-middle"> <!-- Text-start para alineación a la izquierda -->
+                  <select [(ngModel)]="filtros['estudiante.nombre']" (ngModelChange)="aplicarFiltros()" class="form-select form-select-sm">
+                    <option value=""  hidden  disabled selected>Nombre</option>
+                    <option *ngFor="let estudianteNombre of getUniqueValues('estudiante.nombre')" [value]="estudianteNombre">{{ estudianteNombre }}</option>
+                  </select>
+                </th>
+                <th style="width: 10%;" class="text-center align-middle">
+                  <select [(ngModel)]="filtros['estudiante.curso']" (ngModelChange)="aplicarFiltros()" class="form-select form-select-sm">
+                    <option value=""  hidden  disabled selected>Curso</option>
+                    <option *ngFor="let curso of getUniqueValues('estudiante.curso')" [value]="curso">{{ curso }}</option>
+                  </select>
+                </th>
+                <th style="width: 10%;" class="text-center align-middle">
+                  <select [(ngModel)]="filtros['almuerzo.nombre']" (ngModelChange)="aplicarFiltros()" class="form-select form-select-sm">
+                    <option value=""  hidden  disabled selected>Comida</option>
+                    <option *ngFor="let comida of getUniqueValues('almuerzo.nombre')" [value]="comida">{{ comida }}</option>
+                  </select>
+                </th>
+                <th style="width: 20%;" class="text-center align-middle">
+                  <select [(ngModel)]="filtros['fecha']" (ngModelChange)="aplicarFiltros()" class="form-select form-select-sm">
+                    <option value=""  hidden  disabled selected>Fecha de registro</option>
+                    <option *ngFor="let fecha of getUniqueValues('fecha')" [value]="fecha">{{ fecha }}</option>
+                  </select>
+                </th>
+                <th style="width: 20%;" class="text-center align-middle">Acciones</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-asistencia let-rowIndex="rowIndex">
+              <tr [class.bg-light]="rowIndex % 2 === 0">
+                <td style="width: 5%;" class="text-center align-middle">{{ asistencia.id }}</td>
+                <td style="width: 10%;" class="text-center align-middle">{{ asistencia.estudiante.id }}</td>
+                <td style="width: 25%;" class="text-start align-middle">{{ asistencia.estudiante.nombre }}</td> <!-- Text-start para alineación a la izquierda -->
+                <td style="width: 10%;" class="text-center align-middle">{{ asistencia.estudiante.curso }}</td>
+                <td style="width: 10%;" class="text-center align-middle">{{ asistencia.almuerzo.nombre }}</td>
+                <td style="width: 20%;" class="text-center align-middle">{{ formatDate(asistencia.fecha) }}</td>
+                <td style="width: 20%;" class="text-center align-middle">
+                  <button class="btn btn-warning btn-sm me-2" (click)="editarAsistencia(asistencia)" [disabled]="isUserRole('USER')">Editar</button>
+                  <button class="btn btn-danger btn-sm" (click)="confirmarEliminacion(asistencia.id)" [disabled]="isUserRole('USER')">Eliminar</button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
