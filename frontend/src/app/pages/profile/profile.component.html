@@ -1,50 +1,40 @@
-<mat-card class="profile-card custom-card">
-  <mat-card-header>
-    <div class="profile-header">
-      <h1 class="profile-title">Profile</h1>
-
-
-    </div>
+<mat-card class="profile-card">
+  <mat-card-header class="text-center">
+    <h1 class="profile-title">Profile</h1>
   </mat-card-header>
   <mat-card-content>
-    <div class="profile-content">
-      <div class="profile-image">
-        <img src="https://via.placeholder.com/150" alt="Profile Image">
+    <div class="profile-content row">
+      <div class="profile-image col-12 col-md-4 text-center mb-3 mb-md-0">
+        <img src="https://via.placeholder.com/150" alt="Profile Image" class="img-fluid rounded-circle">
       </div>
-      <div class="profile-details">
-        <p *ngIf="errorMessage.length!=0" class="text-danger">{{errorMessage}}</p>
-        <h2>Usuario: {{user?.username}}</h2>
-        <!-- Display editable fields when in edit mode -->
+      <div class="profile-details col-12 col-md-8">
+        <p *ngIf="errorMessage.length != 0" class="text-danger">{{errorMessage}}</p>
+        <h2 class="mb-3">Usuario: {{user?.username}}</h2>
         <ng-container *ngIf="isEditMode; else displayMode">
-          <p>
-            Address: <input [(ngModel)]="address" />
-          </p>
-          <!-- Other editable fields... -->
+          <div class="mb-3">
+            <label for="address" class="form-label">Address:</label>
+            <input id="address" [(ngModel)]="address" class="form-control" />
+          </div>
         </ng-container>
-        <!-- Display non-editable fields when not in edit mode -->
-        <ng-template #displayMode>io
+        <ng-template #displayMode>
           <p>Nombre: {{user?.firstname}}</p>
-          <p>role: {{ user?.role }}</p>
-          <p>Unique ID: {{user?.id}}</p>
-          <p>country: {{user?.country}}</p>
-         
+          <p>Rol: {{ user?.role }}</p>
+          <p>ID: {{user?.id}}</p>
+          <p>Pais: {{user?.country}}</p>
         </ng-template>
-       
-
-       <!-- <div *ngIF="!userLoginOn">-->
-        <button mat-raised-button color="accent" (click)="logOut()">    Cerrar Sesion  </button>
-     <!--- </div>-->
-         <button mat-raised-button color="accent" (click)="toggleEditMode()">
-        {{ isEditMode ? 'Cancel' : 'Edit' }}
-      </button>
+        <div class="d-flex justify-content-center mt-3">
+          <button mat-raised-button color="accent" (click)="logOut()" class="btn btn-secondary mx-2">Cerrar Sesión</button>
+          <button mat-raised-button color="accent" hidden (click)="toggleEditMode()" class="btn btn-primary mx-2">
+            {{ isEditMode ? 'Cancel' : 'Edit' }}
+          </button>
+        </div>
       </div>
     </div>
   </mat-card-content>
-  <mat-card-actions>
-    <!-- Display Save and Cancel buttons when in edit mode -->
+  <mat-card-actions class="text-center mt-4">
     <ng-container *ngIf="isEditMode">
-      <button mat-raised-button color="primary" (click)="saveChanges()">Save</button>
-      <button mat-raised-button color="warn" (click)="cancelEdit()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="saveChanges()" class="btn btn-success mx-2">Save</button>
+      <button mat-raised-button color="warn" (click)="cancelEdit()" class="btn btn-danger mx-2">Cancel</button>
     </ng-container>
   </mat-card-actions>
 </mat-card>

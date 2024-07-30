@@ -20,6 +20,10 @@ export class FormularioCrearUsuarioComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private usuarioService: UserService) {}
 
   ngOnInit(): void {
+    this.initForm();
+  }
+
+  initForm() {
     this.usuarioForm = this.formBuilder.group({
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
@@ -35,8 +39,8 @@ export class FormularioCrearUsuarioComponent implements OnInit {
       this.usuarioService.agregarUser(this.usuarioForm.value).subscribe(
         response => {
           console.log('Usuario guardado:', response);
-          this.onUsuarioGuardado.emit(); // Emitir evento cuando el usuario se guarda
-          this.cerrarFormulario();
+          this.resetFormulario();
+          this.cerrarFormulario(); // Cierra el formulario después de guardar
         },
         error => {
           console.error('Error al guardar el usuario:', error);
@@ -49,8 +53,21 @@ export class FormularioCrearUsuarioComponent implements OnInit {
   }
 
   cerrarFormulario() {
-    this.mostrarFormulario = false;
+    this.resetFormulario();
+    this.mostrarFormulario = false; // Cambia el valor de mostrarFormulario para cerrar el formulario
     this.onClose.emit();
+  }
+
+  resetFormulario() {
+    this.usuarioForm.reset({
+      firstname: '',
+      lastname: '',
+      username: '',
+      password: '',
+      country: '',
+      role: 'ADMIN'
+    });
+    this.loginError = ''; // Limpia el mensaje de error
   }
 
   onFormClick(event: MouseEvent) {

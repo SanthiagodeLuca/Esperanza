@@ -1,10 +1,13 @@
-<div>
-    <app-list-user></app-list-user>
-    <button class="btn btn-success" (click)="abrirFormularioCrearAdministrador()"  [disabled]="isUserRole('USER')">Agregar Usuario </button>
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <h2 class="display-5 mb-0">Seguridad</h2>
+  </div>
+  <hr />
 
-    <app-formulario-crear-usuario 
-    [mostrarFormulario]="mostrarFormularioEstudiante"
-      (onClose)="cerrarFormulario()"
-    
-    ></app-formulario-crear-usuario>
+  <!-- Componente de estadísticas -->
+  <div class="mb-4">
+    <app-list-user></app-list-user>
+  </div>
+
+  
 </div>

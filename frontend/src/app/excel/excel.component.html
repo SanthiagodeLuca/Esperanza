@@ -1,28 +1,44 @@
-<p class="title">Exportar Excel</p>
-<div class="file-upload-container">
-  <input type="file" (change)="cargaArchivo($event)" class="file-input">
-  <button (click)="validarArchivo()" [disabled]="!archivo" class="submit-button">Enviar</button>
-</div>
-<!-- Message div with dynamic class based on mensajeTipo -->
-
-
-<div>
-  <mat-form-field appearance="fill">
-    <mat-label>Fecha de inicio</mat-label>
-    <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
-    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-    <mat-datepicker #startPicker></mat-datepicker>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Fecha de fin</mat-label>
-    <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate">
-    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-    <mat-datepicker #endPicker></mat-datepicker>
-  </mat-form-field>
-
-  <button (click)="exportExcel()" [disabled]="!startDate || !endDate" class="submit-button">Exportar Excel</button>
-</div>
-<div *ngIf="mensaje" [ngClass]="{'message-success': mensajeTipo === 'success', 'message-error': mensajeTipo === 'error'}">
-    {{ mensaje }}
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <h2 class="display-5 mb-0">Exportar Excel</h2>
   </div>
+  <hr />
+
+  <!-- Tarjeta de Archivo -->
+  <div class="card mb-4">
+    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+      <div class="file-input-container">
+        <input type="file" (change)="cargaArchivo($event)" class="form-control file-input" />
+      </div>
+      <button (click)="validarArchivo()" [disabled]="!archivo" class="btn btn-success btn-sm mt-3">Enviar</button>
+    </div>
+  </div>
+
+  <!-- Tarjeta de Exportar Excel -->
+  <div class="card mb-4">
+    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+      <div class="d-flex">
+        <div class="me-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha de inicio</mat-label>
+            <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" />
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="me-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha de fin</mat-label>
+            <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" />
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <button (click)="exportExcel()" [disabled]="!startDate || !endDate" class="btn btn-success btn-sm">Exportar Excel</button>
+      <div *ngIf="mensaje" [ngClass]="{'alert alert-success': mensajeTipo === 'success', 'alert alert-danger': mensajeTipo === 'error'}">
+        {{ mensaje }}
+      </div>
+    </div>
+  </div>
+</div>

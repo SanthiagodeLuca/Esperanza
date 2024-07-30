@@ -1,0 +1,28 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    z-index: 999; /* Z-index alto para que esté encima de todo */
+}
+
+
+th {
+    padding: 0;
+    margin: 0;
+}
+
+.custom-button {
+  color: #28a746 !important; /* Color de texto verde */
+  background-color: transparent; /* Fondo transparente si quieres solo color de texto verde */
+}
+
+.custom-button:hover {
+  background-color: #28a74621; /* Fondo verde en el hover */
+}
+
+.custom-button:active {
+  background-color: #28a7466e !important; /* Fondo verde al hacer clic */
+}

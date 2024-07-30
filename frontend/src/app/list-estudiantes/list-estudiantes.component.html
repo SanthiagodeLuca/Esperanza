@@ -1,104 +1,84 @@
-<!--filtros-->
-<!--<input type="text" pInputText placeholder="Nombre" [(ngModel)]="filtros['nombre']" >
-<input type="text" pInputText placeholder="Jornada" [(ngModel)]="filtros['jornada']">
-<input type="text" pInputText placeholder="curso" [(ngModel)]="filtros['curso']">-->
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"></h4>
+        <button mat-raised-button class="custom-button" (click)="limpiarFiltros()">Limpiar Filtros</button>
+      </div>
+    </div>
+  </div>
 
-<!-- tabla-datos.component.html -->
-<!--value enlaza los datos con la tabla row el numero de filas por tabla-->
-<!--<button (click)="mostrarValoresEstudiantesFiltrado()">Mostrar Valores Únicos de Nombre</button>-->
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="card pt-5 ps-3 pe-3">
+        <div class="card-body p-0">
+          <p-table [value]="filtrarEstudianes" [rows]="10" [paginator]="true">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 5%;" class="column-id text-center align-middle">
+                  <select [(ngModel)]="filtros['id']" (ngModelChange)="aplicarFiltros()" class="form-select form-select-sm">
+                    <option value="" hidden disabled selected>ID</option>
+                    <option *ngFor="let id of getUniqueValues('id')" [value]="id">{{ id }}</option>
+                  </select>
+                </th>
+                <th style="width: 5%;" class="text-start align-middle">
+                  <input type="text" pInputText placeholder="Nombre" (input)="aplicarFiltros()" [(ngModel)]="filtros['nombre']" class="form-control form-control-sm" />
+                </th>
+                <th style="width: 5%;" class="column-jornada text-center align-middle">
+                  <select [(ngModel)]="filtros['jornada']" (ngModelChange)="aplicarFiltros()" class="form-select form-select-sm">
+                    <option value="" hidden disabled selected>Jornada</option>
+                    <option *ngFor="let jornada of getUniqueValues('jornada')" [value]="jornada">{{ jornada }}</option>
+                  </select>
+                </th>
+                <th style="width: 5%;" class="column-curso text-center align-middle">
+                  <select [(ngModel)]="filtros['curso']" (ngModelChange)="aplicarFiltros()" class="form-select form-select-sm">
+                    <option value="" hidden disabled selected>Curso</option>
+                    <option *ngFor="let curso of getUniqueValues('curso')" [value]="curso">{{ curso }}</option>
+                  </select>
+                </th>
+                <th style="width: 5%;" class="text-center align-middle">Imagen</th>
+                <th style="width: 5%;" class="text-center align-middle column-acciones">Acciones</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-estudiante let-rowIndex="rowIndex">
+              <tr [class.bg-light]="rowIndex % 2 === 0">
+                <td style="width: 10%;" class="text-center align-middle">{{estudiante.id}}</td>
+                <td style="width: 40%;" class="text-start align-middle">{{ estudiante.nombre }}</td>
+                <td style="width: 10%;" class="text-center align-middle">{{ estudiante.jornada }}</td>
+                <td style="width: 10%;" class="text-center align-middle">{{ estudiante.curso }}</td>
+                <td style="width: 15%;" class="text-center align-middle">
+                  <button class="btn btn-success" (click)="cambiarEstadoImagen(estudiante)">{{ cambiarEstadoTexto(estudiante) }}</button>
+                  <div *ngIf="estudiante.imagenVisible" class="pt-3">
+                    <a [href]="imagenUrl" download="estudiante.png">
+                      <img [src]="imagenUrl" alt="Imagen" class="img-thumbnail" (error)="handleImageError($event)" />
+                    </a>
+                  </div>
+                </td>
+                <td style="width: 15%;" class="text-center align-middle">
+                  <button class="btn btn-warning btn-sm me-2" (click)="editarEstudiante(estudiante)" [disabled]="isUserRole('USER')">Editar</button>
+                  <button class="btn btn-danger btn-sm" (click)="confirmarEliminacion(estudiante.id)" [disabled]="isUserRole('USER')">Eliminar</button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
 
-<!-- Creamos un área donde se mostrarán los valores únicos -->
-<div *ngIf="uniqueValues">
-  <ul>
-    <!-- Iteramos sobre los valores únicos y los mostramos en una lista -->
-    <li *ngFor="let value of uniqueValues">{{ value }}</li>
-  </ul>
+          <!--<div *ngIf="mostrarAlertaEliminar"></div>-->
+          <app-alerta-estudiante-eliminar
+            *ngIf="mostrarAlertaEliminar"
+            (confirm)="eliminarEstudiante($event)"
+            (cancel)="cancelarEliminacion()"
+            message="¿Está seguro de que quiere eliminar este estudiante?"
+            confirmButtonText="Sí, eliminarlo"
+            cancelButtonText="Cancelar"
+          >
+          </app-alerta-estudiante-eliminar>
+
+          <div class="modal-overlay" *ngIf="mostrarFormularioEdicion"></div>
+          <app-formulario-estudiante [estudiante]="estudianteParaEditar" (onSave)="guardarEstudiante($event)" (onCancel)="cancelarEdicion()" *ngIf="mostrarFormularioEdicion">
+            
+          </app-formulario-estudiante>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<p-table [value]="filtrarEstudianes" [rows]="10" [paginator]="true">
-  <ng-template pTemplate="header">
-    <!-- Encabezados de la tabla -->
-    <tr>
-      <th>
-      <select [(ngModel)]="filtros['id']" >
-        <option *ngFor="let id of getUniqueValues('id')" [value]="id">{{ id }}</option>
-      </select>
-    </th>
-      <th>
-        <input type="text" pInputText placeholder="Nombre" (input)="aplicarFiltros()" [(ngModel)]="filtros['nombre']">
-      <th> 
-        <!-- Filtra por jornada -->
-         <!--  [(ngModel)]="filtros['jornada']" vincula esto con un valor en la opcion seleccionada -->
-          <select [(ngModel)]="filtros['jornada']" >
-            <option *ngFor="let jornada of getUniqueValues('jornada')" [value]="jornada">{{ jornada }}</option>
-          </select>
-      </th>
-      <th>
-        <!-- Filtra por curso -->
-        <select [(ngModel)]="filtros['curso']" >
-          <option *ngFor="let curso of getUniqueValues('curso')" [value]="curso">{{ curso }}</option>
-        </select>
-      </th>
-      <th>Imagen</th>
-
-      <th>Acciones</th>
-      <th>
-        <!-- Botón para limpiar los filtros -->
-        <button (click)="limpiarFiltros()" class="btn btn-secondary">Limpiar Filtros</button>
-      </th>
-    </tr>
-
-  </ng-template>
-    <ng-template pTemplate="body" let-estudiante>
-      <tr>
-        <td>{{estudiante.id}}</td>
-        <!-- Celdas de la tabla -->
-       <td> {{ estudiante.nombre }}</td>
-       <td> {{ estudiante.jornada }}</td>
-       <td> {{ estudiante.curso }}</td>
-       <td>
-        <button (click)="cambiarEstadoImagen(estudiante)">{{ cambiarEstadoTexto(estudiante) }}</button>
-        
-        <!--<p>{{tokenSeleccionado }}</p>-->
-      
-        <!-- <button (click)="cambiarEstadoImagen(estudiante)">{{ cambiarEstadoTexto(estudiante) }}</button>-->
-          <div *ngIf="estudiante.imagenVisible"> 
-            <a [href]="imagenUrl" download="estudiante.png"> 
-              <img [src]="imagenUrl" alt="Imagen"  (error)="handleImageError($event)">
-            </a>
-            <!--<p>texto {{tokenSeleccionado }}</p>-->
-          </div>
-        </td>
-       <!--nosotros reconstruimos la imagen (load)="cargarImagen(estudiante)"> -->
-        <!--<td> <img [src]="'http://localhost:8085/api/imagen/image/' + estudiante.id + '.png'" alt="Imagen">  -->
-          <td>
-            <!-- Botón Editar -->
-            <button Editar  class="btn btn-primary mr-1" (click)="editarEstudiante(estudiante)"   [disabled]="isUserRole('USER')">Editar</button>
-            <!-- Botón Eliminar -->
-            <button  class="btn btn-danger" (click)="confirmarEliminacion(estudiante.id)"   [disabled]="isUserRole('USER')"> Eliminar</button>
-          </td>
-      </tr>
-      
-    </ng-template>
-  </p-table>
-  <!--<div *ngIf="mostrarAlertaEliminar"
-  ></div>-->
-  <app-alerta-estudiante-eliminar
-  *ngIf="mostrarAlertaEliminar"
-  (confirm)="eliminarEstudiante($event)" 
-  (cancel)="cancelarEliminacion()"
-  message="¿Está seguro de que quiere eliminar este estudiante?"
-  confirmButtonText="Sí, eliminarlo"
-  cancelButtonText="Cancelar">
-</app-alerta-estudiante-eliminar>
-
-  <div class="modal-overlay" *ngIf="mostrarFormularioEdicion"></div>
-
-  <app-formulario-estudiante
-  [estudiante]="estudianteParaEditar"
-  (onSave)="guardarEstudiante($event)"
-  (onCancel)="cancelarEdicion()"
-  *ngIf="mostrarFormularioEdicion"
-  
-  
-  ></app-formulario-estudiante>
-

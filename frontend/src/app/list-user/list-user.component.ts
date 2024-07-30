@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/modelos/user';
 import { UserService } from 'src/app/services/user/user.service';
-import { UserRoleService } from '../services/userRole/user-role.service';
+import { UserRoleService } from 'src/app/services/userRole/user-role.service';
 
 @Component({
   selector: 'app-list-user',
@@ -12,10 +12,16 @@ import { UserRoleService } from '../services/userRole/user-role.service';
 export class ListUserComponent implements OnInit, OnDestroy {
   usuarios: User[] = [];
   uniqueValues: { [key: string]: any[] } = {};
-  filtros: { [key: string]: any } = {};
+  filtros: { [key: string]: any } = {
+    id: '',
+    firstname: '',
+    role: '',
+    country: ''
+  };
 
   usuarioParaEditar: User | null = null;
   mostrarFormularioUsuarioEdicion: boolean = false;
+  mostrarFormularioCrearUsuario: boolean = false; // Nueva propiedad para mostrar el formulario de creación de usuario
   private subscription: Subscription | null = null;
 
   usuariosFiltrados: User[] = [];
@@ -30,7 +36,6 @@ export class ListUserComponent implements OnInit, OnDestroy {
     this.subscription = this.userService.behaviorSubjecUsuario().subscribe(
       datos => {
         this.usuarios = datos;
-        console.log(this.usuarios)
         this.usuariosFiltrados = this.filtrarUsuarios();
         this.getUniqueValues();
       }
@@ -83,7 +88,6 @@ export class ListUserComponent implements OnInit, OnDestroy {
     if (this.usuarioAEliminar) {
       this.userService.eliminarUsuario(this.usuarioAEliminar.id).subscribe(
         response => {
-          console.log(response);
           this.cancelarEliminacion();
           this.usuarios = this.usuarios.filter(user => user.id !== this.usuarioAEliminar?.id);
           this.usuariosFiltrados = this.filtrarUsuarios();
@@ -120,8 +124,15 @@ export class ListUserComponent implements OnInit, OnDestroy {
   }
 
   limpiarFiltros() {
-    this.filtros = {}; // Resetea todos los filtros a un objeto vacío
-    this.usuariosFiltrados = this.filtrarUsuarios(); // Restablece la lista filtrada a la lista completa
+    this.filtros = { id: '', firstname: '', role: '', country: '' };
+    this.usuariosFiltrados = this.filtrarUsuarios();
   }
-  
+
+  abrirFormularioCrearUsuario() {
+    this.mostrarFormularioCrearUsuario = true;
+  }
+
+  cerrarFormularioCrearUsuario() {
+    this.mostrarFormularioCrearUsuario = false;
+  }
 }

@@ -68,7 +68,12 @@ import { UserRoleService } from '../services/userRole/user-role.service';
 
     tokenSeleccionado:string="";
     // Filtros
-    filtros: { [key: string]: any } = {};
+    filtros: { [key: string]: any } = {
+      id: '',
+      nombre: '',
+      jornada: '',
+      curso: ''
+    };
 
 
     usuarioRol: string = 'admin'; // Suponiendo que obtienes el rol del usuario de algún servicio o componente
@@ -220,38 +225,14 @@ import { UserRoleService } from '../services/userRole/user-role.service';
 
 
      aplicarFiltros(): void {
-      // Vuevlve a reconvertir el estudiantes filtro 
-     
-       this.estudiantesFiltrados = this.estudiantes.filter(
-        estudiante => {
-        // Object.keys ejemplo 
-      
-        
-        // cada clave cumple con una condicion 
-        //object.key devuelve un arreglo con las llaves 
-         Object.keys(this.filtros)
-        // every metodo que verificasi lo elemento cumplen una condicion 
-         .every(
-          key => {
-          // Aquí se muestra la clave actual en cada ciclo
-         // console.log('Ciclo de Object.keys:', key);
+      this.estudiantesFiltrados = this.estudiantes.filter(estudiante =>
+        Object.keys(this.filtros).every(key =>
+          this.filtros[key] === null || estudiante[key] === this.filtros[key]
+        )
+      );
     
-          // Esta es la lógica de cada iteración en el método every
-          //filtros[key] el valor que tiene ese filtro
-          var valor=this.filtros[key];
-          var valorEstudiante =estudiante[key];
-          const condition = !this.filtros[key] || estudiante[key] === this.filtros[key];
-    
-          // Se muestra el resultado de la condición en cada iteración
-          //console.log('Condición en cada iteración de every:', condition);
-    
-          // Se retorna el resultado de la condición para cada clave
-          return condition;
-        });
-      });
-
-      if(this.estudiantesFiltrados.length===0){
-        this.estudiantesFiltrados= this.estudiantes.slice();
+      if (this.estudiantesFiltrados.length === 0) {
+        this.estudiantesFiltrados = this.estudiantes.slice();
       }
     }
     
@@ -392,9 +373,15 @@ guardarEstudiante(estudiante: any) {
 
 
   limpiarFiltros(): void {
-    this.filtros = {}; // Resetea todos los filtros a un objeto vacío
+    this.filtros = {
+      id: '',
+      nombre: '',
+      jornada: '',
+      curso: ''
+    }; // Resetea todos los filtros a sus valores iniciales
     this.estudiantesFiltrados = [...this.estudiantes]; // Restablece la lista filtrada a la lista completa
   }
+  
   
   }
 
