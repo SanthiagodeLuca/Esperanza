@@ -42,7 +42,7 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import  {CommonModule} from '@angular/common';
+import  {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
 import { CriteriosComponent } from './criterio/criterio.component';
 import { LoginComponent } from './login/login.component';
 //import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
@@ -172,6 +172,7 @@ import { RegisterComponent } from './pages/register/register.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
+    //{ provide: LocationStrategy, useClass: HashLocationStrategy},
     provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
