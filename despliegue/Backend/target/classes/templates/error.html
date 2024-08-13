@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+   
+ 		 <link rel="stylesheet" href="/css/bootstrap.min.css">
+	 <link rel="stylesheet" href="/css/error.css">
+
+</head>
+<body>
+ 
+ <h1>Error 1</h1>
+<div th:if="${mensaje}" class="alert custom-alert" role="alert"
+     th:style="${mensaje.contains('este es un error de insercion') ? 'background-color: #dc3545; color: #fff;' : (mensaje.contains('se adiciono correctamente') ? 'background-color: #28a745; color: #fff;' : 'background-color: #17a2b8; color: #fff;')}">
+    <p th:text="${mensaje}"></p>
+</div>
+
+
+
+
+
+
+<script src="/js/jquery-3.5.1.slim.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+</body>
+</html>
