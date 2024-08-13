@@ -1,0 +1,5 @@
+Privilegios
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'tu_contraseña';
+GRANT ALL PRIVILEGES ON db_ejemplo.* TO 'admin'@'localhost';
+FLUSH PRIVILEGES;
