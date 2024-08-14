@@ -172,8 +172,8 @@ import { RegisterComponent } from './pages/register/register.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
-    //{ provide: LocationStrategy, useClass: HashLocationStrategy},
-    provideAnimationsAsync()
+    { provide: LocationStrategy, useClass: HashLocationStrategy}
+    //provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })
